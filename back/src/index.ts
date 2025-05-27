@@ -27,8 +27,6 @@
 
 */
 
-let nome:string = "Guilherme Henrique"
+import {server} from './server/server';
 
-console.log(nome);
-
-console.log(nome);
+server.listen(5065, () => console.log('App rodando!'));
