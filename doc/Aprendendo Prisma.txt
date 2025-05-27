@@ -8,3 +8,4 @@ Aprendendo Prisma (ORM) para conexão com o Banco de dados
 
 Em vez de escrever SQL puro para fazer INSERT, SELECT, UPDATE e DELETE. 
 Você usa objetos e métodos da linguagem de programação (Python, JavaScript, etc.).
+
