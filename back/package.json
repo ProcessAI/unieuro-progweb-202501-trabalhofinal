@@ -12,7 +12,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/app.ts"
+    "dev": "tsx watch src/app.ts",
+    "prisma:generate": "npx prisma generate --schema=back/database/prisma/schema.prisma",
+    "prisma:migrate": "npx prisma migrate --schema=back/databse/prisma/schema.prisma",
+    "prisma:studio": "npx prisma studio --schema=back/database/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
