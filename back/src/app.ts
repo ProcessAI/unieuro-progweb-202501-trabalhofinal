@@ -4,14 +4,14 @@
 import express from 'express'
 
 // routes 
-import Rounter_cliente from '../routes/Rounter_cliente'
+import Rounte_cliente from '../routes/Rounte_cliente'
 
 /*craindo uma variável constante no nosso projeto para uma instÂncia de express */
 const app = express();
 
 
 /*Criando uma rota! */
-app.use('/', Rounter_cliente)
+app.use('/', Rounte_cliente)
 
 /* colocando o nosso servidor express para rodar na porta 3000 */
 app.listen(3000,function(){

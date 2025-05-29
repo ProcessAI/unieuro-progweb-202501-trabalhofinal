@@ -1,12 +1,14 @@
 FremeWork
 
-    - Prisma: É Um ORM é uma ferramenta que conecta seu código (em forma de objetos) a um banco de dados relacional
+    - Prisma: É Um ORM é uma ferramenta que conecta seu código (em forma de objetos)
+    a um banco de dados relacional
     
     - Comandos para instalação:
         
         npm install prisma --save-dev
 
-        Serve: Criar o modo Desenvolvedor que contém ferramenta de linha de comando (CLI) usada para:
+        Serve: Criar o modo Desenvolvedor que contém ferramenta de linha de comando (CLI)
+        usada para:
 
             Criar o arquivo de schema (npx prisma init)
 
@@ -21,7 +23,9 @@ FremeWork
 
         npm install @prisma/client
 
-        Serve: É a dependência de runtime (tempo de execução) do Prisma. Ela contém o cliente gerado automaticamente para acessar seu banco de dados com TypeScript/JavaScript de forma tipada.
+        Serve: É a dependência de runtime (tempo de execução) do Prisma. 
+        Ela contém o cliente gerado automaticamente para acessar seu banco de dados
+        com TypeScript/JavaScript de forma tipada.
 
     comandos básicos:    
         
@@ -35,7 +39,8 @@ FremeWork
 
         npx prisma migrate deploy -> Usado em produção para aplicar migrações existentes.
 
-        npx prisma migrate reset -> Apaga, recria o banco e reaplica todas as migrações (bom para testes).
+        npx prisma migrate reset -> Apaga, recria o banco e reaplica todas as migrações 
+        (bom para testes).
 
         npx prisma validate ->  Verificar se o schema está válido
 
@@ -67,8 +72,8 @@ FremeWork
         Por que usar @types/express?
 
             O pacote express não é escrito em TypeScript, então, para usar com segurança
-            tipada no seu projeto TypeScript, você precisa das definições de tipo fornecidas
-            pela comunidade no DefinitelyTyped.
+            tipada no seu projeto TypeScript, você precisa das definições de tipo
+            fornecidas pela comunidade no DefinitelyTyped.
 
 FremeWork
 
