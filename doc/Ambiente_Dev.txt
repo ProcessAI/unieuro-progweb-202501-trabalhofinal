@@ -70,7 +70,13 @@ FremeWork
             tipada no seu projeto TypeScript, você precisa das definições de tipo fornecidas
             pela comunidade no DefinitelyTyped.
 
+FremeWork
 
+    - cors: 
+
+        npm i cors
+
+    
 Depedências/ferramentas para Copilar o TypeScript:
 
  - ts-node-dev
