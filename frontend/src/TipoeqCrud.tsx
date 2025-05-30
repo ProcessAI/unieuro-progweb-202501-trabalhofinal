@@ -1,69 +1,92 @@
-import React, { useEffect, useState } from 'react';
-import { fetchTipoeqs, createTipoeq, updateTipoeq, deleteTipoeq, Tipoeq } from './api';
+import React, { useState, useEffect } from 'react';
+import './TipoeqCrud.css';
 
-export function TipoeqCrud() {
-  const [tipos, setTipos] = useState<Tipoeq[]>([]);
-  const [nome, setNome] = useState('');
-  const [editId, setEditId] = useState<number | null>(null);
+interface TipoEq {
+  idtipoeq: number;
+  tipoeqnome: string;
+}
 
-  useEffect(() => {
-    loadTipos();
-  }, []);
+const TipoeqCrud: React.FC = () => {
+  const [tipos, setTipos] = useState<TipoEq[]>([]);
+  const [form, setForm] = useState<TipoEq>({ idtipoeq: 0, tipoeqnome: '' });
+  const [isEditing, setIsEditing] = useState(false);
 
-  async function loadTipos() {
-    const data = await fetchTipoeqs();
-    setTipos(data);
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (editId === null) {
-      // Criar novo
-      await createTipoeq(nome);
+  const handleSubmit = () => {
+    if (isEditing) {
+      setTipos(tipos.map(t => t.idtipoeq === form.idtipoeq ? form : t));
     } else {
-      // Atualizar
-      await updateTipoeq(editId, nome);
-      setEditId(null);
+      setTipos([...tipos, { ...form, idtipoeq: Date.now() }]);
     }
-    setNome('');
-    loadTipos();
-  }
+    setForm({ idtipoeq: 0, tipoeqnome: '' });
+    setIsEditing(false);
+  };
 
-  function handleEdit(tipo: Tipoeq) {
-    setNome(tipo.tipoeqnome);
-    setEditId(tipo.idtipoeq);
-  }
+  const handleEdit = (t: TipoEq) => {
+    setForm(t);
+    setIsEditing(true);
+  };
 
-  async function handleDelete(id: number) {
-    if (window.confirm('Quer mesmo deletar?')) {
-      await deleteTipoeq(id);
-      loadTipos();
-    }
-  }
+  const handleDelete = (id: number) => {
+    setTipos(tipos.filter(t => t.idtipoeq !== id));
+  };
 
   return (
-    <div>
-      <h2>Tipos de Equipamento</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          placeholder="Nome do tipo"
-          required
-        />
-        <button type="submit">{editId === null ? 'Criar' : 'Atualizar'}</button>
-        {editId !== null && <button onClick={() => { setEditId(null); setNome(''); }}>Cancelar</button>}
-      </form>
+    <div className="container">
+      <header className="header">
+        <div className="logo">LOGO</div>
+        <nav>
+          <a>HOME</a>
+          <a>CLIENTES</a>
+          <a>EQUIPAMENTOS</a>
+        </nav>
+        <div className="profile">
+          Rafael Marconi <button>SAIR</button>
+        </div>
+      </header>
 
-      <ul>
-        {tipos.map((tipo) => (
-          <li key={tipo.idtipoeq}>
-            {tipo.tipoeqnome}{' '}
-            <button onClick={() => handleEdit(tipo)}>Editar</button>{' '}
-            <button onClick={() => handleDelete(tipo.idtipoeq)}>Deletar</button>
-          </li>
-        ))}
-      </ul>
+      <div className="content">
+        <input type="text" className="search" placeholder="BUSCAR" />
+        <button className="btn-novo" onClick={() => setIsEditing(false)}>NOVO</button>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tipos.map(t => (
+              <tr key={t.idtipoeq}>
+                <td>{t.idtipoeq}</td>
+                <td>{t.tipoeqnome}</td>
+                <td>
+                  <button onClick={() => handleEdit(t)}>EDITAR</button>
+                  <button onClick={() => handleDelete(t.idtipoeq)}>DELETAR</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div className="form">
+          <input
+            type="text"
+            name="tipoeqnome"
+            value={form.tipoeqnome}
+            placeholder="Tipo de Equipamento"
+            onChange={handleChange}
+          />
+          <button onClick={handleSubmit}>{isEditing ? 'ATUALIZAR' : 'INSERIR'}</button>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default TipoeqCrud;

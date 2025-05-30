@@ -1,38 +1,127 @@
-.App {
-  text-align: center;
+/* App.css */
+
+body, html {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9fafb;
+  color: #333;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.navbar {
+  background-color: #fbff00;
   color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
 }
 
-.App-link {
-  color: #61dafb;
+.navbar .left, .navbar .right {
+  display: flex;
+  align-items: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.navbar .left > * {
+  margin-right: 24px;
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.navbar .left > *:hover {
+  color: #cbd5e0;
+}
+
+.navbar .right > * {
+  margin-left: 16px;
+}
+
+.navbar button {
+  background-color: #e53e3e;
+  border: none;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.navbar button:hover {
+  background-color: #c53030;
+}
+
+.main-container {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.controls input[type="text"] {
+  width: 300px;
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+}
+
+.controls input[type="text"]:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 5px #3182ce;
+}
+
+.controls button {
+  background-color: #3182ce;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  background-color: #2b6cb0;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+thead {
+  background-color: #edf2f7;
+}
+
+th, td {
+  padding: 12px 10px;
+  border: 1px solid #cbd5e0;
+  text-align: left;
+}
+
+tbody tr:hover {
+  background-color: #f7fafc;
+}
+
+td.center {
+  text-align: center;
+  cursor: pointer;
+  color: #3182ce;
+}
+
+td.center:hover {
+  color: #2b6cb0;
 }

@@ -1,0 +1,93 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+.container {
+  width: 90%;
+  margin: 20px auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f7c600;
+  padding: 10px 20px;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+nav a {
+  margin: 0 10px;
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+}
+
+.profile button {
+  margin-left: 10px;
+  background: black;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+}
+
+.content {
+  margin-top: 20px;
+}
+
+.search {
+  width: 300px;
+  padding: 8px;
+}
+
+.btn-novo {
+  background: #f7c600;
+  border: none;
+  padding: 10px;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.form {
+  margin-top: 20px;
+  background: white;
+  padding: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.form input {
+  flex: 1;
+  padding: 10px;
+}
+
+.form button {
+  background: #f7c600;
+  border: none;
+  padding: 10px;
+  font-weight: bold;
+}
