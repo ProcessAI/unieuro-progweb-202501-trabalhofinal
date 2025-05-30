@@ -62,7 +62,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE laudo.cliente (
-    idcliente bigint NOT NULL,
+    idcliente integer NOT NULL,
     clientenome character varying(50) NOT NULL,
     clientestatus integer DEFAULT 0
 );
