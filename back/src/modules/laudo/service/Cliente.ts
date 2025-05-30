@@ -1,4 +1,5 @@
-import { PrismaClient } from '../database/generated/prisma';
+import { PrismaClient } from '../../../../prisma/generated/prisma';
+/*import { PrismaClient } from '../database/generated/prisma'; back*/
 import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();

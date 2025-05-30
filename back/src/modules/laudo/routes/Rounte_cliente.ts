@@ -6,7 +6,7 @@ import {
   buscarCliente,
   atualizarCliente,
   deletarCliente
-} from "../controller/Cliente";
+} from "../service/Cliente";
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.post("/criar", criarCliente);
 router.get("/listar", listarClientes);
 
 // Buscar cliente pelo ID
-router.get("/buscar/:id", buscarCliente);
+/*router.get("/buscar/:id", buscarCliente);*/
 
 // Atualizar cliente pelo ID
 router.put("at/:id", atualizarCliente);

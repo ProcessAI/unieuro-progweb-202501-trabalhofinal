@@ -1,5 +1,6 @@
-# Ignorar depedências 
+# Ignorar pastas
 /node_modules/
+/test/
 
 # ignorar arquivos de ambiente de variáveis
 *.env
