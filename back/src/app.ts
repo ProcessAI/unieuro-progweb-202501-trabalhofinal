@@ -9,6 +9,8 @@ import Rounte_cliente from '../routes/Rounte_cliente'
 /*craindo uma variável constante no nosso projeto para uma instÂncia de express */
 const app = express();
 
+/* colocando middleware ANTES das rotas*/
+app.use(express.json());
 
 /*Criando uma rota! */
 app.use('/', Rounte_cliente)

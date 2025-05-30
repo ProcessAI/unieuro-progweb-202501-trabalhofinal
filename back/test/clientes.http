@@ -1,0 +1,26 @@
+### Criar cliente
+POST http://localhost:3000/criar
+Content-Type: application/json
+
+{
+  "nome": "Pena",
+  "status": 0
+}
+
+### Listar todos os clientes
+GET http://localhost:3000/listar
+
+### Buscar cliente por ID
+GET http://localhost:3000/buscar/1
+
+### Atualizar cliente por ID
+PUT http://localhost:3000/at/1
+Content-Type: application/json
+
+{
+  "nome": "Maria da Silva Atualizada",
+  "status": 1
+}
+
+### Deletar cliente por ID
+DELETE http://localhost:3000/del/4

@@ -15,7 +15,8 @@
     "dev": "tsx watch src/app.ts",
     "prisma:generate": "npx prisma generate --schema=database/prisma/schema.prisma",
     "prisma:migrate": "npx prisma migrate dev --schema=database/prisma/schema.prisma",
-    "prisma:studio": "npx prisma studio --schema=database/prisma/schema.prisma"
+    "prisma:studio": "npx prisma studio --schema=database/prisma/schema.prisma",
+    "prisma:migrate-reset":"npx prisma migrate reset --schema=database/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",

@@ -12,3 +12,11 @@ INSERT INTO laudo.cliente (clientenome, clientestatus)
 VALUES ('laudinho2', 1);
 INSERT INTO laudo.cliente (clientenome, clientestatus)
 VALUES ('laudinho1', 0);
+
+
+SELECT idcliente, clientenome, clientestatus
+	FROM laudo.cliente;
+
+
+/* tive que mudar a coluna de idcliente para bigint*/
+ALTER TABLE laudo.cliente ALTER COLUMN idcliente TYPE bigint;

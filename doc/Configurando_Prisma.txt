@@ -116,6 +116,7 @@ Aprendendo a configurar o Prisma
 
         Está testando ou debugando a aplicação
 
+
     DICA DE CONFIGURAÇÃO DOS COMANDOS:
 
     É interessante colocar esses comandos no scrips do seu package.json
@@ -124,6 +125,44 @@ Aprendendo a configurar o Prisma
         "prisma:generate": "npx prisma generate --schema=database/prisma/schema.prisma",
         "prisma:migrate": "npx prisma migrate dev --schema=database/prisma/schema.prisma",
         "prisma:studio": "npx prisma studio --schema=database/prisma/schema.prisma"
+        "prisma:migrate-reset":"npx prisma migrate reset --schema=database/prisma/schema.prisma"
     },
 
-    Assim você tem uma eficiência maior
+    Assim você tem uma eficiência maior, basta usar npm run <nome_scripts_no_packege.json>
+
+    exemplo: nmp run prisma:migrate
+
+3 - Reconfigurando o Prisma caso de merda:
+
+    Atenção: Use esse método, somente se não possuir dados relevantes (valorosos)
+
+    3.1 - Remova a pasta migrations no seu powershell: 
+
+        Remove-Item -Recurse -Force .\database\prisma\migrations
+
+        Você pode fazer manualmente, basta abrir o vscode ou explorador de arquivo
+        e deletar a pasta migrations
+
+    3.2 - Após, no powershell, no diretório raiz do seu projeto, coloque o comando:        
+    
+        npx prisma migrate reset --schema=database/prisma/schema.prisma
+
+        - Atenção: esse comando apaga o banco atual! É ideal para ambientes de
+        desenvolvimento, não de produção, pois remove todos os dados existentes
+        no schema usado.
+        
+    3.3 - Depois, é boa prática fazer excluir o banco de dados no seu SGBD e criar um novo
+    banco do zero
+
+    3.4 - Cheque a URLs com seu banco de dados para fazer a integração do prisma no arquivo.env
+
+    3.5 - Agora, redefina o arquivo schema.prisma na pasta prisma e sincronize o prisma
+    com o seu banco de dados usando o prisma migrate:
+
+        npx prisma migrate dev --name init --schema=database/prisma/schema.prisma
+
+    3.6 - Por ultimo! Crie um prisma Client usando o comando:
+
+        npx prisma generate --schema=database/prisma/schema.prisma
+        
+

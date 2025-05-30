@@ -1,8 +1,3 @@
-/* 
-    Criando rotas bem definidas no nosso projeto
-    Para facilitar a importação e exportação
-*/
-
 import express from 'express';
 
 import {
@@ -15,10 +10,33 @@ import {
 
 const router = express.Router();
 
-router.post("/", criarCliente);
-router.get("/cliente", listarClientes);
-/*router.get("/:id", buscarCliente);*/
-router.put("/:id", atualizarCliente);
-router.delete("/:id", deletarCliente);
+// Criar um novo cliente
+router.post("/criar", criarCliente);
+
+// Listar todos os clientes
+router.get("/listar", listarClientes);
+
+// Buscar cliente pelo ID
+router.get("/buscar/:id", buscarCliente);
+
+// Atualizar cliente pelo ID
+router.put("at/:id", atualizarCliente);
+
+// Deletar cliente pelo ID
+router.delete("del/:id", deletarCliente);
 
 export default router;
+
+/*
+
+POST / — cria um cliente (antes /criar, mas o padrão REST usa a rota base para criar recursos).
+
+GET / — lista todos os clientes.
+
+GET /:id — busca cliente por ID.
+
+PUT /:id — atualiza cliente por ID.
+
+DELETE /:id — exclui cliente por ID.
+
+*/
