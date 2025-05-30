@@ -17,6 +17,17 @@ model Cliente {
   @@map("cliente")
 }
 
+model sede {
+  idsede         Int           @id @default(autoincrement())
+  sedenome       String        @db.VarChar(50)
+  sedestatus     Int           @default(0)
+  idcliente      BigInt
+  sededtinclusao DateTime?     @default(now()) @db.Date
+  endereco       endereco[]
+  equipamento    equipamento[]
+  cliente        Cliente       @relation(fields: [idcliente], references: [idcliente], onDelete: NoAction, onUpdate: NoAction)
+}
+
 model endereco {
   idendereco       Int      @id @default(autoincrement())
   enderecoendereco String   @db.VarChar(150)
@@ -26,6 +37,12 @@ model endereco {
   enderecostatus   Int?     @default(0)
   idsede           Int
   sede             sede     @relation(fields: [idsede], references: [idsede], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model tipoeq {
+  idtipoeq    Int           @id @default(autoincrement())
+  tipoeqnome  String        @db.VarChar(50)
+  equipamento equipamento[]
 }
 
 model equipamento {
@@ -44,6 +61,19 @@ model equipamento {
   tipoeq             tipoeq   @relation(fields: [idtipoeq], references: [idtipoeq], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model tipoinstalacao {
+  idtipoinstalacao   Int     @id @default(autoincrement())
+  tipoinstalacaonome String  @db.VarChar(50)
+  laudo              laudo[]
+}
+
+model tipolaudo {
+  idtipolaudo       Int     @id @default(autoincrement())
+  tipolaudonome     String  @db.VarChar(50)
+  tipolaudotemplate String?
+  laudo             laudo[]
+}
+
 model laudo {
   idlaudo           Int            @id @default(autoincrement())
   laudodescricao    String
@@ -56,34 +86,4 @@ model laudo {
   laudoosclickup    String?        @db.VarChar(10)
   tipoinstalacao    tipoinstalacao @relation(fields: [idtipoinstalacao], references: [idtipoinstalacao], onDelete: NoAction, onUpdate: NoAction)
   tipolaudo         tipolaudo      @relation(fields: [idtipolaudo], references: [idtipolaudo], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model sede {
-  idsede         Int           @id @default(autoincrement())
-  sedenome       String        @db.VarChar(50)
-  sedestatus     Int           @default(0)
-  idcliente      Int
-  sededtinclusao DateTime?     @default(now()) @db.Date
-  endereco       endereco[]
-  equipamento    equipamento[]
-  cliente        Cliente       @relation(fields: [idcliente], references: [idcliente], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model tipoeq {
-  idtipoeq    Int           @id @default(autoincrement())
-  tipoeqnome  String        @db.VarChar(50)
-  equipamento equipamento[]
-}
-
-model tipoinstalacao {
-  idtipoinstalacao   Int     @id @default(autoincrement())
-  tipoinstalacaonome String  @db.VarChar(50)
-  laudo              laudo[]
-}
-
-model tipolaudo {
-  idtipolaudo       Int     @id @default(autoincrement())
-  tipolaudonome     String  @db.VarChar(50)
-  tipolaudotemplate String?
-  laudo             laudo[]
 }

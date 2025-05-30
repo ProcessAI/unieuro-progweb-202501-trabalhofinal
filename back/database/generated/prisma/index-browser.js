@@ -121,9 +121,69 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 });
 
 exports.Prisma.ClienteScalarFieldEnum = {
-  id: 'id',
-  nome: 'nome',
-  status: 'status'
+  idcliente: 'idcliente',
+  clientenome: 'clientenome',
+  clientestatus: 'clientestatus'
+};
+
+exports.Prisma.SedeScalarFieldEnum = {
+  idsede: 'idsede',
+  sedenome: 'sedenome',
+  sedestatus: 'sedestatus',
+  idcliente: 'idcliente',
+  sededtinclusao: 'sededtinclusao'
+};
+
+exports.Prisma.EnderecoScalarFieldEnum = {
+  idendereco: 'idendereco',
+  enderecoendereco: 'enderecoendereco',
+  enderecocep: 'enderecocep',
+  enderecolat: 'enderecolat',
+  enderecolon: 'enderecolon',
+  enderecostatus: 'enderecostatus',
+  idsede: 'idsede'
+};
+
+exports.Prisma.TipoeqScalarFieldEnum = {
+  idtipoeq: 'idtipoeq',
+  tipoeqnome: 'tipoeqnome'
+};
+
+exports.Prisma.EquipamentoScalarFieldEnum = {
+  idequipamento: 'idequipamento',
+  equipamentoserie: 'equipamentoserie',
+  equipamentomodelo: 'equipamentomodelo',
+  equipamentomac: 'equipamentomac',
+  equipamentoipv4: 'equipamentoipv4',
+  equipamentoipv6: 'equipamentoipv6',
+  equipamentoanydesk: 'equipamentoanydesk',
+  equipamentodw: 'equipamentodw',
+  equipamentoalugado: 'equipamentoalugado',
+  idsede: 'idsede',
+  idtipoeq: 'idtipoeq'
+};
+
+exports.Prisma.TipoinstalacaoScalarFieldEnum = {
+  idtipoinstalacao: 'idtipoinstalacao',
+  tipoinstalacaonome: 'tipoinstalacaonome'
+};
+
+exports.Prisma.TipolaudoScalarFieldEnum = {
+  idtipolaudo: 'idtipolaudo',
+  tipolaudonome: 'tipolaudonome',
+  tipolaudotemplate: 'tipolaudotemplate'
+};
+
+exports.Prisma.LaudoScalarFieldEnum = {
+  idlaudo: 'idlaudo',
+  laudodescricao: 'laudodescricao',
+  laudohtmlmd: 'laudohtmlmd',
+  laudodatainclusao: 'laudodatainclusao',
+  laudofechamento: 'laudofechamento',
+  laudostatus: 'laudostatus',
+  idtipolaudo: 'idtipolaudo',
+  idtipoinstalacao: 'idtipoinstalacao',
+  laudoosclickup: 'laudoosclickup'
 };
 
 exports.Prisma.SortOrder = {
@@ -136,9 +196,21 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
-  Cliente: 'Cliente'
+  Cliente: 'Cliente',
+  sede: 'sede',
+  endereco: 'endereco',
+  tipoeq: 'tipoeq',
+  equipamento: 'equipamento',
+  tipoinstalacao: 'tipoinstalacao',
+  tipolaudo: 'tipolaudo',
+  laudo: 'laudo'
 };
 
 /**
