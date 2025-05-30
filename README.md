@@ -1,7 +1,13 @@
 # unieuro-progweb-202501-trabalhofinal
 Trabalho final de programação web 202501
 
+## DICAS
 
+### Informações de usuários nos commits do GIT
+```
+git config --global user.name "Seu Nome"
+git config --global user.email "seu@email.com"
+```
 ## Equipes
 
 ### Squad1
