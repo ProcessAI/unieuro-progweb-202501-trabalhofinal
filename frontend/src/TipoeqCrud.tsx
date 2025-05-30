@@ -10,6 +10,7 @@ const TipoeqCrud: React.FC = () => {
   const [tipos, setTipos] = useState<TipoEq[]>([]);
   const [form, setForm] = useState<TipoEq>({ idtipoeq: 0, tipoeqnome: '' });
   const [isEditing, setIsEditing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(''); // Novo estado para busca
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -34,6 +35,11 @@ const TipoeqCrud: React.FC = () => {
     setTipos(tipos.filter(t => t.idtipoeq !== id));
   };
 
+  // Filtrar lista com base na busca
+  const filteredTipos = tipos.filter(t =>
+    t.tipoeqnome.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="container">
       <header className="header">
@@ -49,8 +55,13 @@ const TipoeqCrud: React.FC = () => {
       </header>
 
       <div className="content">
-        <input type="text" className="search" placeholder="BUSCAR" />
-        <button className="btn-novo" onClick={() => setIsEditing(false)}>NOVO</button>
+        <input
+          type="text"
+          className="search"
+          placeholder="BUSCAR"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         
         <table>
           <thead>
@@ -61,7 +72,7 @@ const TipoeqCrud: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {tipos.map(t => (
+            {filteredTipos.map(t => (
               <tr key={t.idtipoeq}>
                 <td>{t.idtipoeq}</td>
                 <td>{t.tipoeqnome}</td>
