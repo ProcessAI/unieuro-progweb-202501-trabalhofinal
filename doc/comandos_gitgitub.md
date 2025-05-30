@@ -134,7 +134,40 @@ apenas uma revisão:
     git push -u origin <nome_da_sua_branch> -> Envia Branch para GitHub, é uma boa prática sempre fazer assim que terminou de trabalhar no projeto.
      
 
-11 - COMO AVANÇADOS:
+
+11 - COMO PEGAR PASTAS, ARQUIVOS OU DOCUMENTOS DE OUTRAS BRANCHS NO REPOSITÓRIO DO GIT GITHUB UTILIZANDO O GIT?
+
+    Siga o passo a passo abaixo:
+
+        1. Garanta que você tem todas as branches atualizadas
+        
+            Se a branch de origem está no GitHub (remota), rode:
+
+                git fetch origin
+
+        2. Verifique o nome da branch de onde você quer pegar o conteúdo
+
+            Exemplo: pegar o arquivo da branch main
+
+        3. Use o comando git checkout para pegar o arquivo
+
+            Você pode pegar um arquivo específico com:
+
+                git checkout origin/main -- caminho/para/o/arquivo.ext
+        
+                    Ou uma pasta inteira com:
+        
+                git checkout origin/main -- caminho/para/pasta/
+
+        4. Adicione e confirme as mudanças
+
+            git add caminho/para/o/arquivo.ext
+
+            git commit -m "Adicionado arquivo da branch main"
+
+
+
+12 - COMO AVANÇADOS:
 
     git stash  -> Salva alterações permite guardar alterações temporariamente sem fazer um commit. 
     Isso é útil quando você precisa alternar de branch ou trabalhar em outra tarefa sem perder seu progresso atual.
