@@ -5,11 +5,20 @@
 
 import express from 'express';
 
-// Controllers 
-import { index } from '../controller/Cliente';
+import {
+  criarCliente,
+  listarClientes,
+  buscarCliente,
+  atualizarCliente,
+  deletarCliente
+} from "../controller/Cliente";
 
 const router = express.Router();
 
-router.get('/', index)
+router.post("/", criarCliente);
+router.get("/cliente", listarClientes);
+/*router.get("/:id", buscarCliente);*/
+router.put("/:id", atualizarCliente);
+router.delete("/:id", deletarCliente);
 
 export default router;
