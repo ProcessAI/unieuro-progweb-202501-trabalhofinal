@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator migrations {
+  provider = "prisma-migrations"
+  output   = "../migrations"
+}
+
 model cliente {
   idcliente     BigInt @id @default(autoincrement())
   clientenome   String @db.VarChar(50)
