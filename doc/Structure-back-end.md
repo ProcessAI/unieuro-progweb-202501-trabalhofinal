@@ -5,7 +5,7 @@
 │   ├── /modules          # Módulos da aplicação (feature-based architecture)
 │   │   │
 │   │   ├── /router       # Inicialização da aplicação Express
-│   │   │   └── App.ts    # Arquivo principal que configura e exporta a instância do Express
+│   │   │   └── App.ts   # Arquivo principal que configura e exporta a instância do Express
 │   │   │
 │   │   └── /laudo        # Módulo 'laudo' (exemplo de domínio de negócio)
 │   │       │
