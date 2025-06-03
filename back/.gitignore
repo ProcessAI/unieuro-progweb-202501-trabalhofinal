@@ -1,5 +1,5 @@
 # Ignorar pastas
-/node_modules/
+node_modules/
 /test/
 
 # ignorar arquivos de ambiente de variáveis
