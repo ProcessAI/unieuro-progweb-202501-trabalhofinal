@@ -10,19 +10,18 @@ export class SedePersistence {
   async create(sedeData: {
     sedenome: string;
     sedestatus?: number;
-    idcliente: bigint | number;
+    idcliente: number;
     sededtinclusao?: Date;
   }) {
     try {
       const sede = await this.prisma.sede.create({
         data: {
           ...sedeData,
-          idcliente: BigInt(sedeData.idcliente), // conversão explícita
         },
       });
       return sede;
     } catch (error) {
-      console.error("Error creating sede:", error);
+      console.error("Erro ao criar sede:", error);
       throw error;
     }
   }
@@ -38,7 +37,7 @@ export class SedePersistence {
       });
       return sedes;
     } catch (error) {
-      console.error("Error fetching sedes:", error);
+      console.error("Erro ao buscar sedes:", error);
       throw error;
     }
   }
@@ -55,7 +54,7 @@ export class SedePersistence {
       });
       return sede;
     } catch (error) {
-      console.error("Error fetching sede by ID:", error);
+      console.error("Erro ao buscar sede por ID:", error);
       throw error;
     }
   }
@@ -65,7 +64,7 @@ export class SedePersistence {
     sedeData: {
       sedenome?: string;
       sedestatus?: number;
-      idcliente?: bigint | number;
+      idcliente?: number;
       sededtinclusao?: Date;
     }
   ) {
@@ -74,14 +73,11 @@ export class SedePersistence {
         where: { idsede: id },
         data: {
           ...sedeData,
-          idcliente: sedeData.idcliente
-            ? BigInt(sedeData.idcliente)
-            : undefined,
         },
       });
       return updatedSede;
     } catch (error) {
-      console.error("Error updating sede:", error);
+      console.error("Erro ao atualizar sede:", error);
       throw error;
     }
   }
@@ -93,15 +89,15 @@ export class SedePersistence {
       });
       return deletedSede;
     } catch (error) {
-      console.error("Error deleting sede:", error);
+      console.error("Erro ao deletar sede:", error);
       throw error;
     }
   }
 
-  async findByClienteId(idcliente: bigint | number) {
+  async findByClienteId(idcliente: number) {
     try {
       const sedes = await this.prisma.sede.findMany({
-        where: { idcliente: BigInt(idcliente) },
+        where: { idcliente: idcliente },
         include: {
           endereco: true,
           equipamento: true,
@@ -109,7 +105,7 @@ export class SedePersistence {
       });
       return sedes;
     } catch (error) {
-      console.error("Error fetching sedes by cliente ID:", error);
+      console.error("Erro ao buscar sedes por ID do cliente:", error);
       throw error;
     }
   }

@@ -17,7 +17,7 @@ export class TipoLaudoPersistence {
       });
       return tipoLaudo;
     } catch (error) {
-      console.error("Error creating tipoLaudo:", error);
+      console.error("Erro ao criar tipo de laudo:", error);
       throw error;
     }
   }
@@ -27,7 +27,7 @@ export class TipoLaudoPersistence {
       const tiposLaudo = await this.prisma.tipolaudo.findMany();
       return tiposLaudo;
     } catch (error) {
-      console.error("Error fetching tiposLaudo:", error);
+      console.error("Erro ao buscar tipos de laudo:", error);
       throw error;
     }
   }
@@ -39,7 +39,7 @@ export class TipoLaudoPersistence {
       });
       return tipoLaudo;
     } catch (error) {
-      console.error("Error fetching tipoLaudo by ID:", error);
+      console.error("Erro ao buscar tipo de laudo por ID:", error);
       throw error;
     }
   }
@@ -58,7 +58,7 @@ export class TipoLaudoPersistence {
       });
       return updatedTipoLaudo;
     } catch (error) {
-      console.error("Error updating tipoLaudo:", error);
+      console.error("Erro ao atualizar tipo de laudo:", error);
       throw error;
     }
   }
@@ -70,7 +70,7 @@ export class TipoLaudoPersistence {
       });
       return deletedTipoLaudo;
     } catch (error) {
-      console.error("Error deleting tipoLaudo:", error);
+      console.error("Erro ao deletar tipo de laudo:", error);
       throw error;
     }
   }
@@ -87,7 +87,7 @@ export class TipoLaudoPersistence {
       });
       return tiposLaudo;
     } catch (error) {
-      console.error("Error fetching tiposLaudo by name:", error);
+      console.error("Erro ao buscar tipos de laudo por nome:", error);
       throw error;
     }
   }

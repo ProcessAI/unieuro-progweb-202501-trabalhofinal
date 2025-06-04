@@ -13,7 +13,7 @@ export class clientePersistence {
       });
       return cliente;
     } catch (error) {
-      console.error("Error creating cliente:", error);
+      console.error("Erro ao criar cliente:", error);
       throw error;
     }
   }
@@ -22,22 +22,22 @@ export class clientePersistence {
       const clientes = await this.prisma.cliente.findMany();
       return clientes;
     } catch (error) {
-      console.error("Error fetching clientes:", error);
+      console.error("Erro ao buscar clientes:", error);
       throw error;
     }
   }
-  async findById(id: bigint) {
+  async findById(id: number) {
     try {
       const cliente = await this.prisma.cliente.findUnique({
         where: { idcliente: id },
       });
       return cliente;
     } catch (error) {
-      console.error("Error fetching cliente by ID:", error);
+      console.error("Erro ao buscar cliente por ID:", error);
       throw error;
     }
   }
-  async update(id: bigint, clienteData: { clientenome?: string; clientestatus?: number }) {
+  async update(id: number, clienteData: { clientenome?: string; clientestatus?: number }) {
     try {
       const updatedCliente = await this.prisma.cliente.update({
         where: { idcliente: id },
@@ -45,18 +45,18 @@ export class clientePersistence {
       });
       return updatedCliente;
     } catch (error) {
-      console.error("Error updating cliente:", error);
+      console.error("Erro ao atualizar cliente:", error);
       throw error;
     }
   }
-  async delete(id: bigint) {
+  async delete(id: number) {
     try {
       const deletedCliente = await this.prisma.cliente.delete({
         where: { idcliente: id },
       });
       return deletedCliente;
     } catch (error) {
-      console.error("Error deleting cliente:", error);
+      console.error("Erro ao deletar cliente:", error);
       throw error;
     }
   }

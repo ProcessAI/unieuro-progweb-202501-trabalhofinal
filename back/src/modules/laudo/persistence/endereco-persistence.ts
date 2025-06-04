@@ -2,11 +2,11 @@ import { PrismaClient } from "@prisma/client";
 
 export class EnderecoPersistence {
   private prisma: PrismaClient;
-
+  
   constructor() {
     this.prisma = new PrismaClient();
   }
-
+  
   async create(enderecoData: {
     enderecoendereco: string;
     enderecocep: string;
@@ -21,21 +21,21 @@ export class EnderecoPersistence {
       });
       return endereco;
     } catch (error) {
-      console.error("Error creating endereco:", error);
+      console.error("Erro ao criar endereço:", error);
       throw error;
     }
   }
-
+  
   async findAll() {
     try {
       const enderecos = await this.prisma.endereco.findMany();
       return enderecos;
     } catch (error) {
-      console.error("Error fetching enderecos:", error);
+      console.error("Erro ao buscar endereços:", error);
       throw error;
     }
   }
-
+  
   async findById(id: number) {
     try {
       const endereco = await this.prisma.endereco.findUnique({
@@ -43,11 +43,11 @@ export class EnderecoPersistence {
       });
       return endereco;
     } catch (error) {
-      console.error("Error fetching endereco by ID:", error);
+      console.error("Erro ao buscar endereço por ID:", error);
       throw error;
     }
   }
-
+  
   async update(
     id: number,
     enderecoData: {
@@ -66,11 +66,11 @@ export class EnderecoPersistence {
       });
       return updatedEndereco;
     } catch (error) {
-      console.error("Error updating endereco:", error);
+      console.error("Erro ao atualizar endereço:", error);
       throw error;
     }
   }
-
+  
   async delete(id: number) {
     try {
       const deletedEndereco = await this.prisma.endereco.delete({
@@ -78,11 +78,11 @@ export class EnderecoPersistence {
       });
       return deletedEndereco;
     } catch (error) {
-      console.error("Error deleting endereco:", error);
+      console.error("Erro ao deletar endereço:", error);
       throw error;
     }
   }
-
+  
   async findBySedeId(idsede: number) {
     try {
       const enderecos = await this.prisma.endereco.findMany({
@@ -90,7 +90,7 @@ export class EnderecoPersistence {
       });
       return enderecos;
     } catch (error) {
-      console.error("Error fetching enderecos by sede ID:", error);
+      console.error("Erro ao buscar endereços por ID da sede:", error);
       throw error;
     }
   }
