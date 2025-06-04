@@ -78,16 +78,50 @@ th, td {
   padding: 20px;
   display: flex;
   gap: 10px;
+  align-items: center; /* Alinha verticalmente */
 }
 
+/* Estilo para input do formulário */
 .form input {
   flex: 1;
   padding: 10px;
 }
 
+/* Estilo para o botão do formulário */
 .form button {
   background: #f7c600;
   border: none;
   padding: 10px;
   font-weight: bold;
+}
+
+/* ✅ Ajuste para o input com mensagem inline */
+
+.input-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 10px;
+  padding-right: 150px; /* espaço para a mensagem inline */
+  box-sizing: border-box;
+}
+
+.input-error-message {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: red;
+  font-size: 0.75rem;
+  background: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.input-error {
+  border: 1px solid red;
 }
