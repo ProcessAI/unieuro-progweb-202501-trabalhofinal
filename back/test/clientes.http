@@ -14,13 +14,13 @@ GET http://localhost:3000/cliente/listarCliente
 GET http://localhost:3000/cliente/buscarCliente/2
 
 ### Atualizar cliente por ID
-PUT http://localhost:3000/cliente/atualizarCliente/2
+PUT http://localhost:3000/cliente/atualizarCliente/4
 Content-Type: application/json
 
 {
-  "nome_cliente": "Dhovakim",
+  "nome_cliente": "João",
   "status": 1
 }
 
 ### Deletar cliente por ID
-DELETE http://localhost:3000/cliente/deletarCliente/1
+DELETE http://localhost:3000/cliente/deletarCliente/4
