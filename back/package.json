@@ -12,12 +12,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/app.ts",
-    "prisma:generate": "npx prisma generate --schema=database/prisma/schema.prisma",
-    "prisma:migrate": "npx prisma migrate dev --schema=database/prisma/schema.prisma",
-    "prisma:studio": "npx prisma studio --schema=database/prisma/schema.prisma",
-    "prisma:migrate-reset":"npx prisma migrate reset --schema=database/prisma/schema.prisma"
+    "dev:main": "tsx watch src/modules/router/app.ts",
+    "prisma:generate": "npx prisma generate --schema=prisma/schema.prisma",
+    "prisma:migrate": "npx prisma migrate dev --schema=prisma/schema.prisma",
+    "prisma:studio": "npx prisma studio --schema=prisma/schema.prisma",
+    "prisma:migrate-reset":"npx prisma migrate reset --schema=prisma/schema.prisma",
+    "prisma:pull": "npx prisma db pull --schema=prisma/schema.prisma"
   },
+  
   "keywords": [],
   "author": "",
   "license": "ISC",

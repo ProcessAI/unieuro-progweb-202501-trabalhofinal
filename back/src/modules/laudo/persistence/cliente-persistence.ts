@@ -1,6 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../../../prisma/generated/prisma";
 
 export class clientePersistence {
+  
   private prisma: PrismaClient;
 
   constructor() {
@@ -26,7 +27,7 @@ export class clientePersistence {
       throw error;
     }
   }
-  async findById(id: bigint) {
+  async findById(id:number) {
     try {
       const cliente = await this.prisma.cliente.findUnique({
         where: { idcliente: id },
@@ -37,7 +38,7 @@ export class clientePersistence {
       throw error;
     }
   }
-  async update(id: bigint, clienteData: { clientenome?: string; clientestatus?: number }) {
+  async update(id: number, clienteData: { clientenome?: string; clientestatus?: number }) {
     try {
       const updatedCliente = await this.prisma.cliente.update({
         where: { idcliente: id },
@@ -49,7 +50,7 @@ export class clientePersistence {
       throw error;
     }
   }
-  async delete(id: bigint) {
+  async delete(id: number) {
     try {
       const deletedCliente = await this.prisma.cliente.delete({
         where: { idcliente: id },

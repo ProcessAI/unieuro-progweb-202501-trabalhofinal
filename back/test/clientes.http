@@ -8,19 +8,18 @@ Content-Type: application/json
 }
 
 ### Listar todos os clientes
-GET http://localhost:3000/listar
+GET http://localhost:3000/cliente/listarCliente
 
 ### Buscar cliente por ID
-GET http://localhost:3000/buscar/1
+GET http://localhost:3000/cliente/buscarCliente/1
 
 ### Atualizar cliente por ID
-PUT http://localhost:3000/at/1
+PUT http://localhost:3000/cliente/atualizarCliente/1
 Content-Type: application/json
-
 {
   "nome": "Maria da Silva Atualizada",
   "status": 1
 }
 
 ### Deletar cliente por ID
-DELETE http://localhost:3000/del/4
+DELETE http://localhost:3000/cliente/deletarCliente/1

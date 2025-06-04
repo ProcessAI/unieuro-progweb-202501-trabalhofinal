@@ -8,7 +8,7 @@ datasource db {
 }
 
 model cliente {
-  idcliente     BigInt @id @default(autoincrement())
+  idcliente     Int @id @default(autoincrement())
   clientenome   String @db.VarChar(50)
   clientestatus Int?   @default(0)
 }
