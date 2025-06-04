@@ -16,15 +16,14 @@
     "prisma:generate": "npx prisma generate --schema=prisma/schema.prisma",
     "prisma:migrate": "npx prisma migrate dev --schema=prisma/schema.prisma",
     "prisma:studio": "npx prisma studio --schema=prisma/schema.prisma",
-    "prisma:migrate-reset":"npx prisma migrate reset --schema=prisma/schema.prisma",
+    "prisma:migrate-reset": "npx prisma migrate reset --schema=prisma/schema.prisma",
     "prisma:pull": "npx prisma db pull --schema=prisma/schema.prisma"
   },
-  
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^6.8.2",
+    "@prisma/client": "^6.9.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "prisma": "^6.8.2",

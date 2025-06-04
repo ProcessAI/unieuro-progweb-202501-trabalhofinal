@@ -1,23 +1,24 @@
-### Criar cliente
-POST http://localhost:3000/criar
+### Criar cliente, lembrese que os parâmetros do json devem ser os mesmo da função
+POST http://localhost:3000/cliente/criarCliente
 Content-Type: application/json
 
 {
-  "nome": "Pena",
-  "status": 0
+  "nome_cliente": "Pena Pena",
+  "status": 1
 }
 
 ### Listar todos os clientes
 GET http://localhost:3000/cliente/listarCliente
 
 ### Buscar cliente por ID
-GET http://localhost:3000/cliente/buscarCliente/1
+GET http://localhost:3000/cliente/buscarCliente/2
 
 ### Atualizar cliente por ID
-PUT http://localhost:3000/cliente/atualizarCliente/1
+PUT http://localhost:3000/cliente/atualizarCliente/2
 Content-Type: application/json
+
 {
-  "nome": "Maria da Silva Atualizada",
+  "nome_cliente": "Dhovakim",
   "status": 1
 }
 

@@ -1,7 +1,6 @@
 /* Criando a camada de serviço */
 
 // importando classe da camada persistence para conexão com o banco de dados
-
 import { clientePersistence } from "../persistence/cliente-persistence";
 
 export class ClienteService{
@@ -25,13 +24,21 @@ export class ClienteService{
     return viewCliente;
   };
 
-  async criarCliente({ nome, status }: { nome: string; status: number }) {
+  // utilizando a forma tradicional descrito na anotação
+  async criarCliente(data:{nome:string,status:number}) {
     
+    const {nome,status} = data;
+
     const novoCliente = await this.clientePersistence.create({
+      clientenome:nome,
+      clientestatus:status,
+    })
+
+    console.log('Dados enviados à persistência de Clientes:', {
       clientenome: nome,
       clientestatus: status,
     });
-    
+
     return novoCliente;
   }
   
