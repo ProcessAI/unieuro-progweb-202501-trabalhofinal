@@ -1,6 +1,7 @@
 # Ignorar pastas
 /node_modules/
 /treino/
+/test/
 
 # ignorar arquivos de ambiente de variáveis
 *.env
@@ -12,7 +13,6 @@
 *.log
 
 
-# ignorar build e artefatos temporarios 
 # Ignorar build e artefatos temporários
 /dist/
 /build/
