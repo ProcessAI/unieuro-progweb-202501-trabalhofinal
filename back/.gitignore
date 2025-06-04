@@ -1,5 +1,6 @@
 # Ignorar pastas
 /node_modules/
+/treino/
 
 # ignorar arquivos de ambiente de variáveis
 *.env
