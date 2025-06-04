@@ -1,7 +1,6 @@
 # Ignorar pastas
 /node_modules/
 
-
 # ignorar arquivos de ambiente de variáveis
 *.env
 
