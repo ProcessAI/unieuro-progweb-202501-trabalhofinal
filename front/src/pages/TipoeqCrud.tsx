@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import {useForm}  from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { tipoEquipamentoSchema } from '../hooks/tipoEquipamentoSchema'; // ajuste conforme seu projeto
 import './TipoeqCrud.css';
