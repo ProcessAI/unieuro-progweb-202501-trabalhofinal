@@ -1,16 +1,19 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
+import "./App.css";
 
-export default function App() {
+const App = () => {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
-}
+};
+
+export default App;
