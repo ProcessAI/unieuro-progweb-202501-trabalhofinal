@@ -7,7 +7,23 @@ function App() {
   return (
     <>
       <Toaster position="top-right" />
-      <TipoeqCrud />
+
+      <header className="header">
+        <div className="logo">LOGO</div>
+        <nav className="nav">
+          <a href="#">HOME</a>
+          <a href="#">CLIENTES</a>
+          <a href="#">EQUIPAMENTOS</a>
+        </nav>
+        <div className="profile">
+          Rafael Marconi
+          <button className="logout">SAIR</button>
+        </div>
+      </header>
+
+      <main>
+        <TipoeqCrud />
+      </main>
     </>
   );
 }
