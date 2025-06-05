@@ -14,7 +14,7 @@ const port = 3000;
 
 app.use(express.json()) // configuramos o nosso express para aceitar requisições json
 
-/* Configurando express para usar a rotas criadas! */
+/* Configurando express para usar a rotas criadas!  */
 app.use('/cliente',router)
 
 
@@ -26,8 +26,6 @@ app.get('/',  (req:Request,res:Response) => {
 
 });
 
-
-app.get('/cliente', )
 
 /* Criando o nosso Servidor express */
 
