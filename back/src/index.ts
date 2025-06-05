@@ -1,5 +1,5 @@
 import express from 'express';
-import tipoeqRoutes from './routes/tipoeq';
+import tipoeqRoutes from './modules/laudo/routes/tipoeq';
 import cors from 'cors'; // Se ainda não adicionou CORS, adicione
 
 const app = express();

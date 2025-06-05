@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal/issues"
   },
-  "homepage": "https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal#readme"
+  "homepage": "https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal#readme",
+  "dependencies": {
+    "@types/react": "^19.1.6"
+  }
 }

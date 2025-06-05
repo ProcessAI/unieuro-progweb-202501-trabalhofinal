@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -11,11 +12,18 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "pg": "^8.16.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.57.0",
+    "react-hot-toast": "^2.5.2",
     "react-scripts": "5.0.1",
+    "react-toastify": "^11.0.5",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^1.6.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -40,5 +48,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.8",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^4.1.8"
   }
 }
