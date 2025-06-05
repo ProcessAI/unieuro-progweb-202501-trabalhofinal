@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export class LaudoPersistence {
   private prisma: PrismaClient;
@@ -7,15 +7,7 @@ export class LaudoPersistence {
     this.prisma = new PrismaClient();
   }
   
-  async create(laudoData: {
-    laudodescricao: string;
-    laudohtmlmd: string;
-    laudofechamento?: Date;
-    laudostatus?: number;
-    idtipolaudo: number;
-    idtipoinstalacao: number;
-    laudoosclickup?: string;
-  }) {
+  async create(laudoData: Prisma.laudoCreateInput) {
     try {
       const laudo = await this.prisma.laudo.create({
         data: laudoData,
@@ -49,18 +41,7 @@ export class LaudoPersistence {
     }
   }
   
-  async update(
-    id: number,
-    laudoData: {
-      laudodescricao?: string;
-      laudohtmlmd?: string;
-      laudofechamento?: Date;
-      laudostatus?: number;
-      idtipolaudo?: number;
-      idtipoinstalacao?: number;
-      laudoosclickup?: string;
-    }
-  ) {
+  async update(id: number, laudoData: Prisma.laudoCreateInput) {
     try {
       const updatedLaudo = await this.prisma.laudo.update({
         where: { idlaudo: id },

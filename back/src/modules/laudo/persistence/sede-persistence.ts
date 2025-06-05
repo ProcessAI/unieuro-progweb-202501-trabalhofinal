@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export class SedePersistence {
   private prisma: PrismaClient;
@@ -7,17 +7,10 @@ export class SedePersistence {
     this.prisma = new PrismaClient();
   }
 
-  async create(sedeData: {
-    sedenome: string;
-    sedestatus?: number;
-    idcliente: number;
-    sededtinclusao?: Date;
-  }) {
+  async create(sedeData: Prisma.sedeCreateInput) {
     try {
       const sede = await this.prisma.sede.create({
-        data: {
-          ...sedeData,
-        },
+        data: sedeData,
       });
       return sede;
     } catch (error) {
@@ -59,21 +52,11 @@ export class SedePersistence {
     }
   }
 
-  async update(
-    id: number,
-    sedeData: {
-      sedenome?: string;
-      sedestatus?: number;
-      idcliente?: number;
-      sededtinclusao?: Date;
-    }
-  ) {
+  async update(id: number, sedeData: Prisma.sedeUpdateInput) {
     try {
       const updatedSede = await this.prisma.sede.update({
         where: { idsede: id },
-        data: {
-          ...sedeData,
-        },
+        data: sedeData,
       });
       return updatedSede;
     } catch (error) {

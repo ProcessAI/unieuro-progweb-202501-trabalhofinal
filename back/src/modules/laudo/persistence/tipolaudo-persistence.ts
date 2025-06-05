@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export class TipoLaudoPersistence {
   private prisma: PrismaClient;
@@ -7,10 +7,7 @@ export class TipoLaudoPersistence {
     this.prisma = new PrismaClient();
   }
 
-  async create(tipoLaudoData: {
-    tipolaudonome: string;
-    tipolaudotemplate?: string;
-  }) {
+  async create(tipoLaudoData: Prisma.tipolaudoCreateInput) {
     try {
       const tipoLaudo = await this.prisma.tipolaudo.create({
         data: tipoLaudoData,
@@ -44,13 +41,7 @@ export class TipoLaudoPersistence {
     }
   }
 
-  async update(
-    id: number,
-    tipoLaudoData: {
-      tipolaudonome?: string;
-      tipolaudotemplate?: string | null; // Permite definir como null
-    }
-  ) {
+  async update(id: number, tipoLaudoData: Prisma.tipolaudoUpdateInput) {
     try {
       const updatedTipoLaudo = await this.prisma.tipolaudo.update({
         where: { idtipolaudo: id },
@@ -81,7 +72,7 @@ export class TipoLaudoPersistence {
         where: { 
           tipolaudonome: {
             contains: nome,
-            mode: 'insensitive' // busca case insensitive
+            mode: 'insensitive'
           }
         },
       });

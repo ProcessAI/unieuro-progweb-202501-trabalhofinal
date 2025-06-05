@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export class equipamentoPersistence {
   private prisma: PrismaClient;
@@ -7,7 +7,7 @@ export class equipamentoPersistence {
     this.prisma = new PrismaClient();
   }
 
-  async create(equipamentoData: { equipamentonome: string; equipamentostatus?: number }) {
+  async create(equipamentoData: Prisma.equipamentoCreateInput) {
     try {
       const equipamento = await this.prisma.equipamento.create({
         data: equipamentoData,
@@ -29,7 +29,7 @@ export class equipamentoPersistence {
     }
   }
 
-  async findById(id: bigint) {
+  async findById(id: number) {
     try {
       const equipamento = await this.prisma.equipamento.findUnique({
         where: { idequipamento: id },
@@ -41,7 +41,7 @@ export class equipamentoPersistence {
     }
   }
 
-  async update(id: bigint, equipamentoData: { equipamentonome?: string; equipamentostatus?: number }) {
+  async update(id: number, equipamentoData: Prisma.equipamentoUpdateInput) {
     try {
       const updatedEquipamento = await this.prisma.equipamento.update({
         where: { idequipamento: id },
@@ -54,7 +54,7 @@ export class equipamentoPersistence {
     }
   }
 
-  async delete(id: bigint) {
+  async delete(id: number) {
     try {
       const deletedEquipamento = await this.prisma.equipamento.delete({
         where: { idequipamento: id },
@@ -66,4 +66,3 @@ export class equipamentoPersistence {
     }
   }
 }
-

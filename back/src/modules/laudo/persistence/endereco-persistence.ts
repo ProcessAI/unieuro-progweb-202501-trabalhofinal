@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export class EnderecoPersistence {
   private prisma: PrismaClient;
@@ -7,14 +7,7 @@ export class EnderecoPersistence {
     this.prisma = new PrismaClient();
   }
   
-  async create(enderecoData: {
-    enderecoendereco: string;
-    enderecocep: string;
-    enderecolat?: number;
-    enderecolon?: number;
-    enderecostatus?: number;
-    idsede: number;
-  }) {
+  async create(enderecoData: Prisma.enderecoCreateInput) {
     try {
       const endereco = await this.prisma.endereco.create({
         data: enderecoData,
@@ -48,17 +41,7 @@ export class EnderecoPersistence {
     }
   }
   
-  async update(
-    id: number,
-    enderecoData: {
-      enderecoendereco?: string;
-      enderecocep?: string;
-      enderecolat?: number;
-      enderecolon?: number;
-      enderecostatus?: number;
-      idsede?: number;
-    }
-  ) {
+  async update(id: number, enderecoData: Prisma.enderecoUpdateInput) {
     try {
       const updatedEndereco = await this.prisma.endereco.update({
         where: { idendereco: id },

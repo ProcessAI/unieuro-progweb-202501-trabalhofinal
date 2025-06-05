@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export class TipoEquipamentoPersistence {
   private prisma: PrismaClient;
@@ -7,9 +7,7 @@ export class TipoEquipamentoPersistence {
     this.prisma = new PrismaClient();
   }
 
-  async create(tipoEquipamentoData: {
-    tipoeqnome: string;
-  }) {
+  async create(tipoEquipamentoData: Prisma.tipoeqCreateInput) {
     try {
       const tipoEquipamento = await this.prisma.tipoeq.create({
         data: tipoEquipamentoData,
@@ -43,12 +41,7 @@ export class TipoEquipamentoPersistence {
     }
   }
 
-  async update(
-    id: number,
-    tipoEquipamentoData: {
-      tipoeqnome?: string;
-    }
-  ) {
+  async update(id: number, tipoEquipamentoData: Prisma.tipoeqUpdateInput) {
     try {
       const updatedTipoEquipamento = await this.prisma.tipoeq.update({
         where: { idtipoeq: id },

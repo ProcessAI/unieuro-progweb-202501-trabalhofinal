@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export class clientePersistence {
   private prisma: PrismaClient;
@@ -6,7 +6,8 @@ export class clientePersistence {
   constructor() {
     this.prisma = new PrismaClient();
   }
-  async create(clienteData: { clientenome: string; clientestatus?: number }) {
+
+  async create(clienteData: Prisma.clienteCreateInput) {
     try {
       const cliente = await this.prisma.cliente.create({
         data: clienteData,
@@ -17,6 +18,7 @@ export class clientePersistence {
       throw error;
     }
   }
+
   async findAll() {
     try {
       const clientes = await this.prisma.cliente.findMany();
@@ -26,6 +28,7 @@ export class clientePersistence {
       throw error;
     }
   }
+
   async findById(id: number) {
     try {
       const cliente = await this.prisma.cliente.findUnique({
@@ -37,7 +40,8 @@ export class clientePersistence {
       throw error;
     }
   }
-  async update(id: number, clienteData: { clientenome?: string; clientestatus?: number }) {
+
+  async update(id: number, clienteData: Prisma.clienteUpdateInput) {
     try {
       const updatedCliente = await this.prisma.cliente.update({
         where: { idcliente: id },
@@ -49,6 +53,7 @@ export class clientePersistence {
       throw error;
     }
   }
+
   async delete(id: number) {
     try {
       const deletedCliente = await this.prisma.cliente.delete({
@@ -60,4 +65,4 @@ export class clientePersistence {
       throw error;
     }
   }
-};
+}
