@@ -145,7 +145,7 @@ O OBJETIVO DESSA ANOTAÇÃO É A CRIAÇÃO DO AMBIENTE E CONFIGURAÇÃO DO AMBIE
 
     use o comando: npm install axios
 
-8 - CONFIGURAR O TSCONFIG: Não esquecer de usar o chagpt para verificar se a configuraçãofoi corre ao colocar esse cara no tsconfig.jon gerado pelo React
+8 - CONFIGURAR O TSCONFIG: Não esquecer de usar o chagpt para verificar se a configuração foi configurada corretamente. Esse cara no tsconfig.jon gerado pelo React
 
         "compilerOptions": {
             "baseUrl": "src",
