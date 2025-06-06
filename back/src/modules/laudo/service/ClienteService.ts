@@ -15,7 +15,9 @@ export class ClienteService{
   }
 
   async listarCliente(){
-    const listCliente = await this.clientePersistence.findAll(); 
+    const listCliente = await this.clientePersistence.findAll();
+    
+    console.log(typeof(listCliente));
     return listCliente;
   };
 
