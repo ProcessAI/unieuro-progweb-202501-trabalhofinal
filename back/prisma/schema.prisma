@@ -1,0 +1,28 @@
+// back/prisma/schema.prisma
+
+// Este é o bloco do "gerador" do Prisma Client.
+// Ele especifica que queremos gerar o cliente para TypeScript/JavaScript.
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"] // ADICIONE ESTA LINHA: Ativa o suporte a múltiplos esquemas
+}
+
+// ESTE É O BLOCO "DATASOURCE" QUE PRECISA ESTAR NO SEU ARQUIVO!
+// Ele define como o Prisma se conecta ao seu banco de dados.
+// Ele usa a variável de ambiente DATABASE_URL que você configurou no seu .env.
+datasource db {
+  provider = "postgresql" // Confirme que seu banco é PostgreSQL
+  url      = env("DATABASE_URL") // Lê a URL de conexão do seu arquivo .env
+  schemas  = ["laudo"] // ADICIONE ESTA LINHA: Informa ao Prisma qual esquema(s) ele deve usar
+}
+
+// Seu modelo TipoLaudo, que define a estrutura da tabela no banco de dados.
+model TipoLaudo {
+  idtipolaudo     Int     @id @default(autoincrement())
+  tipolaudonome   String  @db.VarChar(50)
+  tipolaudotemplate String? // Opcional, pode ser nulo
+
+  @@map("tipolaudo") // Mapeia para o nome real da tabela no banco de dados
+  @@schema("laudo") // Mapeia para o esquema 'laudo' no PostgreSQL
+}
+

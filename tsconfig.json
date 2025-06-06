@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    // A versão do TypeScript não é definida aqui, mas sim no package.json ou na instalação do TypeScript.
+    // Removido "version" daqui para evitar o erro de estrutura.
+
+    "target": "ES2022", // Use uma versão moderna do JavaScript
+    "module": "NodeNext", // Essencial para Node.js com ES Modules
+    "moduleResolution": "NodeNext", // Para resolução de módulos do Node.js
+    "esModuleInterop": true, // ESSENCIAL para a interoperabilidade de importações (resolve os erros de express/cors)
+    "strict": true, // Boas práticas para o TypeScript
+    "skipLibCheck": true, // Ajuda a ignorar problemas de tipo em bibliotecas externas
+    "forceConsistentCasingInFileNames": true, // Garante nomes de arquivos consistentes (evita problemas em diferentes OS)
+    "outDir": "./dist" // Onde os arquivos JavaScript compilados serão colocados
+  },
+  "include": [
+    "back/**/*" // Inclui todos os arquivos .ts dentro da pasta 'back' e subpastas
+  ],
+  "exclude": [
+    "node_modules", // Exclui a pasta node_modules da compilação
+    "front" // Exclui a pasta 'front' se ela não for parte do backend TypeScript
+  ]
+}
