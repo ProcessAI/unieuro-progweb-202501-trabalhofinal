@@ -3,7 +3,7 @@ import express, { json,Request,Response } from "express";
 
 /* importando todas as rotas criadas em routes */
 
-import router from "../cliente/routes/RouteCliente"
+import router from "../laudo/routes/RouteCliente"
 
 
 /* materializando um objeto do nosso Servidor express */
