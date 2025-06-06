@@ -7,8 +7,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model cliente {
-  idcliente     BigInt @id @default(autoincrement())
+  idcliente     Int @id @default(autoincrement())
   clientenome   String @db.VarChar(50)
   clientestatus Int?   @default(0)
   sede          sede[]
@@ -59,7 +60,7 @@ model sede {
   idsede         Int           @id @default(autoincrement())
   sedenome       String        @db.VarChar(50)
   sedestatus     Int           @default(0)
-  idcliente      BigInt
+  idcliente      Int
   sededtinclusao DateTime?     @default(now()) @db.Date
   endereco       endereco[]
   equipamento    equipamento[]
