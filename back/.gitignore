@@ -31,3 +31,7 @@
 
 # TypeScript 
 *.tsbuildinfo
+
+# Ignorando o tsconfig.json
+
+tsconfig.json
