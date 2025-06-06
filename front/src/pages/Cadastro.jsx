@@ -1,8 +1,11 @@
 // src/pages/Cadastro.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Cadastro.css';
 
 export default function Cadastro() {
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="top-logo">
@@ -11,7 +14,7 @@ export default function Cadastro() {
 
       <header>
         <span className="menu-label">CADASTRO</span>
-        <button className="logout-btn">SAIR</button>
+        <button className="logout-btn" onClick={() => navigate('/')}>SAIR</button>
       </header>
 
       <div className="container">
@@ -23,10 +26,7 @@ export default function Cadastro() {
             <input type="text" placeholder="CPF" required />
             <input type="text" placeholder="Telefone Celular" required />
             <input type="email" placeholder="E-mail" required />
-            <input type="text" placeholder="CPF" required />
-            <input type="text" placeholder="Telefone Celular" required />
-            <input type="email" placeholder="E-mail" required />
-            <button type="submit" className="btn">cadastrar</button>
+            <button type="submit" className="btn">Cadastrar</button>
           </form>
         </div>
         <div className="illustration">
