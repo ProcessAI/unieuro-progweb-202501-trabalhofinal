@@ -30,3 +30,9 @@ node_modules
 
 # ignorando tsconfig.json
 tsconfig.json
+
+# ignorando .eslintrc.json
+.eslintrc.json
+
+# ignorando .prettierrc.json
+.prettierrc.json
