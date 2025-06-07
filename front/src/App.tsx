@@ -1,210 +1,252 @@
 import React, { useState } from 'react';
+import './index.css';
 
-const TiposDeLaudos = () => {
-  const [nome, setNome] = useState('');
+export default function App() {
+  /* -------------------------------------------------------------------- */
+  /* ESTADO                                                               */
+  /* -------------------------------------------------------------------- */
   const [laudos, setLaudos] = useState([
-    { id: 1, nome: 'Laudo Técnico' },
-    { id: 2, nome: 'Laudo de Garantia' },
+    { id: 1, descricao: 'Vistoria geral da instalação A', os: 'OS12345' },
+    { id: 2, descricao: 'Inspeção de segurança predial', os: 'OS67890' },
   ]);
 
-  const handleAtualizar = () => {
-    if (nome.trim()) {
-      const novoId = laudos.length + 1;
-      setLaudos([...laudos, { id: novoId, nome }]);
-      setNome('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [laudoToDelete, setLaudoToDelete] = useState<number | null>(null);
+  const [editingLaudo, setEditingLaudo] = useState<any>(null);
+  const [form, setForm] = useState({
+    descricao: '',
+    markdown: '',
+    data: '',
+    status: '',
+    tipoLaudo: '',
+    tipoInstalacao: '',
+    osClickup: '',
+  });
+
+  /* -------------------------------------------------------------------- */
+  /* HANDLERS                                                             */
+  /* -------------------------------------------------------------------- */
+  const openNovoLaudo = () => {
+    setEditingLaudo(null);
+    setForm({
+      descricao: '',
+      markdown: '',
+      data: '',
+      status: '',
+      tipoLaudo: '',
+      tipoInstalacao: '',
+      osClickup: '',
+    });
+    setModalOpen(true);
+  };
+
+  const openEditarLaudo = (laudo: any) => {
+    setEditingLaudo(laudo);
+    setForm({
+      descricao: laudo.descricao,
+      markdown: '',
+      data: '',
+      status: 'concluido',
+      tipoLaudo: 'Elétrico',
+      tipoInstalacao: 'Residencial',
+      osClickup: laudo.os,
+    });
+    setModalOpen(true);
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = () => {
+    if (editingLaudo) {
+      // atualização
+      setLaudos(prev =>
+        prev.map(l =>
+          l.id === editingLaudo.id ? { ...l, ...form, os: form.osClickup } : l
+        )
+      );
+    } else {
+      // novo laudo
+      setLaudos(prev => [
+        ...prev,
+        { id: Date.now(), descricao: form.descricao, os: form.osClickup },
+      ]);
+    }
+    setModalOpen(false);
+  };
+
+  const confirmExcluirLaudo = (id: number) => {
+    setLaudoToDelete(id);
+    setConfirmDeleteOpen(true);
+  };
+
+  const handleDelete = () => {
+    if (laudoToDelete !== null) {
+      setLaudos(prev => prev.filter(l => l.id !== laudoToDelete));
+      setConfirmDeleteOpen(false);
+      setLaudoToDelete(null);
     }
   };
 
-  const handleEditar = (id: number) => {
-    const laudo = laudos.find((l) => l.id === id);
-    if (laudo) setNome(laudo.nome);
-  };
-
-  const handleExcluir = (id: number) => {
-    setLaudos(laudos.filter((l) => l.id !== id));
-  };
-
+  /* -------------------------------------------------------------------- */
+  /* RENDER                                                               */
+  /* -------------------------------------------------------------------- */
   return (
-    <div style={{ width: '100vw', minHeight: '100vh', backgroundColor: '#f1f3f5' }}>
-      {/* Barra amarela no topo */}
-      <header
-        style={{
-          width: '100%',
-          backgroundColor: '#ffc107',
-          padding: '1rem 2rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          boxSizing: 'border-box',
-        }}
-      >
-        <nav style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-          <img
-            src="/logo.png"
-            alt="Logo"
-            style={{ height: '40px', objectFit: 'contain' }}
-          />
-          <a href="#" style={{ fontWeight: 'bold', textDecoration: 'none', color: '#000' }}>
-            HOME
-          </a>
-          <a href="#" style={{ fontWeight: 'bold', textDecoration: 'none', color: '#000' }}>
-            CLIENTES
-          </a>
-          <a href="#" style={{ fontWeight: 'bold', textDecoration: 'none', color: '#000' }}>
-            EQUIPAMENTOS
-          </a>
-        </nav>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button
-            style={{
-              backgroundColor: '#000',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '0.5rem 1rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-            }}
-          >
-            SAIR
+    <>
+      {/* Navbar */}
+      <nav className="navbar">
+        <div className="navbar-left">
+          <img src="/logo.png" alt="Logo" style={{ height: '32px' }} />
+          <div className="nav-links">
+            <a href="#">HOME</a>
+            <a href="#">CLIENTES</a>
+            <a href="#">EQUIPAMENTOS</a>
+          </div>
+        </div>
+
+        <div className="navbar-right">
+          <span className="user-name">Rafael Marconi</span>
+          <div className="user-icon" />
+          <button className="btn-black">SAIR</button>
+        </div>
+      </nav>
+
+      {/* Conteúdo principal */}
+      <div className="app-container">
+        <div className="laudos-header">
+          <h1 className="laudos-title">Laudos</h1>
+
+          <button className="btn-yellow" onClick={openNovoLaudo}>
+            Novo Laudo
           </button>
         </div>
-      </header>
 
-      {/* Conteúdo da página */}
-      <main
-        style={{
-          padding: '2rem 4rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem',
-        }}
-      >
-        <section>
-          <h2
-            style={{
-              fontSize: '2rem',
-              fontWeight: 'bold',
-              color: '#1a1a1a',
-              textAlign: 'center',
-              marginBottom: '0.5rem',
-            }}
-          >
-            Tipos de Laudos
-          </h2>
-          <p style={{ textAlign: 'center', color: '#555' }}>
-            Cadastre, edite ou remova os tipos de laudo utilizados no sistema.
-          </p>
-        </section>
-
-        <section
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '1rem',
-            flexWrap: 'wrap',
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Nome do tipo de laudo"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            style={{
-              padding: '0.75rem 1rem',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-              width: '300px',
-              fontSize: '1rem',
-            }}
-          />
-          <button
-            onClick={handleAtualizar}
-            style={{
-              padding: '0.75rem 1.5rem',
-              backgroundColor: '#ffc107',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '1rem',
-            }}
-          >
-            Cadastrar
-          </button>
-        </section>
-
-        <section style={{ width: '100%', overflowX: 'auto' }}>
-          <table
-            style={{
-              width: '100%',
-              minWidth: '800px',
-              backgroundColor: '#fff',
-              borderCollapse: 'collapse',
-              borderRadius: '8px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-            }}
-          >
-            <thead>
-              <tr style={{ backgroundColor: '#3B3B3B' }}>
-                <th style={{ textAlign: 'left', padding: '1rem', color: '#fff' }}>ID</th>
-                <th style={{ textAlign: 'left', padding: '1rem', color: '#fff' }}>Nome</th>
-                <th style={{ textAlign: 'left', padding: '1rem', color: '#fff' }}>Ações</th>
+        <table>
+          <thead>
+            <tr>
+              <th>Descrição</th>
+              <th>OS Clickup</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {laudos.map(laudo => (
+              <tr key={laudo.id}>
+                <td>{laudo.descricao}</td>
+                <td>{laudo.os}</td>
+                <td>
+                  <button
+                    className="btn-yellow"
+                    onClick={() => openEditarLaudo(laudo)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="btn-red"
+                    onClick={() => confirmExcluirLaudo(laudo.id)}
+                  >
+                    Excluir
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {laudos.map((laudo) => (
-                <tr
-                  key={laudo.id}
-                  style={{
-                    borderBottom: '1px solid #eee',
-                    backgroundColor: '#3B3B3B',
-                    color: '#fff',
-                  }}
-                >
-                  <td style={{ padding: '1rem' }}>{laudo.id}</td>
-                  <td style={{ padding: '1rem' }}>{laudo.nome}</td>
-                  <td style={{ padding: '1rem' }}>
-                    <button
-                      onClick={() => handleEditar(laudo.id)}
-                      style={{
-                        backgroundColor: '#ffc107',
-                        color: '#000',
-                        border: 'none',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '4px',
-                        marginRight: '0.5rem',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      onClick={() => handleExcluir(laudo.id)}
-                      style={{
-                        backgroundColor: '#dc3545',
-                        color: '#fff',
-                        border: 'none',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      Excluir
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      </main>
-    </div>
-  );
-};
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-export default TiposDeLaudos;
+      {/* Modal de novo/editar */}
+      {modalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h2>{editingLaudo ? 'Editar Laudo' : 'Novo Laudo'}</h2>
+              <button
+                className="modal-close"
+                onClick={() => setModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <input
+              type="text"
+              name="descricao"
+              placeholder="Descrição"
+              value={form.descricao}
+              onChange={handleChange}
+            />
+            <textarea
+              name="markdown"
+              placeholder="HTML Markdown"
+              value={form.markdown}
+              onChange={handleChange}
+            />
+            <input
+              type="date"
+              name="data"
+              value={form.data}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="status"
+              placeholder="Status"
+              value={form.status}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="tipoLaudo"
+              placeholder="Tipo de Laudo"
+              value={form.tipoLaudo}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="tipoInstalacao"
+              placeholder="Tipo de Instalação"
+              value={form.tipoInstalacao}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="osClickup"
+              placeholder="OS Clickup"
+              value={form.osClickup}
+              onChange={handleChange}
+            />
+
+            <button className="btn-yellow" onClick={handleSubmit}>
+              {editingLaudo ? 'Atualizar' : 'Salvar'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmação de exclusão */}
+      {confirmDeleteOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Tem certeza que deseja excluir?</h3>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+              <button className="btn-red" onClick={handleDelete}>
+                Sim
+              </button>
+              <button
+                className="btn-black"
+                onClick={() => setConfirmDeleteOpen(false)}
+              >
+                Não
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

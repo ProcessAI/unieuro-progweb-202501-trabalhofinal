@@ -1,11 +1,13 @@
+/* -------------------------------------------------------------------------- */
+/* CSS GLOBAL – VISUAL PADRÃO                                                */
+/* -------------------------------------------------------------------------- */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: #213547;
+  background-color: #f5f6f8;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,56 +15,224 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* -------------------------------------------------------------------------- */
+/* NAVBAR                                                                     */
+/* -------------------------------------------------------------------------- */
+.navbar {
+  background-color: #facc15;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* --- Lado esquerdo (logo + links) --------------------------------------- */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navbar-left .logo {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.navbar-left .nav-links a {
+  font-weight: 600;
+  color: #000;
+  text-decoration: none;
+  margin-right: 20px;
+}
+.navbar-left .nav-links a:last-child {
+  margin-right: 0;
+}
+
+/* --- Lado direito (user + sair) ---------------------------------------- */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-right .user-name {
+  color: #000;
+}
+
+.navbar-right .user-icon {
+  width: 20px;
+  height: 20px;
+  background-color: #000;
+  border-radius: 50%;
+}
+
+/* -------------------------------------------------------------------------- */
+/* CABEÇALHO "LAUDOS"                                                         */
+/* -------------------------------------------------------------------------- */
+.laudos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.5rem 0 1rem;
+}
+
+/* TÍTULO "Laudos" afastado da borda */
+.laudos-title {
+  padding-left: 24px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* LINKS, TÍTULOS, BOTÕES GENÉRICOS                                           */
+/* -------------------------------------------------------------------------- */
+a {
+  font-weight: 500;
+  color: #213547;
+  text-decoration: none;
+}
+a:hover {
+  color: #555;
+}
+
+h1 {
+  font-size: 1.8rem;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* --- Base de qualquer botão -------------------------------------------- */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
+  transition: background-color 0.25s, border-color 0.25s;
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* --- Botão amarelo (Novo Laudo / Editar) -------------------------------- */
+.btn-yellow {
+  background-color: #facc15;
+  color: #000;
+}
+.btn-yellow:hover {
+  background-color: #eab308;
+}
+
+/* --- Botão preto (SAIR, Cancelar) --------------------------------------- */
+.btn-black {
+  background-color: #000;
+  color: #fff;
+}
+.btn-black:hover {
+  background-color: #1f1f1f;
+}
+
+/* --- Botão vermelho (Excluir) ------------------------------------------ */
+.btn-red {
+  background-color: #e53935;
+  color: #fff;
+}
+.btn-red:hover {
+  background-color: #c62828;
+}
+
+/* -------------------------------------------------------------------------- */
+/* TABELA                                                                     */
+/* -------------------------------------------------------------------------- */
+table {
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+th,
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+th {
+  background-color: #f3f4f6;
+  color: #111827;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------- */
+/* INPUTS                                                                     */
+/* -------------------------------------------------------------------------- */
+input[type='text'],
+input[type='date'],
+textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+  color: #000;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #999;
+}
+
+/* -------------------------------------------------------------------------- */
+/* MODAL (sobreposição + caixa)                                              */
+/* -------------------------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #ffffff;
+  width: 450px;
+  max-width: 90%;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.modal-header h2 {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #1a1a1a;
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #555;
 }
