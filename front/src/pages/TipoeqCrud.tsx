@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
-import {useForm}  from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { tipoEquipamentoSchema } from '../hooks/tipoEquipamentoSchema'; // ajuste conforme seu projeto
+import { tipoEquipamentoSchema } from '../hooks/tipoEquipamentoSchema';
+import {
+  fetchTipoeqs,
+  createTipoeq,
+  updateTipoeq,
+  deleteTipoeq,
+  Tipoeq
+} from '../service/tipoeq-api'; // novo nome
 import './TipoeqCrud.css';
 import toast from 'react-hot-toast';
-
-interface TipoEq {
-  idtipoeq: number;
-  tipoeqnome: string;
-}
 
 type TipoEqForm = {
   tipoeqnome: string;
 };
 
 const TipoeqCrud: React.FC = () => {
-  const [tipos, setTipos] = useState<TipoEq[]>([]);
+  const [tipos, setTipos] = useState<Tipoeq[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,29 +26,53 @@ const TipoeqCrud: React.FC = () => {
     resolver: yupResolver(tipoEquipamentoSchema),
   });
 
-  const onSubmit = (data: TipoEqForm) => {
+  // Carregar dados do banco ao iniciar
+  useEffect(() => {
+    async function loadData() {
+      const data = await fetchTipoeqs();
+      setTipos(data);
+    }
+    loadData();
+  }, []);
+
+  const onSubmit = async (data: TipoEqForm) => {
     if (isEditing && editId !== null) {
-      setTipos(tipos.map(t => t.idtipoeq === editId ? { ...t, tipoeqnome: data.tipoeqnome } : t));
+      const updated = await updateTipoeq(editId, data.tipoeqnome);
+      if (updated) {
+        setTipos(tipos.map(t => t.idtipoeq === editId ? updated : t));
+        toast.success('Equipamento atualizado com sucesso!');
+      } else {
+        toast.error('Erro ao atualizar equipamento.');
+      }
       setIsEditing(false);
       setEditId(null);
-      toast.success('Equipamento atualizado com sucesso!');
     } else {
-      setTipos([...tipos, { idtipoeq: Date.now(), tipoeqnome: data.tipoeqnome }]);
-      toast.success('Equipamento inserido com sucesso!');
+      const created = await createTipoeq(data.tipoeqnome);
+      if (created) {
+        setTipos([...tipos, created]);
+        toast.success('Equipamento inserido com sucesso!');
+      } else {
+        toast.error('Erro ao inserir equipamento.');
+      }
     }
     reset();
   };
 
-  const handleEdit = (t: TipoEq) => {
+  const handleEdit = (t: Tipoeq) => {
     setIsEditing(true);
     setEditId(t.idtipoeq);
     setValue('tipoeqnome', t.tipoeqnome);
     toast('Modo edição ativado', { icon: '✏️' });
   };
 
-  const handleDelete = (id: number) => {
-    setTipos(tipos.filter(t => t.idtipoeq !== id));
-    toast.success('Equipamento deletado com sucesso!');
+  const handleDelete = async (id: number) => {
+    const success = await deleteTipoeq(id);
+    if (success) {
+      setTipos(tipos.filter(t => t.idtipoeq !== id));
+      toast.success('Equipamento deletado com sucesso!');
+    } else {
+      toast.error('Erro ao deletar equipamento.');
+    }
   };
 
   const filteredTipos = tipos.filter(t =>

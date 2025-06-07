@@ -1,19 +1,22 @@
 {
-  "name": "backend",
+  "name": "back",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "",
+  "main": "src/modules/router/app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx watch src/modules/router/app.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "type": "commonjs",
   "devDependencies": {
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.24",
     "prisma": "^6.9.0",
+    "tsx": "^4.19.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },

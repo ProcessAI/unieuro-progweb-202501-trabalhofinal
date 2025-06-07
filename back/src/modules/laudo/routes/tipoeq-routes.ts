@@ -1,14 +1,18 @@
 import { Router, Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-import {create,findAll,findById,update,deletetipoeq} from '../service/tipoeqservice'
+import {
+  create,
+  findAll,
+  findById,
+  update,
+  deleteTipoEquipamento
+} from '../service/tipoeq-service';
 
-const prisma = new PrismaClient();
 const router = Router();
 
 // Listar todos os tipos de equipamento
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const tipos = findAll ()
+    const tipos = await findAll();
     res.json(tipos);
   } catch (error) {
     res.status(500).json({ error: 'Erro ao buscar tipos de equipamento' });
@@ -19,11 +23,11 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
 router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   const id = Number(req.params.id);
   try {
-    const tipos = findById (id)
-    if (!tipos) {
+    const tipo = await findById(id);
+    if (!tipo) {
       res.status(404).json({ error: 'Tipo não encontrado' });
     } else {
-      res.json(tipos);
+      res.json(tipo);
     }
   } catch (error) {
     res.status(500).json({ error: 'Erro ao buscar tipo' });
@@ -34,7 +38,7 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
 router.post('/', async (req: Request, res: Response): Promise<void> => {
   const { tipoeqnome } = req.body;
   try {
-    const novoTipo = create (tipoeqnome)
+    const novoTipo = await create({ tipoeqnome });
     res.status(201).json(novoTipo);
   } catch (error) {
     res.status(500).json({ error: 'Erro ao criar tipo' });
@@ -46,7 +50,7 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
   const id = Number(req.params.id);
   const { tipoeqnome } = req.body;
   try {
-    const tipoAtualizado = update (id,tipoeqnome)
+    const tipoAtualizado = await update(id, { tipoeqnome });
     res.json(tipoAtualizado);
   } catch (error) {
     res.status(500).json({ error: 'Erro ao atualizar tipo' });
@@ -57,7 +61,7 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
 router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
   const id = Number(req.params.id);
   try {
-    deletetipoeq (id)
+    await deleteTipoEquipamento(id);
     res.json({ message: 'Tipo deletado com sucesso' });
   } catch (error) {
     res.status(500).json({ error: 'Erro ao deletar tipo' });
