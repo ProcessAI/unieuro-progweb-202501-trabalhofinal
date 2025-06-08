@@ -86,12 +86,9 @@ model tipolaudo {
   laudo             laudo[]
 }
 
-
 model usuario {
-  id            Int      @id @default(autoincrement())
-  nome          String
-  email         String   @unique
-  senha_hash    String
-  data_cadastro DateTime @default(now())
-  cpf           String   @db.Char(11)
+  idusuario     Int    @id(map: "usuario_pk") @default(autoincrement())
+  usuarioemail  String @db.VarChar(100)
+  usuariosenha  String @db.VarChar(100)
+  usuariostatus Int    @default(0)
 }
