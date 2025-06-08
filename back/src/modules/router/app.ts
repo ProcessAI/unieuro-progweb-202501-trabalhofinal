@@ -1,20 +1,12 @@
 import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import userRoutes from '../login/routes/Route_user';
+import protegidoRoutes from '../login/routes/Route_teste';
 
-// importe o router real, não o service
-import userRoutes from '../login/routes/user-routes';
-
-dotenv.config();
 
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 app.use('/auth', userRoutes);
+app.use('/api', protegidoRoutes); // ou o path que quiser
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+export default app;
