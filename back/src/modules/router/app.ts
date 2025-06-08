@@ -1,6 +1,6 @@
 import express from 'express';
-import userRoutes from '../login/routes/Route_user';
-import protegidoRoutes from '../login/routes/Route_teste';
+import userRoutes from '../login/routes/usuario-routes';
+import protegidoRoutes from '../login/routes/auth-middleware-routes';
 
 
 const app = express();

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { createUser, findUserByEmail } from '../persistence/UserRepository';
+import { createUser, findUserByEmail } from '../persistence/usuario-persistence';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 

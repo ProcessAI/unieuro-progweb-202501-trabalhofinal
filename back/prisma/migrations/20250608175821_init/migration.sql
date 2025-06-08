@@ -90,18 +90,13 @@ CREATE TABLE "tipolaudo" (
 
 -- CreateTable
 CREATE TABLE "usuario" (
-    "id" SERIAL NOT NULL,
-    "nome" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "senha_hash" TEXT NOT NULL,
-    "data_cadastro" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "cpf" CHAR(11) NOT NULL,
+    "idusuario" SERIAL NOT NULL,
+    "usuarioemail" VARCHAR(100) NOT NULL,
+    "usuariosenha" VARCHAR(100) NOT NULL,
+    "usuariostatus" INTEGER NOT NULL DEFAULT 0,
 
-    CONSTRAINT "usuario_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "usuario_pk" PRIMARY KEY ("idusuario")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "usuario_email_key" ON "usuario"("email");
 
 -- AddForeignKey
 ALTER TABLE "endereco" ADD CONSTRAINT "endereco_idsede_fkey" FOREIGN KEY ("idsede") REFERENCES "sede"("idsede") ON DELETE NO ACTION ON UPDATE NO ACTION;
