@@ -57,7 +57,7 @@ apenas uma revisão:
 
     git log -> Mostra o último commit feito e suas informações 
  
-    git log online -> Mostra cada commit feito em linhas contendo informações r
+    git log online -> Mostra cada commit feito em linhas contendo informações 
 
     Opções úteis
 
