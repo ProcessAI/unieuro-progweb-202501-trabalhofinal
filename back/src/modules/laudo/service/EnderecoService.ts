@@ -43,48 +43,48 @@ export class EnderecoService {
 
   // Criar novo endereço
   async criarEndereco({
-    enderecoclient,
-    cepclient,
-    latclient,
-    lonclient,
-    statusclient,
-    sedeclient
+    enderecoend,
+    enderecocep,
+    enderecolat,
+    enderecolon,
+    enderecostatus,
+    enderecosede
   }: {
-    enderecoclient: string;
-    cepclient: string;
-    latclient?: number;
-    lonclient?: number;
-    statusclient?: number;
-    sedeclient: number;
+    enderecoend: string;
+    enderecocep: string;
+    enderecolat?: number;
+    enderecolon?: number;
+    enderecostatus?: number;
+    enderecosede: number;
   }) {
     try {
-      const cepLimpo = (cepclient ?? '').replace(/\D/g, '');
-      const idsede = Number(sedeclient);
+      const cepLimpo = (enderecocep ?? '').replace(/\D/g, '');
+      const idsede = Number(enderecosede);
 
 
       // Fazendo Validações dos parâmetros com if, else if e else, um se encadiado
-      if (sedeclient === undefined || isNaN(idsede)) {
-        throw new Error('O campo idsede é obrigatório');
+      if (enderecosede === undefined || isNaN(idsede)) {
+        throw new Error('O campo enderecosede é obrigatório');
       }
 
-      if (!enderecoclient) {
-        throw new Error('O campo enderecoclient é obrigatório');
+      if (!enderecocep) {
+        throw new Error('O campo enderecocep é obrigatório');
       } else if (!cepLimpo) {
-        throw new Error('O campo CEP é obrigatório');
+        throw new Error('O campo cep é obrigatório');
       } else if (cepLimpo.length !== 8) {
         throw new Error('CEP inválido. Use o formato 00000000');
-      } else if (latclient !== undefined && (latclient < -90 || latclient > 90)) {
+      } else if (enderecolat !== undefined && (enderecolat < -90 || enderecolat > 90)) {
         throw new Error('Latitude inválida.');
-      } else if (lonclient !== undefined && (lonclient < -180 || lonclient > 180)) {
+      } else if (enderecolon !== undefined && (enderecolon < -180 || enderecolon > 180)) {
         throw new Error('Longitude inválida.');
       }
 
       const crendereco = await this.enderecoPersistence.create({
-        enderecoendereco: enderecoclient,
+        enderecoendereco: enderecoend,
         enderecocep: cepLimpo,
-        enderecolat: latclient,
-        enderecolon: lonclient,
-        enderecostatus: statusclient,
+        enderecolat: enderecolat,
+        enderecolon: enderecolon,
+        enderecostatus: enderecostatus,
         idsede: idsede
       });
 
@@ -100,19 +100,19 @@ export class EnderecoService {
   async atualizarEndereco(
     idclient: number,
     {
-      enderecoclient,
-      cepclient,
-      latclient,
-      lonclient,
-      statusclient,
-      sedeclient
+      enderecoend,
+      enderecocep,
+      enderecolat,
+      enderecolon,
+      enderecostatus,
+      enderecosede
     }: {
-      enderecoclient?: string;
-      cepclient?: string;
-      latclient?: number;
-      lonclient?: number;
-      statusclient?: number;
-      sedeclient?: number;
+      enderecoend?: string;
+      enderecocep?: string;
+      enderecolat?: number;
+      enderecolon?: number;
+      enderecostatus?: number;
+      enderecosede?: number;
     }
   ) {
     try {
@@ -122,15 +122,15 @@ export class EnderecoService {
       // Se cepclient tiver um valor válido, ele é usado diretamente.
       // Se cepclient for null ou undefined, então ' ' (string vazia) é utilizada como padrão.
       
-      const cepLimpo = (cepclient ?? '').replace(/\D/g, ''); // esse replace remove tudo aqui que não é número
-      const idsede = Number(sedeclient);
+      const cepLimpo = (enderecocep ?? '').replace(/\D/g, ''); // esse replace remove tudo aqui que não é número
+      const idsede = Number(enderecosede);
 
       const atendereco = await this.enderecoPersistence.update(idclient, {
-        enderecoendereco: enderecoclient,
+        enderecoendereco: enderecoend,
         enderecocep: cepLimpo,
-        enderecolat: latclient,
-        enderecolon: lonclient,
-        enderecostatus: statusclient,
+        enderecolat: enderecolat,
+        enderecolon: enderecolon,
+        enderecostatus: enderecostatus,
         idsede: idsede
       });
 

@@ -57,7 +57,11 @@ apenas uma revisão:
 
     git log -> Mostra o último commit feito e suas informações 
  
+<<<<<<< HEAD
     git log online -> Mostra cada commit feito em linhas contendo informações r
+=======
+    git log online -> Mostra cada commit feito em linhas contendo informações 
+>>>>>>> laudinho-3
 
     Opções úteis
 
