@@ -1,0 +1,64 @@
+name: Deploy para Servidor SSH
+
+on:
+    push:
+        branches: [ main ]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        
+        steps:
+        - name: Fazer checkout do código
+          uses: actions/checkout@v4
+            
+        - name: Configurar Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '22'
+                
+        - name: Instalar e buildar frontend
+          run: |
+            cd front
+            npm i
+            npm run build
+                
+        - name: Buildar backend
+          run: |
+            cd back
+            npm i
+            npm run build
+                
+        - name: Copiar frontend para servidor
+          uses: appleboy/scp-action@v0.1.4
+          with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            key: ${{ secrets.SSH_PASSWORD }}
+            port: 22
+            source: "front/build/"
+            target: "/dados/frontend/"
+            strip_components: 2
+            
+        - name: Copiar backend para servidor
+          uses: appleboy/scp-action@v0.1.4
+          with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            key: ${{ secrets.SSH_PASSWORD }}
+            port: 22
+            source: "back/dist/"
+            target: "/dados/backend/"
+            strip_components: 2
+            
+        - name: Reiniciar aplicação no servidor
+          uses: appleboy/ssh-action@v1.0.0
+          with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            key: ${{ secrets.SSH_PASSWORD }}
+            port: 22
+            script: |
+              pkill -f "node.*backend" || true
+              cd /dados/backend
+              nohup node index.js > app.log 2>&1 &
