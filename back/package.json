@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/modules/router/app.ts",
   "scripts": {
-    "dev": "tsx watch src/modules/router/app.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc"
   },
   "keywords": [],
