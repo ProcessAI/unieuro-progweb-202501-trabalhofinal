@@ -17,7 +17,7 @@ export class SedePersistence {
       const sede = await this.prisma.sede.create({
         data: {
           ...sedeData,
-          idcliente: BigInt(sedeData.idcliente), // conversão explícita
+          idcliente: Number(sedeData.idcliente), // conversão explícita
         },
       });
       return sede;
@@ -75,7 +75,7 @@ export class SedePersistence {
         data: {
           ...sedeData,
           idcliente: sedeData.idcliente
-            ? BigInt(sedeData.idcliente)
+            ? Number(sedeData.idcliente)
             : undefined,
         },
       });
@@ -101,7 +101,7 @@ export class SedePersistence {
   async findByClienteId(idcliente: bigint | number) {
     try {
       const sedes = await this.prisma.sede.findMany({
-        where: { idcliente: BigInt(idcliente) },
+        where: { idcliente: Number(idcliente) },
         include: {
           endereco: true,
           equipamento: true,

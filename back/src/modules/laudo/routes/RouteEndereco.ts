@@ -6,11 +6,20 @@ const service = new EnderecoService();
 
 enderecoRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const endereco = await service.criarEndereco(req.body);
-    res.status(201).json({
-      ...endereco,
-      idendereco: Number(endereco.idendereco)
+
+    const {enderecoendereco, enderecocep, enderecolat, enderecolon, enderecostatus, idsede }=req.body
+    const enderecoCriado = await service.criarEndereco({
+      enderecoend:enderecoendereco,
+      enderecocep:enderecocep,
+      enderecolat:enderecolat,
+      enderecolon:enderecolon,
+      enderecostatus:enderecostatus,
+      enderecosede:idsede
     });
+    
+    res.status(200).json(enderecoCriado)
+
+
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
@@ -27,10 +36,10 @@ enderecoRouter.get('/', async (req: Request, res: Response) => {
 
 enderecoRouter.get('/:id', async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
-    const endereco = await service.visualizarEndereco(id);
+    const idendereco = parseInt(req.params.id);
+    const endereco = await service.visualizarEndereco(idendereco);
     if (!endereco) {
-      return res.status(404).json({ error: "Endereço não encontrado" });
+      return res.status(404).json({ "Aviso": "Endereço não encontrado" });
     }
     res.status(200).json(endereco);
   } catch (error) {
@@ -55,7 +64,7 @@ enderecoRouter.put('/:id', async (req: Request, res: Response) => {
     
    
     if (!enderecoAtualizado) {
-      return res.status(404).json({ error: "Endereço não encontrado" });
+      return res.status(404).json({ "Aviso": "Endereço não encontrado" });
     }
     res.status(200).json(enderecoAtualizado);
   } catch (error) {

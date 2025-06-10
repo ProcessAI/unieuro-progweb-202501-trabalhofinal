@@ -3,12 +3,12 @@ POST http://localhost:3000/endereco
 Content-Type: application/json
 
 {
-  "enderecoclient": "Rua Exemplo, 123",
-  "cepclient": "12345678",
-  "lat": -23.5505,
-  "lon": -46.6333,
-  "status": 1,
-  "sedeclient": 1
+  "enderecoendereco": "Rua Exemplo, 123",
+  "enderecocep": "12345678",
+  "enderecolat": -23.5505,
+  "enderecolon": -46.6333,
+  "enderecostatus": 1,
+  "idsede": 2
 }
 
 
@@ -19,11 +19,11 @@ GET http://localhost:3000/endereco
 
 
 ### Buscar endereço por ID***ok
-GET http://localhost:3000/endereco/2
+GET http://localhost:3000/endereco/8
 
 
 ### Atualizar endereço***ok
-PUT http://localhost:3000/endereco/2
+PUT http://localhost:3000/endereco/8
 Content-Type: application/json
 
 {
@@ -32,11 +32,11 @@ Content-Type: application/json
   "enderecolat": -23.5505,
   "enderecolon": -46.6333,
   "enderecostatus": 1,
-  "idsede": 1
+  "idsede": 2
 }
 
 ### Deletar endereço***ok
-DELETE http://localhost:3000/endereco/2
+DELETE http://localhost:3000/endereco/8
 
 
 ### Listar sedes***ok
@@ -44,7 +44,7 @@ GET http://localhost:3000/sede
 
 
 ### Listar sedes por id***ok
-GET http://localhost:3000/sede/1
+GET http://localhost:3000/sede/3
 ok
 
 

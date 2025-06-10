@@ -1,6 +1,6 @@
 {
-  "name": "Node + Express + Prisma",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "name": "Node 22 + Express + Prisma",
+  "image": "node:22-bullseye",
   "features": {
     "ghcr.io/devcontainers/features/prisma:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
@@ -15,9 +15,12 @@
       ]
     }
   },
-  "forwardPorts": [3000, 5555,5432],
+  "forwardPorts": [3000, 5555, 5432],
   "remoteUser": "node",
   "mounts": [
     "source=${localEnv:HOME}/.npmrc,target=/home/node/.npmrc,type=bind,consistency=cached"
-  ]
+  ],
+  "containerEnv": {
+    "NODE_ENV": "development"
+  }
 }
