@@ -1,7 +1,7 @@
 /* Criando a camada de serviço */
 
 // importando classe da camada persistence para conexão com o banco de dados
-import { clientePersistence } from "../persistence/cliente-persistence";
+import { clientePersistence } from "../persistence/ClientePersistence";
 
 export class ClienteService{
 

@@ -1,4 +1,4 @@
-import { EnderecoPersistence } from '../persistence/enderecopersistance';
+import { EnderecoPersistence } from '../persistence/EnderecoPersistance';
 
 // Criando e exportando a classe EnderecoService
 export class EnderecoService {
@@ -130,7 +130,7 @@ export class EnderecoService {
         enderecocep: cepLimpo,
         enderecolat: latclient,
         enderecolon: lonclient,
-        enderecostatus: statusclient,
+        enderecostatus: sedeclient,
         idsede: idsede
       });
 
