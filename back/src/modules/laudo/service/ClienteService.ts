@@ -15,9 +15,7 @@ export class ClienteService{
   }
 
   async listarCliente(){
-    const listCliente = await this.clientePersistence.findAll();
-    
-    console.log(typeof(listCliente));
+    const listCliente = await this.clientePersistence.findAll(); 
     return listCliente;
   };
 
@@ -26,69 +24,38 @@ export class ClienteService{
     return viewCliente;
   };
 
-  // versão atualizada para as vallidações de criarCliente
-  async criarCliente(data: { nome: string; status: number }) {
-    const { nome, status } = data;
-  
-    // validações
-    if (!nome || typeof nome !== 'string') {
-      throw new Error("O campo 'nome' é obrigatório e deve ser uma string.");
-    }
-  
-    if (status !== 0 && status !== 1) {
-      throw new Error("O campo 'status' deve ser 0 (inativo) ou 1 (ativo).");
-    }
-  
-    // chama o método da persistência para inserir no banco
+  // utilizando a forma tradicional descrito na anotação
+  async criarCliente(data:{nome:string,status:number}) {
+    
+    const {nome,status} = data;
+
     const novoCliente = await this.clientePersistence.create({
+      clientenome:nome,
+      clientestatus:status,
+    })
+
+    console.log('Dados enviados à persistência de Clientes:', {
       clientenome: nome,
       clientestatus: status,
     });
-  
-    // apenas para debug: mostra os dados enviados
-    console.log('Cliente enviado à persistência:', { nome, status });
-  
+
     return novoCliente;
   }
   
-  
-  // versão atualizada para as validações de atualizarCliente
   async atualizarCliente(idcliente: number, { nome, status }: { nome: string; status: number }) {
-    if (!idcliente || typeof idcliente !== 'number') {
-      throw new Error("O 'idcliente' é obrigatório e deve ser um número.");
-    }
-  
-    if (!nome || typeof nome !== 'string') {
-      throw new Error("O campo 'nome' é obrigatório e deve ser uma string.");
-    }
-  
-    if (status !== 0 && status !== 1) {
-      throw new Error("O campo 'status' deve ser 0 (inativo) ou 1 (ativo).");
-    }
-    
-    // atualiza os dados no banco
     const clienteAtualizado = await this.clientePersistence.update(idcliente, {
       clientenome: nome,
       clientestatus: status,
     });
-  
     return clienteAtualizado;
   }
 
-  // versão atualizada para as verficações de deletarCliente
-async deletarCliente(idcliente: number) {
-  // validação simples do ID
-  if (!idcliente || typeof idcliente !== 'number') {
-    throw new Error("ID do cliente inválido.");
+  async deletarCliente(idcliente:number){
+    const clienteDeletado = await this.clientePersistence.delete(idcliente);
+    return clienteDeletado;
   }
 
-   // deleta o cliente usando o método da camada de persistência
-  const clienteDeletado = await this.clientePersistence.delete(idcliente);
-  return clienteDeletado;
 }
-
-}  
-
 
 /* 
     ANOTAÇÃO: 
