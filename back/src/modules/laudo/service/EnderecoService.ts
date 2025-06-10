@@ -70,7 +70,7 @@ export class EnderecoService {
       if (!enderecoclient) {
         throw new Error('O campo enderecoclient é obrigatório');
       } else if (!cepLimpo) {
-        throw new Error('O campo CEP é obrigatório');
+        throw new Error('O campo cepclient é obrigatório');
       } else if (cepLimpo.length !== 8) {
         throw new Error('CEP inválido. Use o formato 00000000');
       } else if (latclient !== undefined && (latclient < -90 || latclient > 90)) {
