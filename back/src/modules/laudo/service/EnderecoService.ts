@@ -1,4 +1,4 @@
-import { EnderecoPersistence } from '../persistence/EnderecoPersistance';
+import { EnderecoPersistence } from '../persistence/enderecopersistance';
 
 // Criando e exportando a classe EnderecoService
 export class EnderecoService {
@@ -100,19 +100,19 @@ export class EnderecoService {
   async atualizarEndereco(
     idclient: number,
     {
-      enderecoclient,
-      cepclient,
-      latclient,
-      lonclient,
-      statusclient,
-      sedeclient
+      enderecoend,
+      enderecocep,
+      enderecolat,
+      enderecolon,
+      enderecostatus,
+      enderecosede
     }: {
-      enderecoclient?: string;
-      cepclient?: string;
-      latclient?: number;
-      lonclient?: number;
-      statusclient?: number;
-      sedeclient?: number;
+      enderecoend?: string;
+      enderecocep?: string;
+      enderecolat?: number;
+      enderecolon?: number;
+      enderecostatus?: number;
+      enderecosede?: number;
     }
   ) {
     try {
@@ -122,15 +122,15 @@ export class EnderecoService {
       // Se cepclient tiver um valor válido, ele é usado diretamente.
       // Se cepclient for null ou undefined, então ' ' (string vazia) é utilizada como padrão.
       
-      const cepLimpo = (cepclient ?? '').replace(/\D/g, ''); // esse replace remove tudo aqui que não é número
-      const idsede = Number(sedeclient);
+      const cepLimpo = (enderecocep ?? '').replace(/\D/g, ''); // esse replace remove tudo aqui que não é número
+      const idsede = Number(enderecosede);
 
       const atendereco = await this.enderecoPersistence.update(idclient, {
-        enderecoendereco: enderecoclient,
+        enderecoendereco: enderecoend,
         enderecocep: cepLimpo,
-        enderecolat: latclient,
-        enderecolon: lonclient,
-        enderecostatus: sedeclient,
+        enderecolat: enderecolat,
+        enderecolon: enderecolon,
+        enderecostatus: enderecostatus,
         idsede: idsede
       });
 

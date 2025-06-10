@@ -15,7 +15,7 @@
       ]
     }
   },
-  "forwardPorts": [3000, 5555],
+  "forwardPorts": [3000, 5555,5432],
   "remoteUser": "node",
   "mounts": [
     "source=${localEnv:HOME}/.npmrc,target=/home/node/.npmrc,type=bind,consistency=cached"

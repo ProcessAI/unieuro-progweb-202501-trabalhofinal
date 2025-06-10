@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import { EnderecoService } from '../service/EnderecoService';
-import { ok } from 'assert';
 
 const enderecoRouter = express.Router();
 const service = new EnderecoService();
@@ -46,12 +45,12 @@ enderecoRouter.put('/:id', async (req: Request, res: Response) => {
     const {enderecoendereco, enderecocep, enderecolat, enderecolon, enderecostatus, idsede }=req.body
     const idconvertido = Number(id);
     const enderecoAtualizado = await service.atualizarEndereco(idconvertido,{
-      enderecoclient:enderecoendereco,
-      cepclient:enderecocep,
-      latclient:enderecolat,
-      lonclient:enderecolon,
-      statusclient:enderecostatus,
-      sedeclient:idsede
+      enderecoend:enderecoendereco,
+      enderecocep:enderecocep,
+      enderecolat:enderecolat,
+      enderecolon:enderecolon,
+      enderecostatus:enderecostatus,
+      enderecosede:idsede
     });
     
    
