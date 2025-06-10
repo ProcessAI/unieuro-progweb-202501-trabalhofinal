@@ -1,0 +1,110 @@
+1 - Visão Geral
+
+    Este documento descreve a configuração ideal para rodar o ambiente de desenvolvimento
+    do back-end Node.js com TypeScript, Express e Prisma usando GitHub Codespaces.
+
+    O objetivo é garantir uma setup automática, consistente e pronta para desenvolvimento,
+    testes e migração do banco de dados.
+
+2 - Dependências principais do projeto
+
+    Node.js 20 (LTS recomendado)
+
+    TypeScript (v5.8.3)
+
+    Express 5.x
+
+    Prisma ORM (v6.x)
+
+    Cors, ts-node, tsx e outras devDependencies para desenvolvimento com TS
+
+3 - Estrutura recomendada do Codespace Arquivo .devcontainer/devcontainer.json
+
+    {
+    "name": "Back-end Node + Express + Prisma",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+    "features": {
+        "ghcr.io/devcontainers/features/prisma:1": {},
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    },
+    "postCreateCommand": "npm install",
+    "customizations": {
+        "vscode": {
+        "extensions": [
+            "dbaeumer.vscode-eslint",
+            "esbenp.prettier-vscode",
+            "Prisma.prisma",
+            "mhutchie.git-graph"
+        ]
+        }
+    },
+    "forwardPorts": [3000, 5555],
+    "remoteUser": "node",
+    "mounts": [
+        "source=${localEnv:HOME}/.npmrc,target=/home/node/.npmrc,type=bind,consistency=cached"
+    ]
+    }
+
+4 - Explicações:
+
+    Base image: Node.js 20 + TypeScript pronta para uso.
+
+    Features:
+
+    Prisma CLI instalado para execução de comandos npx prisma ....
+
+    Docker-in-Docker habilitado para uso de containers, se necessário.
+
+    Post-create: roda npm install automaticamente.
+
+    Extensões VS Code: ESLint, Prettier, suporte Prisma e Git Graph.
+
+    Portas abertas:
+
+    3000 para a API Express.
+
+    5555 para o Prisma Studio.
+
+    Usuário remoto: node para garantir permissões adequadas.
+
+    Mount do .npmrc local para registrar pacotes privados, se aplicável.
+
+5 - Scripts importantes no package.json
+
+    dev:main: executa seu backend em modo watch via tsx.
+
+    Scripts prisma:*: gerenciamento e migração do banco via Prisma CLI.
+
+    Use os comandos abaixo no terminal do Codespace para rodar seu projeto e gerenciar banco:
+
+
+        npm run dev:main          # roda backend em hot reload
+        npm run prisma:generate   # gera client Prisma
+        npm run prisma:migrate    # aplica migrações
+        npm run prisma:studio     # abre interface web do Prisma Studio
+
+5. Recomendações para uso do Codespace
+
+    Sempre crie o Codespace a partir do branch atualizado.
+
+    Use o terminal integrado do VS Code Codespace para executar comandos npm/prisma.
+
+    Para atualizações de dependências, rode npm install no Codespace.
+
+    Utilize o Prisma Studio na porta 5555 para gerenciar seu banco visualmente.
+
+6. Exemplo rápido de workflow no Codespace
+
+    Crie ou abra o Codespace pelo GitHub no seu repositório com .devcontainer/.
+
+    Aguarde a criação do container com o ambiente configurado.
+
+    No terminal integrado, execute:
+
+
+        npm run prisma:migrate
+        npm run dev:main
+
+    Acesse localhost:3000 no preview do Codespace para testar API.
+
+    Para abrir Prisma Studio, acesse localhost:5555.
