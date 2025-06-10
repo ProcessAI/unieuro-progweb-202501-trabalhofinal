@@ -1,7 +1,8 @@
-# Ignorar pastas
+# Ignorar depedências 
 /node_modules/
-/treino/
-/test/
+
+#ignorar Editor/IDE
+.vscode/
 
 # ignorar arquivos de ambiente de variáveis
 *.env
@@ -13,6 +14,7 @@
 *.log
 
 
+# ignorar build e artefatos temporarios 
 # Ignorar build e artefatos temporários
 /dist/
 /build/
@@ -31,9 +33,3 @@
 
 # TypeScript 
 *.tsbuildinfo
-
-# Ignorando o tsconfig.json
-tsconfig.json
-
-# Ignorando o package-lock.json
-package-lock.json
