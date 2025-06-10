@@ -12,6 +12,7 @@ export async function findAll() {
 }
 
 export async function findById(id: number) {
+  console.log(id);
   return await tipoEquipamentoRepo.findById(id);
 }
 
