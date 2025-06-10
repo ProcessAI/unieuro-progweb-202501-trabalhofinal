@@ -1,0 +1,30 @@
+{
+  "name": "React + TypeScript Frontend",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "postCreateCommand": "npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "eslint.format.enable": true,
+        "eslint.alwaysShowStatus": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll": true,
+          "source.fixAll.eslint": true
+        }
+      }
+    }
+  },
+  "forwardPorts": [3000],
+  "remoteUser": "node",
+  "mounts": [
+    "source=${localEnv:HOME}/.npmrc,target=/home/node/.npmrc,type=bind,consistency=cached"
+  ]
+}
