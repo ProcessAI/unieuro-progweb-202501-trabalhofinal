@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import TipoeqCrud from './pages/TipoeqCrud';
+import Laudos from "./pages/laudos";
 import { Toaster } from 'react-hot-toast';
 import './App.css';
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/tipoeq" element={<TipoeqCrud />} />
+          <Route path="/laudos" element={<Laudos />} />
         </Routes>
       </main>
     </Router>
