@@ -2,8 +2,7 @@
   "name": "unieuro-progweb-202501-trabalhofinal",
   "version": "1.0.0",
   "description": "Aplicação web em React + TypeScript para o projeto final de Desenvolvimento Web",
-
-   "main": "index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

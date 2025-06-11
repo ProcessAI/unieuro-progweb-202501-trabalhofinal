@@ -2,9 +2,15 @@
   "name": "back",
   "version": "1.0.0",
   "description": "",
+<<<<<<< HEAD
   "main": "src/app.ts",
   "scripts": {
     "dev": "tsx watch src/app.ts",
+=======
+  "main": "src/modules/router/app.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+>>>>>>> 47082b25964ca7a9f2c42fd3d76f3459f115f289
     "build": "tsc"
   },
   "keywords": [],
@@ -16,8 +22,13 @@
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.24",
     "prisma": "^6.9.0",
+<<<<<<< HEAD
     "ts-node": "^10.9.2",
     "tsx": "^4.20.1",
+=======
+    "tsx": "^4.19.4",
+    "ts-node": "^10.9.2",
+>>>>>>> 47082b25964ca7a9f2c42fd3d76f3459f115f289
     "typescript": "^5.8.3"
   },
   "dependencies": {
