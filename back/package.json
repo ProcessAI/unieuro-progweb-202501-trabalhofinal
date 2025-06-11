@@ -1,0 +1,28 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.ts",
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.24",
+    "prisma": "^6.9.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.1",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.9.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}

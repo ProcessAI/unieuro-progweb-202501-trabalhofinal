@@ -1,0 +1,23 @@
+{
+  "name": "unieuro-progweb-202501-trabalhofinal",
+  "version": "1.0.0",
+  "description": "Aplicação web em React + TypeScript para o projeto final de Desenvolvimento Web",
+
+   "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal.git"
+  },
+  "author": "Paulo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal/issues"
+  },
+  "homepage": "https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal#readme",
+  "dependencies": {
+    "@types/react": "^19.1.6"
+  }
+}
