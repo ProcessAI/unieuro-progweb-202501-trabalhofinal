@@ -100,4 +100,5 @@ dist
 # vuepress build output
 .vuepress/dist
 
-*tsconfig.json
+/generated/prisma
+package-lock.json
