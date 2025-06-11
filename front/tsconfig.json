@@ -1,4 +1,3 @@
-// tsconfig.json (No diretório raiz do seu projeto React)
 {
   "compilerOptions": {
     "target": "ES2020",
@@ -6,32 +5,22 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-
-    /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true, // Este deve estar true para o frontend (Vite/Webpack/etc. cuidam da build)
-    "jsx": "react-jsx", // Habilita o novo JSX transform sem precisar importar React
-
-    /* Linting */
-    "strict": true, // Muito recomendado para segurança de tipos
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true, // <-- MANTENHA ISSO COMO TRUE PARA FORÇAR TIPAGEM (e corrigir 7006)
-    "allowSyntheticDefaultImports": true, // Útil para algumas libs
-
-    /* Paths */
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"] // Configuração para o alias @/
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src"], // Quais arquivos incluir na compilação
-  "references": [
-    // Se você tiver um tsconfig.node.json, ele estaria aqui.
-    // Certifique-se de que a configuração dele esteja alinhada com o que o projeto principal espera.
-    // { "path": "./tsconfig.node.json" } // Exemplo de referência
-  ]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
+

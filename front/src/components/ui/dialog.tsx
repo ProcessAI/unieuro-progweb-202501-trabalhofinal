@@ -1,50 +1,20 @@
-import * as React from "react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { XIcon } from "lucide-react";
+import * as React from "react"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { XIcon } from "lucide-react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-// 1. Tipagem para Dialog (Root)
-interface DialogProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Root> {}
+const Dialog = DialogPrimitive.Root
 
-function Dialog({ ...props }: DialogProps) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
-}
+const DialogTrigger = DialogPrimitive.Trigger
 
-// 2. Tipagem para DialogTrigger
-interface DialogTriggerProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger> {}
+const DialogPortal = DialogPrimitive.Portal
 
-function DialogTrigger({ ...props }: DialogTriggerProps) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
-}
-
-// 3. Tipagem para DialogPortal
-interface DialogPortalProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal> {}
-
-function DialogPortal({ ...props }: DialogPortalProps) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
-}
-
-// 4. Tipagem para DialogClose
-interface DialogCloseProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Close> {}
-
-function DialogClose({ ...props }: DialogCloseProps) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
-}
-
-// 5. Tipagem para DialogOverlay
-interface DialogOverlayProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> {
-  className?: string;
-}
+const DialogClose = DialogPrimitive.Close
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
-  DialogOverlayProps
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
@@ -55,21 +25,14 @@ const DialogOverlay = React.forwardRef<
     )}
     {...props}
   />
-));
-DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
-
-// 6. Tipagem para DialogContent
-interface DialogContentProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
-  className?: string;
-  children?: React.ReactNode;
-}
+))
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  DialogContentProps
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
-  <DialogPortal data-slot="dialog-portal">
+  <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
@@ -87,48 +50,36 @@ const DialogContent = React.forwardRef<
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
-));
-DialogContent.displayName = DialogPrimitive.Content.displayName;
+))
+DialogContent.displayName = DialogPrimitive.Content.displayName
 
-// 7. Tipagem para DialogHeader
-interface DialogHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string;
-}
+const DialogHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    data-slot="dialog-header"
+    className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
+    {...props}
+  />
+)
+DialogHeader.displayName = "DialogHeader"
 
-function DialogHeader({ className, ...props }: DialogHeaderProps) {
-  return (
-    <div
-      data-slot="dialog-header"
-      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
-      {...props}
-    />
-  );
-}
-
-// 8. Tipagem para DialogFooter
-interface DialogFooterProps extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string;
-}
-
-function DialogFooter({ className, ...props }: DialogFooterProps) {
-  return (
-    <div
-      data-slot="dialog-footer"
-      className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
-      {...props}
-    />
-  );
-}
-
-// 9. Tipagem para DialogTitle
-interface DialogTitleProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title> {
-  className?: string;
-}
+const DialogFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    data-slot="dialog-footer"
+    className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
+    {...props}
+  />
+)
+DialogFooter.displayName = "DialogFooter"
 
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
-  DialogTitleProps
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
@@ -136,18 +87,12 @@ const DialogTitle = React.forwardRef<
     className={cn("text-lg leading-none font-semibold", className)}
     {...props}
   />
-));
-DialogTitle.displayName = DialogPrimitive.Title.displayName;
-
-// 10. Tipagem para DialogDescription
-interface DialogDescriptionProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description> {
-  className?: string;
-}
+))
+DialogTitle.displayName = DialogPrimitive.Title.displayName
 
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
-  DialogDescriptionProps
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
@@ -155,8 +100,8 @@ const DialogDescription = React.forwardRef<
     className={cn("text-muted-foreground text-sm", className)}
     {...props}
   />
-));
-DialogDescription.displayName = DialogPrimitive.Description.displayName;
+))
+DialogDescription.displayName = DialogPrimitive.Description.displayName
 
 export {
   Dialog,
@@ -169,4 +114,5 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
-};
+}
+
