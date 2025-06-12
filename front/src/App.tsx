@@ -1,5 +1,4 @@
-import React from 'react'
-import ClientesPage from './components/ClientesPage'
+import ClientesPage from './pages/ClientesPage'
 import './App.css'
 
 function App() {
