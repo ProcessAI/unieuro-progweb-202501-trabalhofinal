@@ -1,9 +1,13 @@
 import React from "react";
 import "./App.css";
-import Markdown from  "./components/Markdown";
+import { HelpMarkdown } from "./helpmarkdown"; 
+
 const App = () => {
   return (
-  <Markdown/>
+    <div className="App">
+      <h1>Ajuda de Markdown</h1>
+      <HelpMarkdown />
+    </div>
   );
 };
 
