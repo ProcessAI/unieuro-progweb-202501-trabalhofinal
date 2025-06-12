@@ -1,0 +1,34 @@
+{
+  "name": "Laudinho Frontend",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20-bookworm",
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/pnpm:2": {
+      "version": "10.4.1"
+    }
+  },
+  "postCreateCommand": "pnpm install",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "eslint.validate": ["javascript", "typescript", "typescriptreact"],
+        "editor.formatOnSave": true
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss",
+        "ms-vsliveshare.vsliveshare",
+        "yoavbls.pretty-ts-errors"
+      ]
+    }
+  },
+  "forwardPorts": [5173,3000],
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite Dev Server",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "remoteUser": "node"
+}

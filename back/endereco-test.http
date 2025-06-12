@@ -1,0 +1,64 @@
+### Criar um novo endereço***ok
+POST http://localhost:3000/endereco
+Content-Type: application/json
+
+{
+  "enderecoendereco": "Rua Exemplo, 123",
+  "enderecocep": "12345678",
+  "enderecolat": -23.5505,
+  "enderecolon": -46.6333,
+  "enderecostatus": 1,
+  "idsede": 2
+}
+
+
+
+### Listar todos os endereços***ok
+GET http://localhost:3000/endereco
+
+
+
+### Buscar endereço por ID***ok
+GET http://localhost:3000/endereco/8
+
+
+### Atualizar endereço***ok
+PUT http://localhost:3000/endereco/8
+Content-Type: application/json
+
+{
+  "enderecoendereco": "Rua Atualizada, 456",
+  "enderecocep": "87654321",
+  "enderecolat": -23.5505,
+  "enderecolon": -46.6333,
+  "enderecostatus": 1,
+  "idsede": 2
+}
+
+### Deletar endereço***ok
+DELETE http://localhost:3000/endereco/8
+
+
+### Listar sedes***ok
+GET http://localhost:3000/sede
+
+
+### Listar sedes por id***ok
+GET http://localhost:3000/sede/3
+ok
+
+
+### Atualizar sede
+PUT http://localhost:3000/sede/3
+Content-Type: application/json
+
+{
+  "nomesede": "Sede Atualizada",
+  "status": 1
+}
+
+### deletar sede***ok
+delete http://localhost:3000/sede/2
+
+
+
