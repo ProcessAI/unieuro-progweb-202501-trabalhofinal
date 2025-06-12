@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc"
-  },
+"scripts": {
+  "dev": "tsx watch src/index.ts"
+},
+
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -22,6 +21,8 @@
     "@prisma/client": "^6.8.2",
     "bcrypt": "^6.0.0",
     "dependencies": "^0.0.1",
-    "express": "^5.1.0"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
   }
 }
