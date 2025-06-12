@@ -1,3 +1,4 @@
+import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -12,6 +13,12 @@ import sedeRouter from "../laudo/routes/RouteSede";
 
 /* materializando um objeto do nosso Servidor express */
 const app = express();
+
+app.use(cors({
+    origin: 'http://localhost:5173', // Porta do Vite/React
+    credentials: true,
+}));
+
 
 //const port = process.env.PORT || 3000;
 const port = 3000;
