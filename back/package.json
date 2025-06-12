@@ -3,9 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+<<<<<<< laudinho-2-leandro
+"scripts": {
+  "dev": "tsx watch src/index.ts"
+},
+
+=======
   "scripts": {
     "dev": "tsx watch src/index.ts"
   },
+>>>>>>> laudinho-2
   "keywords": [],
   "author": "",
   "license": "ISC",
