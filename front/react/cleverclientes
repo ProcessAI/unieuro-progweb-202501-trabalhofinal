@@ -1,0 +1,123 @@
+import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+const clientsMock = [
+  "sicoob",
+  "sky burguer",
+  "superbom",
+  "guarapari",
+  "aquifisio",
+  "ceci",
+  "AABB",
+  "supermercado eldorado",
+  "vitalia",
+  "aliança",
+  "oftalmed",
+];
+
+export default function ClientEditor() {
+  const [clients, setClients] = useState(clientsMock);
+  const [selected, setSelected] = useState("");
+  const [form, setForm] = useState({ name: "", address: "", phone: "" });
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  const handleEdit = (name) => {
+    setSelected(name);
+    setForm({ name, address: "Rua das Flores, 123 - Sala 402", phone: "(xx)xxxxx-xxxx" });
+    setDialogOpen(true);
+  };
+
+  const handleInsert = () => {
+    if (!form.name) return;
+    setClients([...clients, form.name]);
+    setForm({ name: "", address: "", phone: "" });
+    setSelected("");
+    setDialogOpen(false);
+  };
+
+  const handleDelete = () => {
+    setClients(clients.filter((c) => c !== selected));
+    setForm({ name: "", address: "", phone: "" });
+    setSelected("");
+    setDialogOpen(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <div className="bg-yellow-400 p-4 flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <div className="w-6 h-6 bg-black rounded" />
+        </div>
+        <div className="text-lg font-bold text-center flex-1 -ml-6">CLIENTES</div>
+        <div className="flex items-center gap-2">
+          <span>Rafael Marconi</span>
+          <div className="w-6 h-6 bg-black rounded-full" />
+          <Button className="bg-black text-white px-3 py-1">SAIR</Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 p-6">
+        <div className="col-span-2">
+          <Input placeholder="BUSCAR" className="mb-2" />
+          <table className="w-full text-sm border">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="p-2">nome</th>
+                <th className="p-2">endereço</th>
+                <th className="p-2">número</th>
+                <th className="p-2">EDITAR</th>
+              </tr>
+            </thead>
+            <tbody>
+              {clients.map((client) => (
+                <tr key={client} className="text-center border-t">
+                  <td className="p-2">{client}</td>
+                  <td className="p-2">Rua das Flores, 123 - Sala 402</td>
+                  <td className="p-2">(xx)xxxxx-xxxx</td>
+                  <td className="p-2">
+                    <Button size="sm" onClick={() => handleEdit(client)}>
+                      EDITAR
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Dados Pessoais do Inscrito</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-4">
+            <Input
+              placeholder="Nome da empresa"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+            <Input
+              placeholder="Endereço"
+              value={form.address}
+              onChange={(e) => setForm({ ...form, address: e.target.value })}
+            />
+            <Input
+              placeholder="Numero"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            />
+            <Button className="bg-yellow-400 text-black hover:bg-yellow-500" onClick={handleInsert}>
+              INSERIR
+            </Button>
+            <Button className="bg-yellow-400 text-black hover:bg-yellow-500" onClick={handleDelete}>
+              DELETAR
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

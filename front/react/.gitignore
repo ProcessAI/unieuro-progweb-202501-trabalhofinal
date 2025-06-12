@@ -1,0 +1,35 @@
+# Ignorar depedências 
+/node_modules/
+
+#ignorar Editor/IDE
+.vscode/
+
+# ignorar arquivos de ambiente de variáveis
+*.env
+
+# ignorar client gerado pelo prisma
+.prisma/
+
+# ignorar arquivos de log
+*.log
+
+
+# ignorar build e artefatos temporarios 
+# Ignorar build e artefatos temporários
+/dist/
+/build/
+/tmp/
+
+# Keep environment variables out of version control
+# significado da palavra acima: Não versionar arquivos que contêm variáveis de ambiente, como .env, no Git (ou seja, evitar que sejam salvos no repositório).
+
+# prisma
+/generated/prisma
+*.db
+
+# Ignore IDEs comuns
+.vscode/
+.idea/
+
+# TypeScript 
+*.tsbuildinfo

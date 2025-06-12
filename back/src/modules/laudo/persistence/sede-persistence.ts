@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 export class SedePersistence {
   private prisma: PrismaClient;
@@ -7,14 +7,22 @@ export class SedePersistence {
     this.prisma = new PrismaClient();
   }
 
-  async create(sedeData: Prisma.sedeCreateInput) {
+  async create(sedeData: {
+    sedenome: string;
+    sedestatus?: number;
+    idcliente: bigint | number;
+    sededtinclusao?: Date;
+  }) {
     try {
       const sede = await this.prisma.sede.create({
-        data: sedeData,
+        data: {
+          ...sedeData,
+          idcliente: Number(sedeData.idcliente), // conversão explícita
+        },
       });
       return sede;
     } catch (error) {
-      console.error("Erro ao criar sede:", error);
+      console.error("Error creating sede:", error);
       throw error;
     }
   }
@@ -30,7 +38,7 @@ export class SedePersistence {
       });
       return sedes;
     } catch (error) {
-      console.error("Erro ao buscar sedes:", error);
+      console.error("Error fetching sedes:", error);
       throw error;
     }
   }
@@ -47,20 +55,33 @@ export class SedePersistence {
       });
       return sede;
     } catch (error) {
-      console.error("Erro ao buscar sede por ID:", error);
+      console.error("Error fetching sede by ID:", error);
       throw error;
     }
   }
 
-  async update(id: number, sedeData: Prisma.sedeUpdateInput) {
+  async atualizar(
+    id: number,
+    sedeData: {
+      sedenome?: string;
+      sedestatus?: number;
+      idcliente?: bigint | number;
+      sededtinclusao?: Date;
+    }
+  ) {
     try {
       const updatedSede = await this.prisma.sede.update({
         where: { idsede: id },
-        data: sedeData,
+        data: {
+          ...sedeData,
+          idcliente: sedeData.idcliente
+            ? Number(sedeData.idcliente)
+            : undefined,
+        },
       });
       return updatedSede;
     } catch (error) {
-      console.error("Erro ao atualizar sede:", error);
+      console.error("Error updating sede:", error);
       throw error;
     }
   }
@@ -72,15 +93,15 @@ export class SedePersistence {
       });
       return deletedSede;
     } catch (error) {
-      console.error("Erro ao deletar sede:", error);
+      console.error("Error deleting sede:", error);
       throw error;
     }
   }
 
-  async findByClienteId(idcliente: number) {
+  async findByClienteId(idcliente: bigint | number) {
     try {
       const sedes = await this.prisma.sede.findMany({
-        where: { idcliente: idcliente },
+        where: { idcliente: Number(idcliente) },
         include: {
           endereco: true,
           equipamento: true,
@@ -88,7 +109,7 @@ export class SedePersistence {
       });
       return sedes;
     } catch (error) {
-      console.error("Erro ao buscar sedes por ID do cliente:", error);
+      console.error("Error fetching sedes by cliente ID:", error);
       throw error;
     }
   }
