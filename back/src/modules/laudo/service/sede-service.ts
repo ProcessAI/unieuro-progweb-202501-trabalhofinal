@@ -4,13 +4,21 @@ import { SedePersistence } from '../persistence/sede-persistence';
 const sedeManager = new SedePersistence();
 
 // Criar sede
-// Tentativas falhas de sede criam gastam id. Verificar se é do prisma
 export async function createSede(req: Request, res: Response) {
   try {
     const { sedenome, idcliente, sedestatus } = req.body;
 
     if (!sedenome || !idcliente) {
       return res.status(400).json({ message: 'Campos obrigatórios: sedenome e idcliente' });
+    }
+
+    const todasSedes = await sedeManager.findAll();
+    const nomeExistente = todasSedes.find(
+      (s) => s.sedenome.toLowerCase() === sedenome.toLowerCase()
+    );
+
+    if (nomeExistente) {
+      return res.status(409).json({ message: 'Já existe uma sede com esse nome' });
     }
 
     const sedeData = {
@@ -26,7 +34,6 @@ export async function createSede(req: Request, res: Response) {
     return res.status(500).json({ message: 'Erro ao criar sede', error });
   }
 }
-
 
 // Buscar todas as sedes
 export async function getAllSedes(req: Request, res: Response) {
@@ -62,13 +69,38 @@ export async function getSedeById(req: Request, res: Response) {
 // Atualizar sede
 export async function updateSede(req: Request, res: Response) {
   const id = parseInt(req.params.id);
-  const sedeData = req.body;
+  const { sedenome, sedestatus } = req.body;
 
   if (isNaN(id)) {
     return res.status(400).json({ message: 'ID inválido' });
   }
 
+  if (!sedenome && sedestatus === undefined) {
+    return res.status(400).json({ message: 'Nenhum campo fornecido para atualização' });
+  }
+
   try {
+    // Verifica se a sede existe
+    const existingSede = await sedeManager.findById(id);
+    if (!existingSede) {
+      return res.status(404).json({ message: 'Sede não encontrada' });
+    }
+
+    // Se sedenome for informado, valida se já existe em outra sede
+    if (sedenome) {
+      const allSedes = await sedeManager.findAll();
+      const nomeDuplicado = allSedes.find(
+        (s) => s.sedenome.toLowerCase() === sedenome.toLowerCase() && s.idsede !== id
+      );
+      if (nomeDuplicado) {
+        return res.status(409).json({ message: 'Já existe uma sede com esse nome' });
+      }
+    }
+
+    const sedeData: any = {};
+    if (sedenome) sedeData.sedenome = sedenome;
+    if (sedestatus !== undefined) sedeData.sedestatus = sedestatus;
+
     const updatedSede = await sedeManager.update(id, sedeData);
     return res.status(200).json({ message: 'Sede atualizada com sucesso', sede: updatedSede });
   } catch (error) {
