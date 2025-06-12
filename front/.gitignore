@@ -99,3 +99,7 @@ dist
 
 # vuepress build output
 .vuepress/dist
+
+# ignorando package-lock.json
+package-lock.json
+
