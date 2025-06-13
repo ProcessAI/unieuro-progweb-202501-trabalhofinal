@@ -13,7 +13,10 @@ import protegidoRoutes from '../login/routes/auth-middleware-routes';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+//const PORT = process.env.PORT || 3000;
+
+const PORT = 3000;
+
 
 /* Materializando um objeto do nosso Servidor express */
 const app = express();
