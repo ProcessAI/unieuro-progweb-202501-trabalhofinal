@@ -124,7 +124,8 @@ export default function ClientesPage() {
     cliente.nome.toLowerCase().includes(search.toLowerCase())
   );
 
-  const sedesDoCliente = clienteSelecionadoIndex !== null ? clientes[clienteSelecionadoIndex].sedes : [];
+  const sedesDoCliente =
+    clienteSelecionadoIndex !== null ? clientes[clienteSelecionadoIndex].sedes : [];
 
   const sedesFiltradas = sedesDoCliente.filter((sede) =>
     sede.sedenome.toLowerCase().includes(searchSede.toLowerCase())
@@ -500,7 +501,6 @@ export default function ClientesPage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Cabeçalho */}
       <div className="bg-yellow-400 flex items-center justify-between px-4 py-2 shadow-md sticky top-0 z-50">
         <div className="flex items-center gap-4">
           <img src="/logo.png" alt="Logo" className="h-8" />
@@ -517,7 +517,6 @@ export default function ClientesPage() {
         </div>
       </div>
 
-      {/* Barra de busca e botão novo cliente */}
       <div className="bg-gray-100 px-6 py-4 max-w-5xl mx-auto sticky top-[48px] z-40 border-b border-gray-300 flex justify-between items-center">
         <Input
           placeholder="BUSCAR"
@@ -544,10 +543,7 @@ export default function ClientesPage() {
               className="mb-4 w-full"
             />
             <div className="flex justify-end gap-2">
-              <Button
-                onClick={() => setModalCriarAberto(false)}
-                className="bg-gray-300 text-black text-xs h-7 px-3"
-              >
+              <Button onClick={() => setModalCriarAberto(false)} className="bg-gray-300 text-black text-xs h-7 px-3">
                 Cancelar
               </Button>
               <Button onClick={salvarNovoCliente} className="bg-yellow-400 text-black text-xs h-7 px-3">
@@ -617,24 +613,12 @@ export default function ClientesPage() {
                     >
                       {cliente.status === "ativo" ? "INATIVAR (Frontend)" : "ATIVAR (Frontend)"}
                     </Button>
-                    <Button
-                      onClick={() => excluirCliente(index)}
-                      className="bg-red-600 text-white text-xs h-7 px-3"
-                    >
-                      Excluir
-                    </Button>
-                    <Button
-                      onClick={() => abrirModalSede(index)}
-                      className="bg-yellow-400 text-black text-xs h-7 px-3"
-                    >
-                      Ver Sedes
-                    </Button>
-                  </>
-                )}
-              </div>
-            </div>
-          ))
-        )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <Dialog
@@ -785,7 +769,7 @@ export default function ClientesPage() {
             placeholder="Endereço (Rua, Número, Bairro)"
             value={dadosSedeEditando.endereco}
             onChange={(e) => setDadosSedeEditando({ ...dadosSedeEditando, endereco: e.target.value })}
-            className="mb-2"
+            className="mb-2 w-full"
           />
           <Input
             placeholder="CEP (apenas números, 8 dígitos)"
@@ -829,10 +813,7 @@ export default function ClientesPage() {
             }} className="bg-gray-300 text-black text-xs h-7 px-3">
               Cancelar
             </Button>
-            <Button
-              onClick={salvarSede}
-              className="bg-yellow-400 text-black text-xs h-7 px-3"
-            >
+            <Button onClick={salvarSede} className="bg-yellow-400 text-black text-xs h-7 px-3">
               Salvar
             </Button>
           </div>
