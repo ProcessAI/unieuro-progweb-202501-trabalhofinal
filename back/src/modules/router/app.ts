@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+
 // Rotas laudinho-2
 import userRoutes from '../login/routes/usuario-routes';
 import protegidoRoutes from '../login/routes/auth-middleware-routes';
@@ -15,6 +16,10 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
+// importando o dotenv para pegar o arquivo de configuração .env
+import dotenv from 'dotenv';
+dotenv.config();
+
 /* materializando um objeto do nosso Servidor express */
 const app = express();
 const cors = require('cors');
@@ -27,9 +32,6 @@ app.use('/auth', userRoutes);
 app.use('/api', protegidoRoutes);
 app.use('/sede', sedeRoutes);
 
-//const port = process.env.PORT || 3000;
-const port = 3000;
-
 app.use(express.json()); // configuramos o nosso express para aceitar requisições json
 
 /* Configurando express para usar as rotas criadas!  */
@@ -40,13 +42,20 @@ app.use('/endereco', enderecoRouter); // endereco
 app.use(express.json()); // configuramos o nosso express para aceitar requisições json
 
 // express recebendo requisições get no nosso diretório raiz
-// app.get('/', (req: Request, res: Response) => {
-//     const resposta = res.status(200).json({ messagem: "Diretório Raiz" });
-//     console.log(resposta);
-// });
+app.get('/', (req: Request, res: Response) => {
+    const resposta = res.status(200).json({ messagem: "Diretório Raiz" });
+    console.log(resposta);
+});
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+
+// Puxando o Port do arquivo.env
+
+const port = 3000
+
+/* Criando o nosso Servidor express */
+app.listen(port, (): void => {
+    const mensagem: string = 'SERVIDOR RODANDO NA PORTA:';
+    console.log(`${mensagem} ${port}`);
 });
 
 export default app;
