@@ -1,5 +1,15 @@
+<<<<<<< HEAD
+// filepath: /Users/danielzakhourjreige/Downloads/unieuro-progweb-202501-trabalhofinal-laudinho-5/back/src/modules/laudo/model/laudo-model.ts
+
+export interface Laudo {
+  id: number;
+  titulo: string;
+  descricao: string;
+  tipoEquipamentoId: number; // Assuming a relationship with tipoeq
+}
+=======
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
 }
 
 datasource db {
@@ -84,11 +94,4 @@ model tipolaudo {
   tipolaudonome     String  @db.VarChar(50)
   tipolaudotemplate String?
   laudo             laudo[]
-}
-
-model usuario {
-  idusuario     Int    @id(map: "usuario_pk") @default(autoincrement())
-  usuarioemail  String @db.VarChar(100)
-  usuariosenha  String @db.VarChar(100)
-  usuariostatus Int    @default(0)
 }

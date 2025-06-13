@@ -110,3 +110,30 @@ input[type="password"] {
   cursor: pointer;
   font-weight: bold;
 }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-right: 20px;
+  position: relative;
+}
+
+/* Novo estilo para alinhar o perfil corretamente */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: -10px; /* Ajuste vertical fino */
+}
+
+/* Ícone redondo com borda preta */
+.profile-icon img {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 4px solid black;
+  object-fit: cover;
+}
