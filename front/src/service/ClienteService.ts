@@ -1,4 +1,4 @@
-import api from './api';
+import api from './client-api';
 
 export const listarClientes = async () => {
   const response = await api.get('/cliente');

@@ -1,6 +1,4 @@
 import cors from 'cors';
-import dotenv from 'dotenv';
-dotenv.config();
 
 /* Exportando Class e Métodos da lib express */
 import express, { Request, Response } from "express";
@@ -11,6 +9,10 @@ import enderecoRouter from "../laudo/routes/RouteEndereco";
 import sedeRouter from "../laudo/routes/RouteSede";
 
 
+// importando o dotenv para pegar o arquivo de configuração .env
+import dotenv from 'dotenv';
+dotenv.config();
+
 /* materializando um objeto do nosso Servidor express */
 const app = express();
 
@@ -19,9 +21,6 @@ app.use(cors({
     credentials: true,
 }));
 
-
-//const port = process.env.PORT || 3000;
-const port = 3000;
 
 app.use(express.json()); // configuramos o nosso express para aceitar requisições json
 
@@ -35,6 +34,11 @@ app.get('/', (req: Request, res: Response) => {
     const resposta = res.status(200).json({ messagem: "Diretório Raiz" });
     console.log(resposta);
 });
+
+
+// Puxando o Port do arquivo.env
+
+const port = 3000
 
 /* Criando o nosso Servidor express */
 app.listen(port, (): void => {
