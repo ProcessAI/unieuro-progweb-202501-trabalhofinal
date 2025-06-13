@@ -154,3 +154,161 @@ app.listen(PORT, () => {
 ### Conclusion
 
 You now have a complete CRUD backend for "laudos" that follows the established patterns in the backend of "tipoeq". Make sure to test your endpoints using a tool like Postman or Insomnia to ensure everything is working as expected. Adjust the model fields and request body as necessary to fit your application's requirements.
+
+
+### Etapa 1: Criar o Arquivo de Serviço
+
+Crie um novo arquivo chamado `laudo-service.ts` no diretório `src/modules/laudo/service`.
+
+```typescript
+// caminho: /Users/danielzakhourjreige/Downloads/unieuro-progweb-202501-trabalhofinal-laudinho-5/back/src/modules/laudo/service/laudo-service.ts
+import { Laudo } from '../models/laudo-model'; // Assumindo que você tem um modelo Laudo definido
+
+export const findAll = async (): Promise<Laudo[]> => {
+  return await Laudo.find(); // Buscar todos os laudos no banco de dados
+};
+
+export const findById = async (id: number): Promise<Laudo | null> => {
+  return await Laudo.findById(id); // Buscar um laudo pelo ID
+};
+
+export const create = async (data: Partial<Laudo>): Promise<Laudo> => {
+  const newLaudo = new Laudo(data);
+  return await newLaudo.save(); // Salvar um novo laudo no banco
+};
+
+export const update = async (id: number, data: Partial<Laudo>): Promise<Laudo | null> => {
+  return await Laudo.findByIdAndUpdate(id, data, { new: true }); // Atualizar um laudo pelo ID
+};
+
+export const deleteLaudo = async (id: number): Promise<void> => {
+  await Laudo.findByIdAndDelete(id); // Deletar um laudo pelo ID
+};
+```
+
+### Etapa 2: Criar o Arquivo de Rotas
+
+Crie um novo arquivo chamado `laudo-routes.ts` no diretório `src/modules/laudo/routes`.
+
+```typescript
+// caminho: /Users/danielzakhourjreige/Downloads/unieuro-progweb-202501-trabalhofinal-laudinho-5/back/src/modules/laudo/routes/laudo-routes.ts
+import { Router, Request, Response } from 'express';
+import {
+  create,
+  findAll,
+  findById,
+  update,
+  deleteLaudo
+} from '../service/laudo-service';
+
+const router = Router();
+
+// Listar todos os laudos
+router.get('/', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const laudos = await findAll();
+    res.json(laudos);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar laudos' });
+  }
+});
+
+// Buscar laudo por id
+router.get('/:id', async (req: Request, res: Response): Promise<void> => {
+  const id = Number(req.params.id);
+  try {
+    const laudo = await findById(id);
+    if (!laudo) {
+      res.status(404).json({ error: 'Laudo não encontrado' });
+    } else {
+      res.json(laudo);
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar laudo' });
+  }
+});
+
+// Criar novo laudo
+router.post('/', async (req: Request, res: Response): Promise<void> => {
+  const { title, description } = req.body; // Ajustar conforme o modelo
+  try {
+    const novoLaudo = await create({ title, description });
+    res.status(201).json(novoLaudo);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao criar laudo' });
+  }
+});
+
+// Atualizar laudo pelo id
+router.put('/:id', async (req: Request, res: Response): Promise<void> => {
+  const id = Number(req.params.id);
+  const { title, description } = req.body; // Ajustar conforme o modelo
+  try {
+    const laudoAtualizado = await update(id, { title, description });
+    if (!laudoAtualizado) {
+      res.status(404).json({ error: 'Laudo não encontrado' });
+    } else {
+      res.json(laudoAtualizado);
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao atualizar laudo' });
+  }
+});
+
+// Deletar laudo pelo id
+router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
+  const id = Number(req.params.id);
+  try {
+    await deleteLaudo(id);
+    res.json({ message: 'Laudo deletado com sucesso' });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao deletar laudo' });
+  }
+});
+
+export default router;
+```
+
+### Etapa 3: Criar o Modelo
+
+Assumindo que você está usando Mongoose com MongoDB, crie o modelo `Laudo`. Crie um novo arquivo chamado `laudo-model.ts` no diretório `src/modules/laudo/models`.
+
+```typescript
+// caminho: /Users/danielzakhourjreige/Downloads/unieuro-progweb-202501-trabalhofinal-laudinho-5/back/src/modules/laudo/models/laudo-model.ts
+import { Schema, model } from 'mongoose';
+
+const laudoSchema = new Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
+export const Laudo = model('Laudo', laudoSchema);
+```
+
+### Etapa 4: Integrar as Rotas
+
+Por fim, integre as novas rotas no seu arquivo principal (por exemplo, `app.ts` ou `server.ts`).
+
+```typescript
+// Supondo que você já tenha um app Express configurado
+import express from 'express';
+import laudoRoutes from './modules/laudo/routes/laudo-routes';
+
+const app = express();
+app.use(express.json()); // Middleware para interpretar JSON
+
+// Usar as rotas de laudo
+app.use('/api/laudos', laudoRoutes);
+
+// Outras configurações...
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+```
+
+### Conclusão
+
+Agora você tem um backend completo de CRUD para "laudos", seguindo o mesmo padrão usado no backend de "tipoeq". Teste os endpoints com Postman ou Insomnia. Ajuste os campos do modelo e os dados recebidos conforme necessário.
