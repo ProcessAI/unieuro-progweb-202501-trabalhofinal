@@ -1,8 +1,7 @@
-// src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
-import Cadastro from './pages/Cadastro';
+// import Login from './pages/Login';
+// import Cadastro from './pages/Cadastro';
 import TipoeqCrud from './pages/TipoeqCrud';
 import Laudos from "./pages/laudos";
 import { Toaster } from 'react-hot-toast';
@@ -12,7 +11,7 @@ function App() {
   return (
     <Router>
       <Toaster position="top-right" />
-      
+
       <header className="header">
         <div className="logo">LOGO</div>
         <nav className="nav">
@@ -28,9 +27,7 @@ function App() {
 
       <main>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="/" element={<Navigate to="/tipoeq" />} />
           <Route path="/tipoeq" element={<TipoeqCrud />} />
           <Route path="/laudos" element={<Laudos />} />
         </Routes>
