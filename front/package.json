@@ -60,7 +60,7 @@
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.7",
     "vaul": "^1.1.2",
-    "zod": "^3.24.4"
+    "zod": "^3.24.4",
     "react-hook-form": "^7.57.0",
     "react-hot-toast": "^2.5.2",
     "react-markdown": "^10.1.0",
