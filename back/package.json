@@ -2,18 +2,37 @@
   "name": "back",
   "version": "1.0.0",
   "description": "",
+<<<<<<< HEAD
+  "main": "src/app.ts",
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+=======
+  "main": "src/modules/router/app.ts",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/modules/router/app.ts"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/index.ts",
+>>>>>>> 47082b25964ca7a9f2c42fd3d76f3459f115f289
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.24",
+    "prisma": "^6.9.0",
+<<<<<<< HEAD
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.1",
+=======
     "@types/node": "^22.15.21",
     "prisma": "^6.8.2",
     "tsx": "^4.19.4",
+    "ts-node": "^10.9.2",
+>>>>>>> 47082b25964ca7a9f2c42fd3d76f3459f115f289
     "typescript": "^5.8.3"
   },
   "dependencies": {

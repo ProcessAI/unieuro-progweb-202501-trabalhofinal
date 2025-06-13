@@ -11,6 +11,7 @@
     "dotenv": "^16.5.0",
     "jsonwebtoken": "^9.0.2",
     "notenv": "^2.0.3",
-    "react-input-mask": "^2.0.4"
+    "react-input-mask": "^2.0.4",
+        "@types/react": "^19.1.6"
   }
 }
