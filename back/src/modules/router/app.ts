@@ -1,24 +1,31 @@
+import express, { Request, Response } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-dotenv.config();
+// Rotas laudinho-2
+import userRoutes from '../login/routes/usuario-routes';
+import protegidoRoutes from '../login/routes/auth-middleware-routes';
+import sedeRoutes from '../laudo/routes/sede-routes';
 
-/* Exportando Class e Métodos da lib express */
-import express, { Request, Response } from "express";
-
-/* importando todas as rotas criadas em routes */
+// Rotas laudinho-3
 import router from "../laudo/routes/RouteCliente";
 import enderecoRouter from "../laudo/routes/RouteEndereco";
 import sedeRouter from "../laudo/routes/RouteSede";
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+const PORT = process.env.PORT || 3000;
 
 /* materializando um objeto do nosso Servidor express */
 const app = express();
+const cors = require('cors');
 
-app.use(cors({
-    origin: 'http://localhost:5173', // Porta do Vite/React
-    credentials: true,
-}));
+// laudinho-2
 
+app.use(express.json());
+app.use(cors());
+app.use('/auth', userRoutes);
+app.use('/api', protegidoRoutes);
+app.use('/sede', sedeRoutes);
 
 //const port = process.env.PORT || 3000;
 const port = 3000;
@@ -30,15 +37,16 @@ app.use('/cliente', router); // Cliente
 app.use('/sede', sedeRouter); // Sede
 app.use('/endereco', enderecoRouter); // endereco
 
+app.use(express.json()); // configuramos o nosso express para aceitar requisições json
+
 // express recebendo requisições get no nosso diretório raiz
-app.get('/', (req: Request, res: Response) => {
-    const resposta = res.status(200).json({ messagem: "Diretório Raiz" });
-    console.log(resposta);
+// app.get('/', (req: Request, res: Response) => {
+//     const resposta = res.status(200).json({ messagem: "Diretório Raiz" });
+//     console.log(resposta);
+// });
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
 
-/* Criando o nosso Servidor express */
-app.listen(port, (): void => {
-    const mensagem: string = 'SERVIDOR RODANDO NA PORTA:';
-    console.log(`${mensagem} ${port}`);
-});
-
+export default app;

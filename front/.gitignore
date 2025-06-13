@@ -100,6 +100,9 @@ dist
 # vuepress build output
 .vuepress/dist
 
+/generated/prisma
+package-lock.json
+.vuepress/dist
 # ignorando package-lock.json
 package-lock.json
 
