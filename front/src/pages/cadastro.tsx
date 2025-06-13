@@ -5,7 +5,10 @@ import './Cadastro.css';
 
 const Cadastro: React.FC = () => {
   const navigate = useNavigate();
+
   const [cpf, setCpf] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [email, setEmail] = useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -13,17 +16,30 @@ const Cadastro: React.FC = () => {
   };
 
   const handleCpfChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let value = event.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
-    
-    if (value.length > 11) {
-      value = value.slice(0, 11); // Limita a 11 caracteres
-    }
+    let value = event.target.value.replace(/\D/g, ''); // Remove tudo que não é número
+    if (value.length > 11) value = value.slice(0, 11);
 
     value = value.replace(/(\d{3})(\d)/, '$1.$2');
     value = value.replace(/(\d{3})(\d)/, '$1.$2');
-    value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); // Adiciona pontos e traço
+    value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 
     setCpf(value);
+  };
+
+  const handleTelefoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let value = event.target.value.replace(/\D/g, ''); // Remove tudo que não é número
+    if (value.length > 11) value = value.slice(0, 11);
+
+    if (value.length > 0) value = `(${value}`;
+    if (value.length >= 3) value = value.replace(/^(\(\d{2})(\d+)/, '$1) $2');
+    if (value.length >= 10) value = value.replace(/(\d{5})(\d{4})$/, '$1-$2');
+
+    setTelefone(value);
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value.replace(/\s/g, '').toLowerCase();
+    setEmail(value);
   };
 
   return (
@@ -52,12 +68,27 @@ const Cadastro: React.FC = () => {
               placeholder="CPF"
               value={cpf}
               onChange={handleCpfChange}
-              maxLength={14} // Ajustado para incluir pontos e traço
+              maxLength={14}
               required
             />
 
-            <input type="text" placeholder="Telefone Celular" required />
-            <input type="email" placeholder="E-mail" required />
+            <input
+              type="text"
+              placeholder="Telefone Celular"
+              value={telefone}
+              onChange={handleTelefoneChange}
+              maxLength={15}
+              required
+            />
+
+            <input
+              type="email"
+              placeholder="E-mail"
+              value={email}
+              onChange={handleEmailChange}
+              required
+            />
+
             <button type="submit" className="btn">Cadastrar</button>
           </form>
         </div>
