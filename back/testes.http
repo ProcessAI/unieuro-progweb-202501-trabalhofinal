@@ -61,4 +61,6 @@ Content-Type: application/json
 delete http://localhost:3000/sede/2
 
 
+### listar cliente
+GET http://localhost:3000/cliente/listarCliente
 

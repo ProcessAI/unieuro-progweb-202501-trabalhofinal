@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+import { listarClientes } from "../services/Cliente-Service";
 
 interface Sede {
   nome: string;
@@ -17,50 +19,15 @@ interface Sede {
 }
 
 interface Cliente {
+  id: number;
   nome: string;
   status: "ativo" | "inativo";
   sedes: Sede[];
 }
 
-const clientesIniciais: Cliente[] = [
-  {
-    nome: "sicoob",
-    status: "ativo",
-    sedes: [
-      {
-        nome: "sede 1",
-        endereco: "rua das flores-441",
-        cep: "72414144",
-        latitude: "15°47\\'56.864\\\"S",
-        longitude: "47°52\\'1.286\\\"W",
-      },
-      {
-        nome: "sede 2",
-        endereco: "av das árvores-123",
-        cep: "72414155",
-        latitude: "15°48\\'00.000\\\"S",
-        longitude: "47°53\\'00.000\\\"W",
-      },
-    ],
-  },
-  {
-    nome: "superbom",
-    status: "inativo",
-    sedes: [
-      {
-        nome: "sede única",
-        endereco: "rua das flores-441",
-        cep: "72414144",
-        latitude: "15°47\\'56.864\\\"S",
-        longitude: "47°52\\'1.286\\\"W",
-      },
-    ],
-  },
-];
-
 export default function ClientesPage() {
   const [search, setSearch] = useState("");
-  const [clientes, setClientes] = useState<Cliente[]>(clientesIniciais);
+  const [clientes, setClientes] = useState<Cliente[]>([]);
   const [clienteEditandoIndex, setClienteEditandoIndex] = useState<number | null>(null);
   const [nomeEditando, setNomeEditando] = useState("");
   const [modalCriarAberto, setModalCriarAberto] = useState(false);
@@ -78,29 +45,42 @@ export default function ClientesPage() {
     longitude: "",
   });
 
+  useEffect(() => {
+    async function fetchClientes() {
+      try {
+        const dadosBrutos = await listarClientes();
+        const dadosTransformados: Cliente[] = dadosBrutos.map((cliente: any) => ({
+          id: cliente.idcliente,
+          nome: cliente.clientenome,
+          status: cliente.clientestatus === 1 ? "ativo" : "inativo",
+          sedes: [],
+        }));
+        setClientes(dadosTransformados);
+      } catch (error) {
+        console.error("Erro ao carregar clientes:", error);
+      }
+    }
+    fetchClientes();
+  }, []);
+
   const clientesFiltrados = clientes.filter((cliente) =>
     cliente.nome.toLowerCase().includes(search.toLowerCase())
   );
 
-  const sedesDoCliente =
-    clienteSelecionadoIndex !== null ? clientes[clienteSelecionadoIndex].sedes : [];
+  const sedesDoCliente = clienteSelecionadoIndex !== null ? clientes[clienteSelecionadoIndex].sedes : [];
 
   const sedesFiltradas = sedesDoCliente.filter((sede) =>
     sede.nome.toLowerCase().includes(searchSede.toLowerCase())
   );
 
   function toggleStatus(clienteToToggle: Cliente) {
-    setClientes((oldClientes) => {
-      return oldClientes.map((cliente) => {
-        if (cliente.nome === clienteToToggle.nome) {
-          return {
-            ...cliente,
-            status: cliente.status === "ativo" ? "inativo" : "ativo",
-          };
-        }
-        return cliente;
-      });
-    });
+    setClientes((oldClientes) =>
+      oldClientes.map((cliente) =>
+        cliente.id === clienteToToggle.id
+          ? { ...cliente, status: cliente.status === "ativo" ? "inativo" : "ativo" }
+          : cliente
+      )
+    );
   }
 
   function abrirEditar(index: number) {
@@ -143,6 +123,7 @@ export default function ClientesPage() {
   function salvarNovoCliente() {
     if (nomeNovoCliente.trim() === "") return;
     const novoCliente: Cliente = {
+      id: clientes.length > 0 ? Math.max(...clientes.map((c) => c.id)) + 1 : 1,
       nome: nomeNovoCliente.trim(),
       status: "ativo",
       sedes: [],
@@ -210,6 +191,7 @@ export default function ClientesPage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      {/* Cabeçalho */}
       <div className="bg-yellow-400 flex items-center justify-between px-4 py-2 shadow-md sticky top-0 z-50">
         <div className="flex items-center gap-4">
           <img src="/logo.png" alt="Logo" className="h-8" />
@@ -226,6 +208,7 @@ export default function ClientesPage() {
         </div>
       </div>
 
+      {/* Barra de busca e botão novo cliente */}
       <div className="bg-gray-100 px-6 py-4 max-w-5xl mx-auto sticky top-[48px] z-40 border-b border-gray-300 flex justify-between items-center">
         <Input
           placeholder="BUSCAR"
@@ -235,12 +218,17 @@ export default function ClientesPage() {
         />
         <Dialog open={modalCriarAberto} onOpenChange={setModalCriarAberto}>
           <DialogTrigger asChild>
-            <Button onClick={abrirModalCriar} className="bg-yellow-400 text-black font-bold">
+            <Button
+              onClick={abrirModalCriar}
+              className="bg-yellow-400 text-black font-bold"
+            >
               NOVO CLIENTE
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md w-full">
-            <DialogTitle className="text-lg font-bold mb-4">Criar Novo Cliente</DialogTitle>
+            <DialogTitle className="text-lg font-bold mb-4">
+              Criar Novo Cliente
+            </DialogTitle>
             <Input
               placeholder="Nome do cliente"
               value={nomeNovoCliente}
@@ -249,10 +237,16 @@ export default function ClientesPage() {
               className="mb-4 w-full"
             />
             <div className="flex justify-end gap-2">
-              <Button onClick={() => setModalCriarAberto(false)} className="bg-gray-300 text-black text-xs h-7 px-3">
+              <Button
+                onClick={() => setModalCriarAberto(false)}
+                className="bg-gray-300 text-black text-xs h-7 px-3"
+              >
                 Cancelar
               </Button>
-              <Button onClick={salvarNovoCliente} className="bg-yellow-400 text-black text-xs h-7 px-3">
+              <Button
+                onClick={salvarNovoCliente}
+                className="bg-yellow-400 text-black text-xs h-7 px-3"
+              >
                 Salvar
               </Button>
             </div>
@@ -260,167 +254,154 @@ export default function ClientesPage() {
         </Dialog>
       </div>
 
-      <div className="p-6 max-w-5xl mx-auto pt-4">
-        <table className="w-full bg-white rounded shadow overflow-hidden">
-          <thead>
-            <tr className="text-left border-b">
-              <th className="p-2">Nome</th>
-              <th className="p-2">Status</th>
-              <th className="p-2">Sedes</th>
-              <th className="p-2 text-right">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {clientesFiltrados.map((cliente, index) => (
-              <tr key={cliente.nome} className="border-b hover:bg-gray-50">
-                <td className="p-2 font-bold">{cliente.nome}</td>
-                <td className="p-2">
-                  <div
-                    className={`w-16 h-6 rounded-md text-center text-xs font-bold ${
-                      cliente.status === "ativo"
-                        ? "bg-green-500 text-white"
-                        : "bg-red-500 text-white"
-                    } flex items-center justify-center`}
-                  >
-                    {cliente.status.toUpperCase()}
-                  </div>
-                </td>
-                <td className="p-2">
-                  <Button
-                    className="bg-yellow-400 text-black text-xs h-7 px-3"
-                    onClick={() => abrirModalSede(index)}
-                  >
-                    SEDES ({cliente.sedes.length})
-                  </Button>
-                </td>
-                <td className="p-2 text-right">
-                  <div className="flex gap-2 justify-end">
+      {/* Lista de clientes */}
+      <div className="max-w-5xl mx-auto px-6 py-6">
+        {clientesFiltrados.length === 0 ? (
+          <p className="text-center text-gray-500">Nenhum cliente encontrado.</p>
+        ) : (
+          clientesFiltrados.map((cliente, index) => (
+            <div
+              key={cliente.id}
+              className="bg-white shadow p-4 rounded mb-4 flex justify-between items-center"
+            >
+              <div className="flex flex-col">
+                {/* Mostrar ID do cliente */}
+                <span className="text-xs text-gray-500 mb-1">ID: {cliente.id}</span>
+                {clienteEditandoIndex === index ? (
+                  <input
+                    className="border border-gray-300 rounded px-2 py-1"
+                    value={nomeEditando}
+                    onChange={(e) => setNomeEditando(e.target.value)}
+                  />
+                ) : (
+                  <h3 className="font-bold">{limitarTexto(cliente.nome, 30)}</h3>
+                )}
+                <p
+                  className={`text-sm ${
+                    cliente.status === "ativo" ? "text-green-600" : "text-red-600"
+                  } font-semibold`}
+                >
+                  {cliente.status.toUpperCase()}
+                </p>
+              </div>
+
+              <div className="flex gap-2">
+                {clienteEditandoIndex === index ? (
+                  <>
                     <Button
-                      className="bg-black text-white text-xs h-7 px-3"
+                      onClick={salvarEdicao}
+                      className="bg-green-500 text-white text-xs h-7 px-3"
+                    >
+                      Salvar
+                    </Button>
+                    <Button
+                      onClick={fecharEditar}
+                      className="bg-gray-300 text-black text-xs h-7 px-3"
+                    >
+                      Cancelar
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
                       onClick={() => abrirEditar(index)}
+                      className="bg-yellow-400 text-black text-xs h-7 px-3"
                     >
-                      EDITAR
+                      Editar
                     </Button>
                     <Button
-                      className="bg-red-600 text-white text-xs h-7 px-3"
-                      onClick={() => excluirCliente(index)}
-                    >
-                      EXCLUIR
-                    </Button>
-                    <Button
-                      className={`text-xs h-7 px-3 ${
-                        cliente.status === "ativo"
-                          ? "bg-red-600 text-white"
-                          : "bg-green-600 text-white"
-                      }`}
                       onClick={() => toggleStatus(cliente)}
+                      className={`${
+                        cliente.status === "ativo" ? "bg-red-600" : "bg-green-600"
+                      } text-white text-xs h-7 px-3`}
                     >
-                      {cliente.status === "ativo" ? "INATIVAR" : "ATIVAR"}
+                      {cliente.status === "ativo" ? "Inativar" : "Ativar"}
                     </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                    <Button
+                      onClick={() => excluirCliente(index)}
+                      className="bg-red-600 text-white text-xs h-7 px-3"
+                    >
+                      Excluir
+                    </Button>
+                    <Button
+                      onClick={() => abrirModalSede(index)}
+                      className="bg-yellow-400 text-black text-xs h-7 px-3"
+                    >
+                      Ver Sedes
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
-      {/* Modal Editar Cliente */}
-      <Dialog
-        open={clienteEditandoIndex !== null}
-        onOpenChange={(open) => {
-          if (!open) fecharEditar();
-        }}
-      >
-        <DialogContent className="max-w-md w-full">
-          <DialogTitle className="text-lg font-bold mb-4">Editar Cliente</DialogTitle>
-          <Input
-            value={nomeEditando}
-            onChange={(e) => setNomeEditando(e.target.value)}
-            autoFocus
-            className="mb-4 w-full"
-          />
-          <div className="flex justify-end gap-2">
-            <Button onClick={fecharEditar} className="bg-gray-300 text-black text-xs h-7 px-3">
-              Cancelar
+      {/* Modal das sedes */}
+      <Dialog open={modalSedeAberto} onOpenChange={setModalSedeAberto}>
+        <DialogContent className="max-w-4xl w-full">
+          <DialogTitle className="text-lg font-bold mb-4">
+            Sedes do Cliente
+          </DialogTitle>
+
+          <div className="mb-4 flex gap-4 items-center">
+            <Input
+              placeholder="Buscar Sede"
+              value={searchSede}
+              onChange={(e) => setSearchSede(e.target.value)}
+              className="flex-grow"
+            />
+            <Button
+              onClick={abrirModalCriarSede}
+              className="bg-yellow-400 text-black text-xs h-7 px-3"
+            >
+              Nova Sede
             </Button>
-            <Button onClick={salvarEdicao} className="bg-yellow-400 text-black text-xs h-7 px-3">
-              Salvar
+          </div>
+
+          {sedesFiltradas.length === 0 ? (
+            <p className="text-center text-gray-500">Nenhuma sede encontrada.</p>
+          ) : (
+            sedesFiltradas.map((sede, index) => (
+              <div
+                key={index}
+                className="bg-white shadow p-4 rounded mb-4 flex justify-between items-center"
+              >
+                <div className="flex flex-col">
+                  <h3 className="font-bold">{limitarTexto(sede.nome, 30)}</h3>
+                  <p className="text-sm text-gray-700">{sede.endereco}</p>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => abrirModalEditarSede(sede, index)}
+                    className="bg-yellow-400 text-black text-xs h-7 px-3"
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    onClick={() => excluirSede(index)}
+                    className="bg-red-600 text-white text-xs h-7 px-3"
+                  >
+                    Excluir
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+
+          <div className="flex justify-end">
+            <Button
+              onClick={() => setModalSedeAberto(false)}
+              className="bg-gray-300 text-black text-xs h-7 px-3"
+            >
+              Fechar
             </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Modal Sedes do Cliente */}
-      <Dialog open={modalSedeAberto} onOpenChange={setModalSedeAberto}>
-        <DialogContent className="max-w-4xl w-full">
-          <DialogTitle className="text-lg font-bold mb-4 flex justify-between items-center">
-            <span>
-              Sedes do cliente:{" "}
-              {clienteSelecionadoIndex !== null ? clientes[clienteSelecionadoIndex].nome : ""}
-            </span>
-            <Button className="bg-yellow-400 text-black text-xs h-7 px-3" onClick={abrirModalCriarSede}>
-              + NOVA SEDE
-            </Button>
-          </DialogTitle>
-
-          <Input
-            placeholder="BUSCAR SEDES"
-            value={searchSede}
-            onChange={(e) => setSearchSede(e.target.value)}
-            className="mb-4 w-full max-w-md"
-          />
-
-          <table className="w-full border rounded border-gray-300 overflow-hidden">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-2 text-left">Nome</th>
-                <th className="p-2 text-left">Endereço</th>
-                <th className="p-2 text-left">CEP</th>
-                <th className="p-2 text-left">Latitude</th>
-                <th className="p-2 text-left">Longitude</th>
-                <th className="p-2 text-right">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sedesFiltradas.map((sede, index) => (
-                <tr key={index} className="border-b hover:bg-gray-50">
-                  <td className="p-2">{limitarTexto(sede.nome, 20)}</td>
-                  <td className="p-2">{limitarTexto(sede.endereco, 25)}</td>
-                  <td className="p-2">{sede.cep}</td>
-                  <td className="p-2">{sede.latitude}</td>
-                  <td className="p-2">{sede.longitude}</td>
-                  <td className="p-2 text-right">
-                    <div className="flex gap-2 justify-end">
-                      <Button
-                        className="bg-black text-white text-xs h-7 px-3"
-                        onClick={() => abrirModalEditarSede(sede, index)}
-                      >
-                        EDITAR
-                      </Button>
-                      <Button
-                        className="bg-red-600 text-white text-xs h-7 px-3"
-                        onClick={() => excluirSede(index)}
-                      >
-                        EXCLUIR
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {sedesFiltradas.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="text-center p-4 text-gray-500">
-                    Nenhuma sede encontrada.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal Criar/Editar Sede */}
+      {/* Modal criar/editar sede */}
       <Dialog open={modalCriarEditarSedeAberto} onOpenChange={setModalCriarEditarSedeAberto}>
         <DialogContent className="max-w-md w-full">
           <DialogTitle className="text-lg font-bold mb-4">
@@ -431,39 +412,44 @@ export default function ClientesPage() {
             placeholder="Nome"
             value={dadosSedeEditando.nome}
             onChange={(e) => setDadosSedeEditando({ ...dadosSedeEditando, nome: e.target.value })}
-            className="mb-2 w-full"
-            autoFocus
+            className="mb-2"
           />
           <Input
             placeholder="Endereço"
             value={dadosSedeEditando.endereco}
             onChange={(e) => setDadosSedeEditando({ ...dadosSedeEditando, endereco: e.target.value })}
-            className="mb-2 w-full"
+            className="mb-2"
           />
           <Input
             placeholder="CEP"
             value={dadosSedeEditando.cep}
             onChange={(e) => setDadosSedeEditando({ ...dadosSedeEditando, cep: e.target.value })}
-            className="mb-2 w-full"
+            className="mb-2"
           />
           <Input
             placeholder="Latitude"
             value={dadosSedeEditando.latitude}
             onChange={(e) => setDadosSedeEditando({ ...dadosSedeEditando, latitude: e.target.value })}
-            className="mb-2 w-full"
+            className="mb-2"
           />
           <Input
             placeholder="Longitude"
             value={dadosSedeEditando.longitude}
             onChange={(e) => setDadosSedeEditando({ ...dadosSedeEditando, longitude: e.target.value })}
-            className="mb-4 w-full"
+            className="mb-4"
           />
 
           <div className="flex justify-end gap-2">
-            <Button onClick={() => setModalCriarEditarSedeAberto(false)} className="bg-gray-300 text-black text-xs h-7 px-3">
+            <Button
+              onClick={() => setModalCriarEditarSedeAberto(false)}
+              className="bg-gray-300 text-black text-xs h-7 px-3"
+            >
               Cancelar
             </Button>
-            <Button onClick={salvarSede} className="bg-yellow-400 text-black text-xs h-7 px-3">
+            <Button
+              onClick={salvarSede}
+              className="bg-yellow-400 text-black text-xs h-7 px-3"
+            >
               Salvar
             </Button>
           </div>

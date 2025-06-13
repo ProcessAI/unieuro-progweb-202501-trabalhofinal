@@ -26,9 +26,9 @@ const port = 3000;
 app.use(express.json()); // configuramos o nosso express para aceitar requisições json
 
 /* Configurando express para usar as rotas criadas!  */
-app.use('/sede', sedeRouter);
-app.use('/cliente', router);
-app.use('/endereco', enderecoRouter);
+app.use('/cliente', router); // Cliente 
+app.use('/sede', sedeRouter); // Sede
+app.use('/endereco', enderecoRouter); // endereco
 
 // express recebendo requisições get no nosso diretório raiz
 app.get('/', (req: Request, res: Response) => {

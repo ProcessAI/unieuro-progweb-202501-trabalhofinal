@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { listarClientes } from '../services/clienteService';
+import { listarClientes } from "../services/clienteService";
 
 type Cliente = {
   idcliente: number;
@@ -8,10 +8,24 @@ type Cliente = {
 
 const ClienteList = () => {
   const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    listarClientes().then(setClientes).catch(console.error);
+    listarClientes()
+      .then((dados) => {
+        setClientes(dados);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError('Erro ao carregar clientes.');
+        console.error(err);
+        setLoading(false);
+      });
   }, []);
+
+  if (loading) return <p>Carregando clientes...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div>
