@@ -103,3 +103,6 @@ dist
 /generated/prisma
 package-lock.json
 .vuepress/dist
+# ignorando package-lock.json
+package-lock.json
+
