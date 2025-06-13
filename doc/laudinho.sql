@@ -62,7 +62,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE laudo.cliente (
-    idcliente integer NOT NULL,
+    idcliente int NOT NULL,
     clientenome character varying(50) NOT NULL,
     clientestatus integer DEFAULT 0
 );
@@ -732,4 +732,3 @@ ALTER TABLE ONLY laudo.sede
 --
 -- PostgreSQL database dump complete
 --
-
