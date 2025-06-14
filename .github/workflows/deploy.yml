@@ -38,8 +38,8 @@ jobs:
             username: ${{ secrets.SSH_USER }}
             key: ${{ secrets.SSH_PASSWORD }}
             port: 22
-            source: "front/build/"
-            target: "/dados/frontend/"
+            source: "front/dist/"
+            target: "/dados/laudinho/frontend/"
             strip_components: 2
             
         - name: Copiar backend para servidor
@@ -50,7 +50,7 @@ jobs:
             key: ${{ secrets.SSH_PASSWORD }}
             port: 22
             source: "back/dist/"
-            target: "/dados/backend/"
+            target: "/dados/laudinho/backend/"
             strip_components: 2
             
         - name: Reiniciar aplicação no servidor
