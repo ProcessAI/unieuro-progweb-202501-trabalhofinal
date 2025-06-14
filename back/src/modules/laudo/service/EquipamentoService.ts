@@ -56,8 +56,8 @@ export class EquipamentoClass {
       }
 
       const equipamentoCriado = await this.EquipamentoPersistence.create({
-        idsede,
-        idtipoeq,
+        sede: { connect: { idsede } },
+        tipoeq: { connect: { idtipoeq } },
         equipamentoserie: equipserie,
         equipamentomodelo: equipmodel,
         equipamentomac: equipmac,
@@ -127,8 +127,8 @@ export class EquipamentoClass {
       const equipamentoAtualizado = await this.EquipamentoPersistence.update(
         idequipamento,
         {
-          idsede,
-          idtipoeq,
+          sede: { connect: { idsede } },
+          tipoeq: { connect: { idtipoeq } },
           equipamentoserie: equipserie,
           equipamentomodelo: equipmodel,
           equipamentomac: equipmac,

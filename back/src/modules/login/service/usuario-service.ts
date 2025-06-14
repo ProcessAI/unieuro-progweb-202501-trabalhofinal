@@ -11,16 +11,19 @@ export async function registerUser(req: Request, res: Response) {
   try {
     const existingUser = await findUserByEmail(usuarioemail);
     if (existingUser) {
-      return res.status(400).json({ message: 'Usuário já existe' });
+      res.status(400).json({ message: 'Usuário já existe' });
+      return;
     }
 
     const hashedPassword = await bcrypt.hash(usuariosenha, 10);
     const user = await createUser(usuarioemail, hashedPassword);
 
-    return res.status(201).json({ message: 'Usuário criado com sucesso', user });
+    res.status(201).json({ message: 'Usuário criado com sucesso', user });
+    return;
   } catch (error) {
     console.error('Erro no registerUser:', error);
-    return res.status(500).json({ message: 'Erro interno', error });
+    res.status(500).json({ message: 'Erro interno', error });
+    return;
   }
 }
 
@@ -30,17 +33,21 @@ export async function loginUser(req: Request, res: Response) {
   try {
     const user = await findUserByEmail(usuarioemail);
     if (!user) {
-      return res.status(400).json({ message: 'Usuário não encontrado' });
+      res.status(400).json({ message: 'Usuário não encontrado' });
+      return;
     }
 
     const isValid = await bcrypt.compare(usuariosenha, user.usuariosenha);
     if (!isValid) {
-      return res.status(401).json({ message: 'Senha inválida' });
+      res.status(401).json({ message: 'Senha inválida' });
+      return;
     }
 
     const token = jwt.sign({ idusuario: user.idusuario }, JWT_SECRET, { expiresIn: '1h' });
-    return res.status(200).json({ message: 'Login bem-sucedido', token });
+    res.status(200).json({ message: 'Login bem-sucedido', token });
+    return;
   } catch (error) {
-    return res.status(500).json({ message: 'Erro interno', error });
+    res.status(500).json({ message: 'Erro interno', error });
+    return;
   }
 }

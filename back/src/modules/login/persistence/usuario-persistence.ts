@@ -11,7 +11,7 @@ export async function createUser(usuarioemail: string, usuariosenha: string) {
   });
 }
 
-export async function findUserByEmail(usuarioemail: String) {
+export async function findUserByEmail(usuarioemail: string) {
   return prisma.usuario.findFirst({
     where: { usuarioemail },
   });

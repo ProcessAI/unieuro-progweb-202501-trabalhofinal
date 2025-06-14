@@ -1,3 +1,7 @@
+//NOTE: Não retorne RES direto, retorne void, alguma coisa com o Express 5 causa erro de typagem
+// https://stackoverflow.com/questions/79071082/typescript-error-no-overload-matches-this-call-in-express-route-handler
+
+
 import express, { Request, Response } from 'express';
 // Rotas laudinho-2
 import userRoutes from '../login/routes/usuario-routes';

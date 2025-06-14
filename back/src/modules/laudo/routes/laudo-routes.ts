@@ -1,5 +1,4 @@
 import { Router, Request, Response } from 'express';
-import { Laudo } from '../model/laudo-model';
 import {
   findAll,
   findById,
