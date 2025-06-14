@@ -1,46 +1,175 @@
-# Começando com Create React App
+# Laudinho Frontend
 
-Este projeto foi inicializado com [Create React App](https://github.com/facebook/create-react-app).
+Sistema de gerenciamento de clientes desenvolvido em React com TypeScript, usando Vite como bundler.
 
-## Scripts Disponíveis
+## 🚀 Tecnologias Utilizadas
 
-No diretório do projeto, você pode executar:
+- **React 19.1.0** - Biblioteca para construção de interfaces
+- **TypeScript 5.8.3** - Superset do JavaScript com tipagem estática
+- **Vite 6.3.5** - Build tool e dev server
+- **Tailwind CSS 4.1.7** - Framework CSS utilitário
+- **Radix UI** - Componentes acessíveis e customizáveis
+- **Lucide React** - Ícones
+- **React Router DOM** - Roteamento
+- **React Hook Form** - Gerenciamento de formulários
+- **Zod** - Validação de schemas
 
-### `npm start`
+## 📁 Estrutura do Projeto
 
-Executa o aplicativo em modo de desenvolvimento.
-Abra [http://localhost:3000](http://localhost:3000) para visualizá-lo no navegador.
+```
+laudinho-frontend/
+├── public/
+├── src/
+│   ├── assets/          # Arquivos estáticos (imagens, etc.)
+│   ├── components/
+│   │   └── ui/          # Componentes UI do shadcn/ui
+│   ├── hooks/           # Custom React hooks
+│   ├── lib/             # Funções utilitárias
+│   ├── pages/           # Páginas da aplicação
+│   │   └── ClientesPage.tsx
+│   ├── service/         # Serviços e APIs
+│   ├── App.css          # Estilos da aplicação
+│   ├── App.tsx          # Componente principal
+│   ├── index.css        # Estilos globais
+│   └── main.tsx         # Ponto de entrada
+├── components.json      # Configuração do shadcn/ui
+├── eslint.config.js     # Configuração do ESLint
+├── index.html           # HTML principal
+├── package.json         # Dependências e scripts
+├── tsconfig.json        # Configuração do TypeScript
+├── tsconfig.node.json   # Configuração do TypeScript para Node
+└── vite.config.ts       # Configuração do Vite
+```
 
-A página será recarregada se você fizer alterações.
-Você também verá erros de lint no console.
+## 🛠️ Instalação e Configuração
 
-### `npm test`
+### Pré-requisitos
 
-Inicia o executor de testes no modo interativo.
-Veja a seção sobre [execução de testes](https://facebook.github.io/create-react-app/docs/running-tests) para mais informações.
+- Node.js 20.x ou superior
+- pnpm (recomendado) ou npm
 
-### `npm run build`
+### Passos para instalação
 
-Cria o aplicativo para produção na pasta `build`.
-Ele empacota corretamente o React em modo de produção e otimiza o build para o melhor desempenho.
+1. **Clone ou baixe o projeto**
+   ```bash
+   # Se estiver clonando de um repositório
+   git clone <url-do-repositorio>
+   cd laudinho-frontend
+   ```
 
-O build é minificado e os nomes dos arquivos incluem hashes.
-Seu aplicativo está pronto para ser implantado!
+2. **Instale as dependências**
+   ```bash
+   pnpm install
+   # ou
+   npm install
+   ```
 
-Veja a seção sobre [implantação](https://facebook.github.io/create-react-app/docs/deployment) para mais informações.
+3. **Execute o projeto em modo de desenvolvimento**
+   ```bash
+   pnpm run dev
+   # ou
+   npm run dev
+   ```
 
-### `npm run eject`
+4. **Acesse a aplicação**
+   - Abra o navegador em: `http://localhost:5173`
 
-**Atenção: esta é uma operação irreversível. Depois de executar `eject`, não há como voltar atrás!**
+## 📋 Scripts Disponíveis
 
-Se você não estiver satisfeito com as ferramentas de build e as configurações escolhidas, pode executar `eject` a qualquer momento. Esse comando removerá a dependência única de build do seu projeto.
+- `pnpm run dev` - Inicia o servidor de desenvolvimento
+- `pnpm run build` - Gera build de produção
+- `pnpm run preview` - Visualiza o build de produção
+- `pnpm run lint` - Executa o linter
 
-Em vez disso, ele copiará todos os arquivos de configuração e dependências transitivas (webpack, Babel, ESLint, etc.) diretamente para o seu projeto, permitindo total controle sobre eles. Todos os comandos, exceto `eject`, continuarão funcionando, mas passarão a apontar para os scripts copiados, permitindo que você os personalize. A partir desse ponto, você estará por conta própria.
+## 🎯 Funcionalidades
 
-Você nunca é obrigado a usar o `eject`. O conjunto de funcionalidades oferecido é adequado para implantações pequenas e médias, e você não deve se sentir pressionado a usar esse recurso. No entanto, entendemos que essa ferramenta não seria útil se não permitisse personalização quando você estiver pronto para isso.
+### Gerenciamento de Clientes
+- ✅ Listar clientes
+- ✅ Criar novo cliente
+- ✅ Editar cliente existente
+- ✅ Excluir cliente
+- ✅ Ativar/Inativar cliente
+- ✅ Buscar clientes
 
-## Saiba Mais
+### Gerenciamento de Sedes
+- ✅ Visualizar sedes de um cliente
+- ✅ Criar nova sede
+- ✅ Editar sede existente
+- ✅ Excluir sede
+- ✅ Buscar sedes
 
-Você pode aprender mais na [documentação do Create React App](https://facebook.github.io/create-react-app/docs/getting-started).
+### Interface
+- ✅ Design responsivo
+- ✅ Modais para criação/edição
+- ✅ Navegação intuitiva
+- ✅ Feedback visual de status
 
-Para aprender React, consulte a [documentação do React](https://reactjs.org/).
+## 🎨 Componentes UI
+
+O projeto utiliza componentes do **shadcn/ui** baseados no **Radix UI**:
+
+- `Dialog` - Modais e pop-ups
+- `Input` - Campos de entrada
+- `Button` - Botões interativos
+- E outros componentes conforme necessário
+
+## 🔧 Configurações Importantes
+
+### TypeScript
+- Configuração estrita habilitada
+- Paths configurados para imports absolutos (`@/`)
+- Suporte completo para JSX
+
+### Vite
+- Hot Module Replacement (HMR)
+- Build otimizado para produção
+- Suporte a TypeScript nativo
+
+### Tailwind CSS
+- Configuração personalizada
+- Componentes estilizados
+- Design system consistente
+
+## 📦 Dependências Principais
+
+```json
+{
+  "react": "^19.1.0",
+  "react-dom": "^19.1.0",
+  "typescript": "^5.8.3",
+  "vite": "^6.3.5",
+  "@radix-ui/react-dialog": "^1.1.13",
+  "tailwindcss": "^4.1.7",
+  "lucide-react": "^0.510.0"
+}
+```
+
+## 🚀 Deploy
+
+Para fazer deploy da aplicação:
+
+1. **Gere o build de produção**
+   ```bash
+   pnpm run build
+   ```
+
+2. **Os arquivos estarão na pasta `dist/`**
+   - Faça upload dos arquivos para seu servidor web
+   - Configure o servidor para servir arquivos estáticos
+
+## 🤝 Contribuição
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+## 📞 Suporte
+
+Para dúvidas ou suporte, entre em contato através dos issues do repositório.
+

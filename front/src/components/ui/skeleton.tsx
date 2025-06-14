@@ -1,19 +1,15 @@
-import { cn } from "@/lib/utils";
-import * as React from "react"; // Importar React para tipagens
+import { cn } from "@/lib/utils"
 
-// 1. Tipagem para Skeleton
-interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string;
-}
-
-function Skeleton({ className, ...props }: SkeletonProps) {
+function Skeleton({
+  className,
+  ...props
+}) {
   return (
     <div
       data-slot="skeleton"
       className={cn("bg-accent animate-pulse rounded-md", className)}
-      {...props}
-    />
+      {...props} />
   );
 }
 
-export { Skeleton };
+export { Skeleton }

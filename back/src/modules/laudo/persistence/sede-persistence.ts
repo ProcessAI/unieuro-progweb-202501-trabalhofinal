@@ -60,7 +60,7 @@ export class SedePersistence {
     }
   }
 
-  async atualizar(
+  async update(
     id: number,
     sedeData: {
       sedenome?: string;

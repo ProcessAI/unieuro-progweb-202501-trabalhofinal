@@ -1,22 +1,19 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { ChevronRight, MoreHorizontal } from "lucide-react";
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { ChevronRight, MoreHorizontal } from "lucide-react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-// 1. Tipagem para Breadcrumb (Root)
-interface BreadcrumbProps extends React.ComponentPropsWithoutRef<"nav"> {} // Herda as props de uma tag <nav>
-
-function Breadcrumb({ ...props }: BreadcrumbProps) {
+function Breadcrumb({
+  ...props
+}) {
   return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
 }
 
-// 2. Tipagem para BreadcrumbList
-interface BreadcrumbListProps extends React.ComponentPropsWithoutRef<"ol"> {
-  className?: string;
-}
-
-function BreadcrumbList({ className, ...props }: BreadcrumbListProps) {
+function BreadcrumbList({
+  className,
+  ...props
+}) {
   return (
     <ol
       data-slot="breadcrumb-list"
@@ -24,50 +21,41 @@ function BreadcrumbList({ className, ...props }: BreadcrumbListProps) {
         "text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5",
         className
       )}
-      {...props}
-    />
+      {...props} />
   );
 }
 
-// 3. Tipagem para BreadcrumbItem
-interface BreadcrumbItemProps extends React.ComponentPropsWithoutRef<"li"> {
-  className?: string;
-}
-
-function BreadcrumbItem({ className, ...props }: BreadcrumbItemProps) {
+function BreadcrumbItem({
+  className,
+  ...props
+}) {
   return (
     <li
       data-slot="breadcrumb-item"
       className={cn("inline-flex items-center gap-1.5", className)}
-      {...props}
-    />
+      {...props} />
   );
 }
 
-// 4. Tipagem para BreadcrumbLink
-interface BreadcrumbLinkProps extends React.ComponentPropsWithoutRef<"a"> { // Herda as props de uma tag <a>
-  asChild?: boolean;
-  className?: string;
-}
-
-function BreadcrumbLink({ asChild, className, ...props }: BreadcrumbLinkProps) {
-  const Comp = asChild ? Slot : "a";
+function BreadcrumbLink({
+  asChild,
+  className,
+  ...props
+}) {
+  const Comp = asChild ? Slot : "a"
 
   return (
     <Comp
       data-slot="breadcrumb-link"
       className={cn("hover:text-foreground transition-colors", className)}
-      {...props}
-    />
+      {...props} />
   );
 }
 
-// 5. Tipagem para BreadcrumbPage
-interface BreadcrumbPageProps extends React.ComponentPropsWithoutRef<"span"> { // Herda as props de uma tag <span>
-  className?: string;
-}
-
-function BreadcrumbPage({ className, ...props }: BreadcrumbPageProps) {
+function BreadcrumbPage({
+  className,
+  ...props
+}) {
   return (
     <span
       data-slot="breadcrumb-page"
@@ -75,45 +63,38 @@ function BreadcrumbPage({ className, ...props }: BreadcrumbPageProps) {
       aria-disabled="true"
       aria-current="page"
       className={cn("text-foreground font-normal", className)}
-      {...props}
-    />
+      {...props} />
   );
 }
 
-// 6. Tipagem para BreadcrumbSeparator
-interface BreadcrumbSeparatorProps extends React.ComponentPropsWithoutRef<"li"> { // Herda as props de uma tag <li>
-  children?: React.ReactNode;
-  className?: string;
-}
-
-function BreadcrumbSeparator({ children, className, ...props }: BreadcrumbSeparatorProps) {
+function BreadcrumbSeparator({
+  children,
+  className,
+  ...props
+}) {
   return (
     <li
       data-slot="breadcrumb-separator"
       role="presentation"
       aria-hidden="true"
       className={cn("[&>svg]:size-3.5", className)}
-      {...props}
-    >
+      {...props}>
       {children ?? <ChevronRight />}
     </li>
   );
 }
 
-// 7. Tipagem para BreadcrumbEllipsis
-interface BreadcrumbEllipsisProps extends React.ComponentPropsWithoutRef<"span"> { // Herda as props de uma tag <span>
-  className?: string;
-}
-
-function BreadcrumbEllipsis({ className, ...props }: BreadcrumbEllipsisProps) {
+function BreadcrumbEllipsis({
+  className,
+  ...props
+}) {
   return (
     <span
       data-slot="breadcrumb-ellipsis"
       role="presentation"
       aria-hidden="true"
       className={cn("flex size-9 items-center justify-center", className)}
-      {...props}
-    >
+      {...props}>
       <MoreHorizontal className="size-4" />
       <span className="sr-only">More</span>
     </span>
@@ -128,4 +109,4 @@ export {
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
-};
+}

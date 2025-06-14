@@ -1,0 +1,2 @@
+### Listar clientes
+GET http://localhost:3000/cliente/listarCliente
