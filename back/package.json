@@ -2,7 +2,6 @@
   "name": "back",
   "version": "1.0.0",
   "description": "",
-  "main": "src/modules/router/app.ts",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -18,16 +17,12 @@
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.24",
     "prisma": "^6.9.0",
-    "@types/node": "^22.15.21",
-    "prisma": "^6.8.2",
     "tsx": "^4.19.4",
-    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
     "bcrypt": "^6.0.0",
-    "dependencies": "^0.0.1",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2"
