@@ -85,3 +85,10 @@ model tipolaudo {
   tipolaudotemplate String?
   laudo             laudo[]
 }
+
+model usuario {
+  idusuario     Int    @id @default(autoincrement())
+  usuarioemail  String @db.VarChar(100)
+  usuariosenha  String @db.VarChar(100)
+  usuariostatus Int    @default(0)
+}

@@ -1,5 +1,8 @@
+//NOTE: Não retorne RES direto, retorne void, alguma coisa com o Express 5 causa erro de typagem
+// https://stackoverflow.com/questions/79071082/typescript-error-no-overload-matches-this-call-in-express-route-handler
+
+
 import express, { Request, Response } from 'express';
-import cors from 'cors';
 // Rotas laudinho-2
 import userRoutes from '../login/routes/usuario-routes';
 import protegidoRoutes from '../login/routes/auth-middleware-routes';
@@ -17,12 +20,10 @@ const PORT = process.env.PORT || 3000;
 
 /* materializando um objeto do nosso Servidor express */
 const app = express();
-const cors = require('cors');
 
 // laudinho-2
 
 app.use(express.json());
-app.use(cors());
 app.use('/auth', userRoutes);
 app.use('/api', protegidoRoutes);
 app.use('/sede', sedeRoutes);

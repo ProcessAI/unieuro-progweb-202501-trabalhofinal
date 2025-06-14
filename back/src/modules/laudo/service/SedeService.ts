@@ -1,4 +1,4 @@
-import { SedePersistence } from '../persistence/sede-persistence.ts';
+import { SedePersistence } from '../persistence/sede-persistence';
 
 export class SedeService {
   private persistence = new SedePersistence();
@@ -16,7 +16,7 @@ export class SedeService {
   }
 
  async atualizar(id: number, data: { sedenome?: string; sedestatus?: number }) {
-    return await this.persistence.atualizar(id, data);
+    return await this.persistence.update(id, data);
   }
 }
 

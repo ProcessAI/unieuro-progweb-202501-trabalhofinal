@@ -4,7 +4,7 @@ import { EnderecoService } from '../service/EnderecoService';
 const enderecoRouter = express.Router();
 const service = new EnderecoService();
 
-enderecoRouter.post('/', async (req: Request, res: Response) => {
+enderecoRouter.post('/', async (req: Request, res: Response): Promise<any> => {
   try {
 
     const {enderecoendereco, enderecocep, enderecolat, enderecolon, enderecostatus, idsede }=req.body
@@ -19,13 +19,12 @@ enderecoRouter.post('/', async (req: Request, res: Response) => {
     
     res.status(200).json(enderecoCriado)
 
-
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
 });
 
-enderecoRouter.get('/', async (req: Request, res: Response) => {
+enderecoRouter.get('/', async (req: Request, res: Response): Promise<any> => {
   try {
     const enderecos = await service.listarEndereco();
     res.status(200).json(enderecos);
@@ -34,7 +33,7 @@ enderecoRouter.get('/', async (req: Request, res: Response) => {
   }
 });
 
-enderecoRouter.get('/:id', async (req: Request, res: Response) => {
+enderecoRouter.get('/:id', async (req: Request, res: Response): Promise<any> => {
   try {
     const idendereco = parseInt(req.params.id);
     const endereco = await service.visualizarEndereco(idendereco);
@@ -47,8 +46,7 @@ enderecoRouter.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-
-enderecoRouter.put('/:id', async (req: Request, res: Response) => {
+enderecoRouter.put('/:id', async (req: Request, res: Response): Promise<any> => {
   try {
     const id = parseInt(req.params.id);
     const {enderecoendereco, enderecocep, enderecolat, enderecolon, enderecostatus, idsede }=req.body
@@ -62,19 +60,17 @@ enderecoRouter.put('/:id', async (req: Request, res: Response) => {
       enderecosede:idsede
     });
     
-   
     if (!enderecoAtualizado) {
       return res.status(404).json({ "Aviso": "Endereço não encontrado" });
     }
     res.status(200).json(enderecoAtualizado);
   } catch (error) {
-    console.error(error); // <-- Adicione isso
+    console.error(error);
     res.status(500).json({ error: "Erro ao atualizar endereço" });
   }
 });
 
-
-enderecoRouter.delete('/:id', async (req: Request, res: Response) => {
+enderecoRouter.delete('/:id', async (req: Request, res: Response): Promise<any> => {
   try {
     const id = parseInt(req.params.id);
     const enderecoDeletado = await service.deletarEndereco(id);
@@ -87,6 +83,5 @@ enderecoRouter.delete('/:id', async (req: Request, res: Response) => {
     res.status(500).json({ error: "Erro ao deletar endereço" });
   }
 });
-
 
 export default enderecoRouter;
