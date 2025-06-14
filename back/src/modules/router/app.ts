@@ -1,37 +1,45 @@
+// Importando express e cors
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+
+// Importando Rotas
+import userRoutes from '../login/routes/usuario-routes';
+import router from '../laudo/routes/RouteCliente';
+import enderecoRouter from '../laudo/routes/RouteEndereco';
+import sedeRoutes from '../laudo/routes/sede-routes';
+import protegidoRoutes from '../login/routes/auth-middleware-routes';
+
+// Importando dotenv para configuração de variáveis ambiente
 import dotenv from 'dotenv';
 dotenv.config();
 
-/* Exportando Class e Métodos da lib express */
-import express, { Request, Response } from "express";
+//const PORT = process.env.PORT || 3000;
 
-/* importando todas as rotas criadas em routes */
-import router from "../laudo/routes/RouteCliente";
-import enderecoRouter from "../laudo/routes/RouteEndereco";
-import sedeRouter from "../laudo/routes/RouteSede";
+const PORT = 3000;
 
 
-/* materializando um objeto do nosso Servidor express */
+/* Materializando um objeto do nosso Servidor express */
 const app = express();
 
-//const port = process.env.PORT || 3000;
-const port = 3000;
+/* Middleware para aceitar requisições JSON e habilitar CORS */
+app.use(express.json());
+app.use(cors());
 
-app.use(express.json()); // configuramos o nosso express para aceitar requisições json
+/* Configurando as rotas */
+app.use('/auth', userRoutes);           // Usuários
+app.use('/api', protegidoRoutes);       // rotas api protegidas
+app.use('/cliente', router);            // Cliente
+app.use('/sede', sedeRoutes);           // Sede
+app.use('/endereco', enderecoRouter);   // Endereço
 
-/* Configurando express para usar as rotas criadas!  */
-app.use('/sede', sedeRouter);
-app.use('/cliente', router);
-app.use('/endereco', enderecoRouter);
-
-// express recebendo requisições get no nosso diretório raiz
+/* Rota raiz para teste */
 app.get('/', (req: Request, res: Response) => {
-    const resposta = res.status(200).json({ messagem: "Diretório Raiz" });
-    console.log(resposta);
+    res.status(200).json({ mensagem: "Diretório Raiz" });
 });
 
-/* Criando o nosso Servidor express */
-app.listen(port, (): void => {
-    const mensagem: string = 'SERVIDOR RODANDO NA PORTA:';
-    console.log(`${mensagem} ${port}`);
+/* Criando o nosso servidor express */
+app.listen(PORT, (): void => {
+    console.log(`SERVIDOR RODANDO NA PORTA: ${PORT}`);
 });
 
+export default app;
