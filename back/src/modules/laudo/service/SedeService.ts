@@ -1,4 +1,4 @@
-import { SedePersistence } from '../persistence/SedePersistence.ts';
+import { SedePersistence } from '../persistence/sede-persistence.ts';
 
 export class SedeService {
   private persistence = new SedePersistence();

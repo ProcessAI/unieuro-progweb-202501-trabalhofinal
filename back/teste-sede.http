@@ -1,0 +1,26 @@
+### Listar todas as sedes
+GET http://localhost:3000/sede
+
+### Buscar sede por ID
+GET http://localhost:3000/sede/3
+
+### Criar nova sede
+POST http://localhost:3000/sede
+Content-Type: application/json
+
+{
+  "nomesede": "Sede Nova",
+  "status": 1
+}
+
+### Atualizar sede
+PUT http://localhost:3000/sede/3
+Content-Type: application/json
+
+{
+  "nomesede": "Sede Atualizada",
+  "status": 1
+}
+
+### Deletar sede
+DELETE http://localhost:3000/sede/2
