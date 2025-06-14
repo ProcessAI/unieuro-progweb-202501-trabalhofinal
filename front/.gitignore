@@ -106,3 +106,5 @@ package-lock.json
 # ignorando package-lock.json
 package-lock.json
 
+# ignorando pnpm-lock.yaml
+pnpm-lock.yaml
