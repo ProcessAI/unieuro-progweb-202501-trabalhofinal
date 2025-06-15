@@ -5,7 +5,6 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -25,11 +24,12 @@ jobs:
             npm i
             npm run build
                 
-        - name: Buildar backend
+        - name: Instalar e buildar backend
           run: |
             cd back
             npm i
             npm run build
+            npx prisma generate
                 
         - name: Copiar frontend para servidor
           uses: appleboy/scp-action@v0.1.4
@@ -49,11 +49,11 @@ jobs:
             username: ${{ secrets.SSH_USER }}
             password: ${{ secrets.SSH_PASSWORD }}
             port: 22
-            source: "back/dist/"
+            source: "back/dist/,back/package.json,back/package-lock.json,back/prisma/"
             target: "/dados/laudinho/backend/"
-            strip_components: 2
+            strip_components: 1
             
-        - name: Reiniciar aplicação no servidor
+        - name: Instalar dependências e reiniciar aplicação
           uses: appleboy/ssh-action@v1.0.0
           with:
             host: ${{ secrets.SSH_HOST }}
@@ -62,5 +62,7 @@ jobs:
             port: 22
             script: |
               pkill -f "node.*backend" || true
-              cd /dados/backend
+              cd /dados/laudinho/backend
+              npm ci --only=production --ignore-scripts
+              npx prisma generate
               nohup node index.js > app.log 2>&1 &
