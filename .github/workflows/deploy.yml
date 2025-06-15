@@ -31,6 +31,27 @@ jobs:
             npm run build
             # Generate Prisma client for production
             npx prisma generate
+        
+        - name: Limpar e preparar diretórios no servidor
+          uses: appleboy/ssh-action@v1.0.0
+          with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            password: ${{ secrets.SSH_PASSWORD }}
+            port: 22
+            script: |
+              echo "Parando aplicação com pm2 (se estiver rodando)..."
+              pm2 delete laudinho-backend || true
+              
+              echo "Removendo diretórios antigos..."
+              rm -rf /dados/laudinho/frontend/*
+              rm -rf /dados/laudinho/backend/*
+              
+              echo "Criando diretórios se não existirem..."
+              mkdir -p /dados/laudinho/frontend
+              mkdir -p /dados/laudinho/backend
+              
+              echo "Diretórios limpos e preparados!"
                 
         - name: Copiar frontend para servidor
           uses: appleboy/scp-action@v0.1.4
@@ -68,9 +89,6 @@ jobs:
                   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
                   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-                  echo "Parando aplicação com pm2 (se estiver rodando)..."
-                  pm2 delete laudinho-backend || true
-
                   echo "Instalando dependências..."
                   cd /dados/laudinho/backend
                   npm ci --only=production
@@ -85,4 +103,3 @@ jobs:
                   pm2 save
 
                   echo "Aplicação implantada com sucesso!"
-
