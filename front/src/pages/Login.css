@@ -1,4 +1,5 @@
-* {
+/* Login.css */
+.login-reset {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -9,7 +10,7 @@ body {
   background-color: #fff;
 }
 
-header {
+.login-header {
   background-color: #ffc800;
   padding: 10px 0;
   display: flex;
@@ -17,26 +18,27 @@ header {
   align-items: center;
 }
 
-.logo {
+.login-logo {
   margin-left: 20px;
 }
 
-.logo img {
+.login-logo img {
   height: 40px;
 }
 
-.header-right {
+.login-header-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   margin-right: 20px;
+  position: relative;
 }
 
-.menu-label {
+.login-menu-label {
   font-weight: bold;
 }
 
-.logout-btn {
+.login-logout-btn {
   background-color: black;
   color: yellow;
   padding: 5px 15px;
@@ -45,7 +47,7 @@ header {
   cursor: pointer;
 }
 
-main {
+.login-main {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,13 +55,13 @@ main {
   padding: 30px 10px;
 }
 
-h1 {
+.login-main h1 {
   margin: 30px 0 20px;
   font-size: 24px;
   font-weight: bold;
 }
 
-form {
+.login-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -67,22 +69,23 @@ form {
   max-width: 300px;
 }
 
-input[type="text"],
-input[type="password"] {
+.login-form input[type="text"],
+.login-form input[type="password"],
+.login-form input[type="email"] {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.senha-container {
+.login-senha-container {
   position: relative;
 }
 
-.senha-container input {
+.login-senha-container input {
   width: 100%;
 }
 
-.senha-container .toggle-senha {
+.login-toggle-senha {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -92,18 +95,18 @@ input[type="password"] {
   cursor: pointer;
 }
 
-.links {
+.login-links {
   text-align: center;
   font-size: 12px;
 }
 
-.links a {
+.login-links a {
   color: #004aad;
   text-decoration: none;
   font-weight: bold;
 }
 
-.btn {
+.login-btn {
   background-color: #ffc800;
   padding: 10px;
   border: none;
@@ -111,25 +114,17 @@ input[type="password"] {
   font-weight: bold;
 }
 
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-right: 20px;
-  position: relative;
-}
-
 /* Novo estilo para alinhar o perfil corretamente */
-.profile-container {
+.login-profile-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  top: -10px; /* Ajuste vertical fino */
+  top: -10px;
 }
 
 /* Ícone redondo com borda preta */
-.profile-icon img {
+.login-profile-icon img {
   height: 30px;
   width: 30px;
   border-radius: 50%;

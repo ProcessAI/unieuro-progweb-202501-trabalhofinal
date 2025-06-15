@@ -1,0 +1,103 @@
+/* Cadastro.css */
+.cadastro-global-reset {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #fff;
+}
+
+.cadastro-top-logo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 20px 0 20px;
+  background-color: #fff;
+}
+
+.cadastro-top-logo img {
+  height: 40px;
+}
+
+.cadastro-header {
+  background-color: #ffc800;
+  height: 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  position: relative;
+  top: 0;
+}
+
+.cadastro-menu-label {
+  font-weight: bold;
+}
+
+.cadastro-logout-btn {
+  background-color: black;
+  color: yellow;
+  padding: 5px 15px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.cadastro-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 40px 10%;
+  gap: 40px;
+}
+
+.cadastro-form-section {
+  flex: 1;
+}
+
+.cadastro-form-section h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.cadastro-form-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cadastro-form-section input[type="text"],
+.cadastro-form-section input[type="email"],
+.cadastro-form-section input[type="date"],
+.cadastro-form-section input[type="password"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.cadastro-btn {
+  background-color: #ffc800;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+}
+
+.cadastro-illustration {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cadastro-illustration img {
+  max-width: 100%;
+  height: auto;
+}
