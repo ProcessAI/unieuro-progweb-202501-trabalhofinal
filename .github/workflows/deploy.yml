@@ -97,7 +97,7 @@ jobs:
                   npx prisma generate
 
                   echo "Iniciando aplicação com pm2..."
-                  pm2 start index.js --name laudinho-backend
+                  pm2 start dist/index.js --name "laudinho-backend"
 
                   echo "Salvando configuração do pm2..."
                   pm2 save
