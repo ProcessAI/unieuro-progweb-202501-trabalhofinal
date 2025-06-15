@@ -1,15 +1,8 @@
-import express from 'express';
-import laudoRoutes from './modules/laudo/routes/laudo-routes';
-import tipoeqRoutes from './modules/laudo/routes/tipoeq-routes';
+// index.ts
+import app from './modules/router/app';
 
-const app = express();
-app.use(express.json());
+const PORT = process.env.PORT || 8080;
 
-// Rotas
-app.use('/api/laudos', laudoRoutes);
-app.use('/api/tipoeq', tipoeqRoutes);
-
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
