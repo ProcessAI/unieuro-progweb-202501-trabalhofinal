@@ -36,7 +36,7 @@ jobs:
           with:
             host: ${{ secrets.SSH_HOST }}
             username: ${{ secrets.SSH_USER }}
-            key: ${{ secrets.SSH_PASSWORD }}
+            password: ${{ secrets.SSH_PASSWORD }}
             port: 22
             source: "front/dist/"
             target: "/dados/laudinho/frontend/"
@@ -47,7 +47,7 @@ jobs:
           with:
             host: ${{ secrets.SSH_HOST }}
             username: ${{ secrets.SSH_USER }}
-            key: ${{ secrets.SSH_PASSWORD }}
+            password: ${{ secrets.SSH_PASSWORD }}
             port: 22
             source: "back/dist/"
             target: "/dados/laudinho/backend/"
@@ -58,7 +58,7 @@ jobs:
           with:
             host: ${{ secrets.SSH_HOST }}
             username: ${{ secrets.SSH_USER }}
-            key: ${{ secrets.SSH_PASSWORD }}
+            password: ${{ secrets.SSH_PASSWORD }}
             port: 22
             script: |
               pkill -f "node.*backend" || true
