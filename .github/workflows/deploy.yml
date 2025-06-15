@@ -29,6 +29,7 @@ jobs:
             cd back
             npm i
             npm run build
+            # Generate Prisma client for production
             npx prisma generate
                 
         - name: Copiar frontend para servidor
@@ -60,9 +61,33 @@ jobs:
             username: ${{ secrets.SSH_USER }}
             password: ${{ secrets.SSH_PASSWORD }}
             port: 22
+            timeout: 300
+            command_timeout: 300
             script: |
+              # Stop existing process
               pkill -f "node.*backend" || true
+              sleep 2
+              
+              # Navigate to backend directory
               cd /dados/laudinho/backend
-              npm ci --only=production --ignore-scripts
+              
+              # Install dependencies with longer timeout
+              echo "Installing dependencies..."
+              npm ci --only=production --ignore-scripts --timeout=300000
+              
+              # Generate Prisma client
+              echo "Generating Prisma client..."
               npx prisma generate
+              
+              # Start application in background
+              echo "Starting application..."
               nohup node index.js > app.log 2>&1 &
+              
+              # Verify it started
+              sleep 3
+              if pgrep -f "node.*index.js" > /dev/null; then
+                echo "Application started successfully"
+              else
+                echo "Failed to start application"
+                exit 1
+              fi
