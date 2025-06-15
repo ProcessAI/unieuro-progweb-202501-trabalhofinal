@@ -1,7 +1,6 @@
 //NOTE: Não retorne RES direto, retorne void, alguma coisa com o Express 5 causa erro de typagem
 // https://stackoverflow.com/questions/79071082/typescript-error-no-overload-matches-this-call-in-express-route-handler
 
-
 import express from 'express';
 import dotenv from 'dotenv';
 import laudoRoutes from '../laudo/routes/laudo-routes';
@@ -23,17 +22,12 @@ app.use(express.json());
 
 app.use('/api/laudos', laudoRoutes);
 app.use('/api/tipoeq', tipoeqRoutes);
+app.use('/api/sede', sedeRoutes);
+app.use('/api/sede', sedeRouter);
+app.use('/api/cliente', routerCliente);
+app.use('/api/endereco', enderecoRouter);
 
-
-app.use('/auth', userRoutes);
-app.use('/api', protegidoRoutes);
-
-
-app.use('/sede', sedeRoutes);
-app.use('/sede', sedeRouter);
-
-
-app.use('/cliente', routerCliente);
-app.use('/endereco', enderecoRouter);
+app.use('/api/auth', userRoutes);
+app.use('/api/protected', protegidoRoutes);
 
 export default app;
