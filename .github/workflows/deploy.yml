@@ -61,8 +61,8 @@ jobs:
             username: ${{ secrets.SSH_USER }}
             password: ${{ secrets.SSH_PASSWORD }}
             port: 22
-            timeout: 300
-            command_timeout: 300
+            timeout: 300s
+            command_timeout: 300s
             script: |
               # Stop existing process
               pkill -f "node.*backend" || true
