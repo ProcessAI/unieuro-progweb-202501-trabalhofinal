@@ -64,26 +64,20 @@ jobs:
             timeout: 300s
             command_timeout: 300s
             script: |
-              # Stop existing process
               pkill -f "node.*backend" || true
               sleep 2
               
-              # Navigate to backend directory
               cd /dados/laudinho/backend
               
-              # Install dependencies with longer timeout
               echo "Installing dependencies..."
-              npm ci --only=production --ignore-scripts --timeout=300000
+              npm ci --only=production
               
-              # Generate Prisma client
               echo "Generating Prisma client..."
               npx prisma generate
               
-              # Start application in background
               echo "Starting application..."
-              nohup node index.js > app.log 2>&1 &
+              nohup node index.js > app.log 2>&1 & disown
               
-              # Verify it started
               sleep 3
               if pgrep -f "node.*index.js" > /dev/null; then
                 echo "Application started successfully"
@@ -91,3 +85,5 @@ jobs:
                 echo "Failed to start application"
                 exit 1
               fi
+
+              echo "done"
