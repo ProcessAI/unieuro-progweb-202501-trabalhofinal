@@ -64,26 +64,20 @@ jobs:
             timeout: 300s
             command_timeout: 300s
             script: |
-              pkill -f "node.*backend" || true
-              sleep 2
-              
-              cd /dados/laudinho/backend
-              
-              echo "Installing dependencies..."
-              npm ci --only=production
-              
-              echo "Generating Prisma client..."
-              npx prisma generate
-              
-              echo "Starting application..."
-              nohup node index.js > app.log 2>&1 & disown
-              
-              sleep 3
-              if pgrep -f "node.*index.js" > /dev/null; then
-                echo "Application started successfully"
-              else
-                echo "Failed to start application"
-                exit 1
-              fi
+              echo "Parando aplicação com pm2 (se estiver rodando)..."
+              pm2 delete laudinho-backend || true
 
-              echo "done"
+              echo "Instalando dependências..."
+              cd /dados/laudinho/backend
+              npm ci --only=production
+
+              echo "Gerando cliente Prisma..."
+              npx prisma generate
+
+              echo "Iniciando aplicação com pm2..."
+              pm2 start index.js --name laudinho-backend
+
+              echo "Salvando configuração do pm2..."
+              pm2 save
+
+              echo "Aplicação implantada com sucesso!"
