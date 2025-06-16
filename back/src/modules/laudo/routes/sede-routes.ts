@@ -11,8 +11,7 @@ const router = Router();
 router.post('/', createSede);
 router.get('/', getAllSedes);
 router.get('/:id', getSedeById);
-router.put('/:id', updateSede);
+router.put('/:id', updateSede as any);
 router.delete('/:id', deleteSede);
-router.get('/cliente/:idcliente', getSedesByClienteId);
 
 export default router;

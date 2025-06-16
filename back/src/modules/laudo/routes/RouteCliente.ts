@@ -1,17 +1,17 @@
 /* importando a classe Router do express e Classes de requisição e resposta do express */
-import express,{Request,Response, Router} from 'express';
+import {Request,Response, Router} from 'express';
 
 /* importando a classe ClienteService da camada service*/
 import {ClienteService} from '../service/ClienteService'
 
 // Materializando um objeto Router da class Router do express
-const router:Router = Router();
+const routeCliente:Router = Router();
 
 // Materializando um objeto ClienteService da class ClienteService
 const clientes:ClienteService = new ClienteService();
 
 // Criar um novo cliente
-router.post("/criarCliente", async(req:Request,res:Response) => {
+routeCliente.post("/criarCliente", async(req:Request,res:Response) => {
 
   try{
 
@@ -35,7 +35,7 @@ router.post("/criarCliente", async(req:Request,res:Response) => {
 });
 
 // Listar todos os clientes
-router.get("/listarCliente", async (req: Request, res: Response) => {
+routeCliente.get("/listarCliente", async (req: Request, res: Response) => {
   
   try {
     const listClientes = await clientes.listarCliente();
@@ -56,7 +56,7 @@ router.get("/listarCliente", async (req: Request, res: Response) => {
 
 // Buscar cliente pelo ID
 
-router.get("/buscarCliente/:id", async(req:Request,res:Response) => {
+routeCliente.get("/buscarCliente/:id", async(req:Request,res:Response) => {
   
   try{
     
@@ -77,7 +77,7 @@ router.get("/buscarCliente/:id", async(req:Request,res:Response) => {
 });
 
 // Atualizar cliente pelo ID
-router.put("/atualizarCliente/:id", async (req:Request,res:Response) => {
+routeCliente.put("/atualizarCliente/:id", async (req:Request,res:Response) => {
   try{
   
   const {nome_cliente, status } = req.body;
@@ -100,7 +100,7 @@ router.put("/atualizarCliente/:id", async (req:Request,res:Response) => {
 });
 
 // Deletar cliente pelo ID
-router.delete("/deletarCliente/:id", async (req:Request,res:Response)=>{
+routeCliente.delete("/deletarCliente/:id", async (req:Request,res:Response)=>{
 
   try{
 
@@ -121,7 +121,7 @@ router.delete("/deletarCliente/:id", async (req:Request,res:Response)=>{
   }
 });
 
-export default router;
+export default routeCliente;
 
 /*
 

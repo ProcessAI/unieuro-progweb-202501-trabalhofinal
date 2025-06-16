@@ -4,12 +4,13 @@ import { SedePersistence } from '../persistence/sede-persistence';
 const sedeManager = new SedePersistence();
 
 // Criar sede
-export async function createSede(req: Request, res: Response) {
+export async function createSede(req: Request, res: Response): Promise<void> {
   try {
     const { sedenome, idcliente, sedestatus } = req.body;
 
     if (!sedenome || !idcliente) {
-      return res.status(400).json({ message: 'Campos obrigatórios: sedenome e idcliente' });
+      res.status(400).json({ message: 'Campos obrigatórios: sedenome e idcliente' });
+      return;
     }
 
     const todasSedes = await sedeManager.findAll();
@@ -18,7 +19,8 @@ export async function createSede(req: Request, res: Response) {
     );
 
     if (nomeExistente) {
-      return res.status(409).json({ message: 'Já existe uma sede com esse nome' });
+      res.status(409).json({ message: 'Já existe uma sede com esse nome' });
+      return;
     }
 
     const sedeData = {
@@ -28,62 +30,67 @@ export async function createSede(req: Request, res: Response) {
     };
 
     const newSede = await sedeManager.create(sedeData);
-    return res.status(201).json({ message: 'Sede criada com sucesso', sede: newSede });
+    res.status(201).json({ message: 'Sede criada com sucesso', sede: newSede });
   } catch (error) {
     console.error('Erro em createSede:', error);
-    return res.status(500).json({ message: 'Erro ao criar sede', error });
+    res.status(500).json({ message: 'Erro ao criar sede', error });
   }
 }
 
 // Buscar todas as sedes
-export async function getAllSedes(req: Request, res: Response) {
+export async function getAllSedes(req: Request, res: Response): Promise<void> {
   try {
     const sedes = await sedeManager.findAll();
-    return res.status(200).json(sedes);
+    res.status(200).json(sedes);
   } catch (error) {
     console.error('Erro em getAllSedes:', error);
-    return res.status(500).json({ message: 'Erro ao buscar sedes', error });
+    res.status(500).json({ message: 'Erro ao buscar sedes', error });
   }
 }
 
 // Buscar sede por ID
-export async function getSedeById(req: Request, res: Response) {
+export async function getSedeById(req: Request, res: Response): Promise<void> {
   const id = parseInt(req.params.id);
 
   if (isNaN(id)) {
-    return res.status(400).json({ message: 'ID inválido' });
+    res.status(400).json({ message: 'ID inválido' });
+    return;
   }
 
   try {
     const sede = await sedeManager.findById(id);
     if (!sede) {
-      return res.status(404).json({ message: 'Sede não encontrada' });
+      res.status(404).json({ message: 'Sede não encontrada' });
+      return;
     }
-    return res.status(200).json(sede);
+    res.status(200).json(sede);
   } catch (error) {
     console.error('Erro em getSedeById:', error);
-    return res.status(500).json({ message: 'Erro ao buscar sede por ID', error });
+    res.status(500).json({ message: 'Erro ao buscar sede por ID', error });
   }
 }
 
 // Atualizar sede
-export async function updateSede(req: Request, res: Response) {
+export async function updateSede(req: Request, res: Response): Promise<void> {
   const id = parseInt(req.params.id);
   const { sedenome, sedestatus } = req.body;
 
   if (isNaN(id)) {
-    return res.status(400).json({ message: 'ID inválido' });
+    res.status(400).json({ message: 'ID inválido' });
+    return;
   }
 
   if (!sedenome && sedestatus === undefined) {
-    return res.status(400).json({ message: 'Nenhum campo fornecido para atualização' });
+    res.status(400).json({ message: 'Nenhum campo fornecido para atualização' });
+    return;
   }
 
   try {
     // Verifica se a sede existe
     const existingSede = await sedeManager.findById(id);
     if (!existingSede) {
-      return res.status(404).json({ message: 'Sede não encontrada' });
+      res.status(404).json({ message: 'Sede não encontrada' });
+      return;
     }
 
     // Se sedenome for informado, valida se já existe em outra sede
@@ -93,7 +100,8 @@ export async function updateSede(req: Request, res: Response) {
         (s) => s.sedenome.toLowerCase() === sedenome.toLowerCase() && s.idsede !== id
       );
       if (nomeDuplicado) {
-        return res.status(409).json({ message: 'Já existe uma sede com esse nome' });
+        res.status(409).json({ message: 'Já existe uma sede com esse nome' });
+        return;
       }
     }
 
@@ -102,43 +110,45 @@ export async function updateSede(req: Request, res: Response) {
     if (sedestatus !== undefined) sedeData.sedestatus = sedestatus;
 
     const updatedSede = await sedeManager.update(id, sedeData);
-    return res.status(200).json({ message: 'Sede atualizada com sucesso', sede: updatedSede });
+    res.status(200).json({ message: 'Sede atualizada com sucesso', sede: updatedSede });
   } catch (error) {
     console.error('Erro em updateSede:', error);
-    return res.status(500).json({ message: 'Erro ao atualizar sede', error });
+    res.status(500).json({ message: 'Erro ao atualizar sede', error });
   }
 }
 
 // Deletar sede
-export async function deleteSede(req: Request, res: Response) {
+export async function deleteSede(req: Request, res: Response): Promise<void> {
   const id = parseInt(req.params.id);
 
   if (isNaN(id)) {
-    return res.status(400).json({ message: 'ID inválido' });
+    res.status(400).json({ message: 'ID inválido' });
+    return;
   }
 
   try {
     await sedeManager.delete(id);
-    return res.status(200).json({ message: 'Sede deletada com sucesso' });
+    res.status(200).json({ message: 'Sede deletada com sucesso' });
   } catch (error) {
     console.error('Erro em deleteSede:', error);
-    return res.status(500).json({ message: 'Erro ao deletar sede', error });
+    res.status(500).json({ message: 'Erro ao deletar sede', error });
   }
 }
 
 // Buscar sedes por ID do cliente
-export async function getSedesByClienteId(req: Request, res: Response) {
+export async function getSedesByClienteId(req: Request, res: Response): Promise<void> {
   const idcliente = parseInt(req.params.idcliente);
 
   if (isNaN(idcliente)) {
-    return res.status(400).json({ message: 'ID do cliente inválido' });
+    res.status(400).json({ message: 'ID do cliente inválido' });
+    return;
   }
 
   try {
     const sedes = await sedeManager.findByClienteId(idcliente);
-    return res.status(200).json(sedes);
+    res.status(200).json(sedes);
   } catch (error) {
     console.error('Erro em getSedesByClienteId:', error);
-    return res.status(500).json({ message: 'Erro ao buscar sedes do cliente', error });
+    res.status(500).json({ message: 'Erro ao buscar sedes do cliente', error });
   }
 }

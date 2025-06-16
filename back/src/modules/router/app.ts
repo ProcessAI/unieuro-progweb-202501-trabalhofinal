@@ -1,41 +1,36 @@
-// Importando express e cors
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+//NOTE: Não retorne RES direto, retorne void, alguma coisa com o Express 5 causa erro de typagem
+// https://stackoverflow.com/questions/79071082/typescript-error-no-overload-matches-this-call-in-express-route-handler
 
-// Importando Rotas
+import express from 'express';
+import dotenv from 'dotenv'; // Importando dotenv para configuração de variáveis ambiente
+import laudoRoutes from '../laudo/routes/laudo-routes';
+import tipoeqRoutes from '../laudo/routes/tipoeq-routes';
 import userRoutes from '../login/routes/usuario-routes';
-import router from '../laudo/routes/RouteCliente';
+import routeCliente from '../laudo/routes/RouteCliente';
 import enderecoRouter from '../laudo/routes/RouteEndereco';
 import sedeRoutes from '../laudo/routes/sede-routes';
 import protegidoRoutes from '../login/routes/auth-middleware-routes';
 
-// Importando dotenv para configuração de variáveis ambiente
-import dotenv from 'dotenv';
+// Basicamente serve para treazer configuração de ambiente para o nosso código
 dotenv.config();
 
 //const PORT = process.env.PORT || 3000;
-
-const PORT = 3000;
-
+const PORT = 8080;
 
 /* Materializando um objeto do nosso Servidor express */
 const app = express();
 
 /* Middleware para aceitar requisições JSON e habilitar CORS */
 app.use(express.json());
-app.use(cors());
 
-/* Configurando as rotas */
-app.use('/auth', userRoutes);           // Usuários
-app.use('/api', protegidoRoutes);       // rotas api protegidas
-app.use('/cliente', router);            // Cliente
-app.use('/sede', sedeRoutes);           // Sede
-app.use('/endereco', enderecoRouter);   // Endereço
-
-/* Rota raiz para teste */
-app.get('/', (req: Request, res: Response) => {
-    res.status(200).json({ mensagem: "Diretório Raiz" });
-});
+/* Nossos Routes para cada Fucionalidade ou Serviço*/
+app.use('/api/laudos', laudoRoutes);
+app.use('/api/tipoeq', tipoeqRoutes);
+app.use('/api/sede', sedeRoutes);
+app.use('/api/cliente', routeCliente);
+app.use('/api/endereco', enderecoRouter);
+app.use('/api/auth', userRoutes);
+app.use('/api/protected', protegidoRoutes);
 
 /* Criando o nosso servidor express */
 app.listen(PORT, (): void => {

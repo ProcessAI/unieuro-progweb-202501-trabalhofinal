@@ -65,7 +65,7 @@ export default function ClientesPage() {
 
   const fetchAllData = useCallback(async () => {
     try {
-      const clientesResponse = await fetch("http://localhost:3000/cliente/listarCliente");
+      const clientesResponse = await fetch("http://localhost:8080/cliente/listarCliente");
       if (!clientesResponse.ok) {
         throw new Error(`Falha ao buscar clientes: ${clientesResponse.status} ${clientesResponse.statusText}`);
       }
@@ -78,13 +78,13 @@ export default function ClientesPage() {
           sedes: []
       }));
 
-      const sedesResponse = await fetch("http://localhost:3000/sede");
+      const sedesResponse = await fetch("http://localhost:8080/sede");
       if (!sedesResponse.ok) {
         throw new Error(`Falha ao buscar sedes: ${sedesResponse.status} ${sedesResponse.statusText}`);
       }
       const sedesData: Sede[] = await sedesResponse.json();
 
-      const enderecosResponse = await fetch("http://localhost:3000/endereco");
+      const enderecosResponse = await fetch("http://localhost:8080/endereco");
       if (!enderecosResponse.ok) {
         throw new Error(`Falha ao buscar endereços: ${enderecosResponse.status} ${enderecosResponse.statusText}`);
       }
@@ -210,7 +210,7 @@ export default function ClientesPage() {
         const novoStatusNumericoParaBackend: 0 | 1 = sedeAntiga.sedestatus === 1 ? 0 : 1;
 
         if (sedeAntiga.idsede) {
-          fetch(`http://localhost:3000/sede/${sedeAntiga.idsede}`, {
+          fetch(`http://localhost:8080/sede/${sedeAntiga.idsede}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -394,8 +394,8 @@ export default function ClientesPage() {
       };
 
       const urlSede = sedeIdParaEndereco
-        ? `http://localhost:3000/sede/${sedeIdParaEndereco}`
-        : "http://localhost:3000/sede";
+        ? `http://localhost:8080/sede/${sedeIdParaEndereco}`
+        : "http://localhost:8080/sede";
       const methodSede: "POST" | "PUT" = sedeIdParaEndereco ? "PUT" : "POST";
 
       const responseSede = await fetch(urlSede, {
@@ -426,8 +426,8 @@ export default function ClientesPage() {
       };
 
       const urlEndereco = enderecoExistenteId
-        ? `http://localhost:3000/endereco/${enderecoExistenteId}`
-        : "http://localhost:3000/endereco";
+        ? `http://localhost:8080/endereco/${enderecoExistenteId}`
+        : "http://localhost:8080/endereco";
       const methodEndereco: "POST" | "PUT" = enderecoExistenteId ? "PUT" : "POST";
 
       const responseEndereco = await fetch(urlEndereco, {
@@ -467,7 +467,7 @@ export default function ClientesPage() {
 
     try {
       if (sedeParaExcluir.endereco?.id) {
-        const enderecoDeleteResponse = await fetch(`http://localhost:3000/endereco/${sedeParaExcluir.endereco.id}`, {
+        const enderecoDeleteResponse = await fetch(`http://localhost:8080/endereco/${sedeParaExcluir.endereco.id}`, {
           method: 'DELETE',
         });
         if (!enderecoDeleteResponse.ok) {
@@ -475,7 +475,7 @@ export default function ClientesPage() {
         }
       }
 
-      const sedeDeleteResponse = await fetch(`http://localhost:3000/sede/${sedeParaExcluir.idsede}`, {
+      const sedeDeleteResponse = await fetch(`http://localhost:8080/sede/${sedeParaExcluir.idsede}`, {
         method: 'DELETE',
       });
       if (!sedeDeleteResponse.ok) {
