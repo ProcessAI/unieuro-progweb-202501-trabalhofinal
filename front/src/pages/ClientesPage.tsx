@@ -6,6 +6,7 @@ import {
   DialogTitle,
   DialogDescription, // Importar DialogDescription para acessibilidade
 } from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -35,7 +36,7 @@ interface ClienteBackend {
 }
 
 interface Cliente {
-  idcliente: number;
+  idcliente?: number;
   nome: string;
   status: "ativo" | "inativo";
   sedes: Sede[];
@@ -65,7 +66,7 @@ export default function ClientesPage() {
 
   const fetchAllData = useCallback(async () => {
     try {
-      const clientesResponse = await fetch("http://localhost:8080/cliente/listarCliente");
+      const clientesResponse = await fetch("http://localhost:8080/api/cliente/listarCliente");
       if (!clientesResponse.ok) {
         throw new Error(`Falha ao buscar clientes: ${clientesResponse.status} ${clientesResponse.statusText}`);
       }
@@ -185,21 +186,61 @@ export default function ClientesPage() {
     setModalCriarAberto(true);
   }
 
-  function salvarNovoCliente() {
-    if (nomeNovoCliente.trim() === "") return;
+  async function salvarNovoCliente() {
+    try {
+    
+    
+      if (nomeNovoCliente.trim() === "") return;
 
-    const novoId = Math.max(...clientes.map(c => c.idcliente)) + 1;
+      const novoId = clientes.length > 0
+      ? Math.max(...clientes.map(c => c.idcliente).filter((id): id is number => typeof id === "number")) + 1
+      :1;
+     
+      const novoCliente: Cliente = {
+        idcliente: novoId,
+        nome: nomeNovoCliente.trim(),
+        status: "ativo",
+        sedes: [],
+      };
+      setClientes((prevClientes) => [...prevClientes, novoCliente]);
+      setModalCriarAberto(false);
+      alert("Cliente criado localmente (sem backend).");
+
+    /*
+      TESTE
+
+    if (nomeNovoCliente.trim() === "") return;
+    
     const novoCliente: Cliente = {
-      idcliente: novoId,
       nome: nomeNovoCliente.trim(),
       status: "ativo",
       sedes: [],
     };
-    setClientes((prevClientes) => [...prevClientes, novoCliente]);
-    setModalCriarAberto(false);
-    alert("Cliente criado localmente (sem backend).");
-  }
 
+    const response = await fetch("http://localhost:8080/api/cliente/criarCliente", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(novoCliente),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+
+    const clienteCriado: Cliente = await response.json();
+
+    setClientes((prevClientes) => [...prevClientes, clienteCriado]);
+    setModalCriarAberto(false);
+    alert("Cliente criado com sucesso!");
+    */
+  } catch (error) {
+    console.error("Erro ao inserir um novo cliente!", error);
+    alert("Erro ao inserir um novo cliente!"),error;
+  }
+}
+  
   function toggleStatusSede(indexToToggle: number) {
     setClientes((oldClientes) => {
       const novosClientes = [...oldClientes];
