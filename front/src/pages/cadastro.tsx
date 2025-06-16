@@ -1,4 +1,4 @@
-// src/pages/Cadastro.tsx
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Cadastro.css';
@@ -8,15 +8,9 @@ export default function CadastroPage() {
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (senha !== confirmarSenha) {
-      alert('As senhas não coincidem.');
-      return;
-    }
 
     try {
       const response = await fetch('http://localhost:3000/auth/register', {
@@ -45,23 +39,14 @@ export default function CadastroPage() {
 
   return (
     <>
-      <div className="cadastro-top-logo">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/1/1c/Clever_Systems_Logo.png"
-          alt="Clever Systems"
-        />
-      </div>
-
       <header className="cadastro-header">
+        <img className="cadastro-logo" src="https://upload.wikimedia.org/wikipedia/commons/1/1c/Clever_Systems_Logo.png" alt="Logo da Empresa" />
         <span className="cadastro-menu-label">CADASTRO</span>
-        <button className="cadastro-logout-btn" onClick={() => navigate('/')}>
-          SAIR
-        </button>
       </header>
 
       <div className="cadastro-container">
-        <div className="cadastro-form-section">
-          <h2>Cadastro de Usuário</h2>
+        <div className="cadastro-form-box">
+          <h2 className="cadastro-title">Crie sua conta</h2>
           <form onSubmit={handleSubmit}>
             <input
               type="email"
@@ -77,23 +62,13 @@ export default function CadastroPage() {
               onChange={(e) => setSenha(e.target.value)}
               required
             />
-            <input
-              type="password"
-              placeholder="Confirmar Senha"
-              value={confirmarSenha}
-              onChange={(e) => setConfirmarSenha(e.target.value)}
-              required
-            />
             <button type="submit" className="cadastro-btn">
               Cadastrar
             </button>
           </form>
-        </div>
-        <div className="cadastro-illustration">
-          <img
-            src="https://cdni.iconscout.com/illustration/premium/thumb/people-working-on-project-3562742-2985425.png"
-            alt="Ilustração de pessoas trabalhando"
-          />
+          <p className="cadastro-login-link">
+            Já tem uma conta? <span onClick={() => navigate('/login')}>Faça login</span>
+          </p>
         </div>
       </div>
     </>
