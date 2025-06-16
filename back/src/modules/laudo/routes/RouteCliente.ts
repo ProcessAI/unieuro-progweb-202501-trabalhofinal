@@ -15,20 +15,32 @@ routeCliente.post("/criarCliente", async(req:Request,res:Response) => {
 
   try{
 
-    const {nome_cliente, status } = req.body;
+    const {nome, status } = req.body;
 
-    const cliente = await clientes.criarCliente({nome:nome_cliente,status:status});
+    // Validar se 'status' é uma string antes de tentar a conversão
+
+    if (typeof status !== 'string') {
+      return res.status(400).json({ error: "O status deve ser uma string." });
+    }
+
+    // Converte o status de string para numérico
+    // Se status for 'Ativo', statusNumerico será 1.
+    // Se status for 'Inativo', statusNumerico será 0.
+    // Qualquer outro valor de status resultará em 0.
+
+    const statusNumerico: number = (status === 'Ativo') ? 1 : 0;
+
+    const cliente = await clientes.criarCliente({ nome: nome, status: statusNumerico });
 
     // Usando o operador spread para copiar todas as propriedades e sobrescreve 
     // idcliente convertendo BigInt para Number
-    
     const clienteConvertido = {
       ...cliente,
       idcliente: Number(cliente.idcliente),
     };
   
-    res.status(201).json(clienteConvertido)
-  
+    return res.status(201).json(clienteConvertido)
+    
   }catch(e){
     console.log(`Erro ao inserir o cliente: ${e}`)
   }

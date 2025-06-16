@@ -79,13 +79,13 @@ export default function ClientesPage() {
           sedes: []
       }));
 
-      const sedesResponse = await fetch("http://localhost:8080/sede");
+      const sedesResponse = await fetch("http://localhost:8080/api/sede");
       if (!sedesResponse.ok) {
         throw new Error(`Falha ao buscar sedes: ${sedesResponse.status} ${sedesResponse.statusText}`);
       }
       const sedesData: Sede[] = await sedesResponse.json();
 
-      const enderecosResponse = await fetch("http://localhost:8080/endereco");
+      const enderecosResponse = await fetch("http://localhost:8080/api/endereco");
       if (!enderecosResponse.ok) {
         throw new Error(`Falha ao buscar endereços: ${enderecosResponse.status} ${enderecosResponse.statusText}`);
       }
@@ -187,7 +187,8 @@ export default function ClientesPage() {
   }
 
   async function salvarNovoCliente() {
-    try {
+  
+    try{ /* {
     
     
       if (nomeNovoCliente.trim() === "") return;
@@ -206,12 +207,16 @@ export default function ClientesPage() {
       setModalCriarAberto(false);
       alert("Cliente criado localmente (sem backend).");
 
-    /*
       TESTE
 
-    if (nomeNovoCliente.trim() === "") return;
-    
-    const novoCliente: Cliente = {
+    */
+      
+    if (nomeNovoCliente.trim() === "") {
+      alert("O nome do cliente é obrigatório.");
+      return;
+    }
+
+    const novoCliente: Cliente = { 
       nome: nomeNovoCliente.trim(),
       status: "ativo",
       sedes: [],
@@ -229,15 +234,12 @@ export default function ClientesPage() {
       throw new Error(`Erro HTTP: ${response.status}`);
     }
 
-    const clienteCriado: Cliente = await response.json();
-
-    setClientes((prevClientes) => [...prevClientes, clienteCriado]);
+    setClientes((prevClientes) => [...prevClientes, novoCliente]);
     setModalCriarAberto(false);
-    alert("Cliente criado com sucesso!");
-    */
+    alert("Cliente criado com sucesso.");
   } catch (error) {
-    console.error("Erro ao inserir um novo cliente!", error);
-    alert("Erro ao inserir um novo cliente!"),error;
+    console.log("Erro ao inserir um novo cliente!", error);
+    alert("Erro ao inserir um novo cliente!");
   }
 }
   
