@@ -39,7 +39,8 @@ routeCliente.post("/criarCliente", async(req:Request,res:Response) => {
       idcliente: Number(cliente.idcliente),
     };
   
-    return res.status(201).json(clienteConvertido)
+    res.status(201).json(clienteConvertido)
+    return;
     
   }catch(e){
     console.log(`Erro ao inserir o cliente: ${e}`)
@@ -92,10 +93,10 @@ routeCliente.get("/buscarCliente/:id", async(req:Request,res:Response) => {
 routeCliente.put("/atualizarCliente/:id", async (req:Request,res:Response) => {
   try{
   
-  const {nome_cliente, status } = req.body;
+  const {nome, status } = req.body;
   const idcliente = parseInt(req.params.id);
   
-  const atualizarCliente = await clientes.atualizarCliente(idcliente,{nome:nome_cliente,status:status}); 
+  const atualizarCliente = await clientes.atualizarCliente(idcliente,{nome:nome,status:status}); 
   
   const atualizarClienteConvertido = {
     ...atualizarCliente,
