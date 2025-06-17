@@ -1,3 +1,4 @@
+/* Cadastro.css */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -40,11 +41,11 @@ body {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   text-align: center;
-  width: 500px; 
+  width: 500px;
 }
 
 .cadastro-title {
-  font-size: 30px; 
+  font-size: 25px;
   font-weight: bold;
   margin-bottom: 25px;
 }
@@ -58,6 +59,34 @@ body {
   font-size: 16px;
 }
 
+/* Campo de senha com botão de olho */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding: 12px;
+  padding-right: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Botão cadastrar */
 .cadastro-btn {
   width: 100%;
   background-color: #ffc800;
@@ -69,13 +98,18 @@ body {
   border-radius: 5px;
 }
 
+/* Link para login */
 .cadastro-login-link {
   margin-top: 15px;
   font-size: 14px;
-  color: #ffc800;
 }
 
-.cadastro-login-link span {
+.cadastro-account-text {
+  color: black;
+}
+
+.cadastro-login-action {
+  color: #ffc800;
   cursor: pointer;
   text-decoration: underline;
 }

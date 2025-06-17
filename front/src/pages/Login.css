@@ -1,80 +1,77 @@
-/* Login.css */
-.login-reset {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
 body {
   background-color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .login-header {
   background-color: #ffc800;
-  padding: 10px 0;
+  height: 80px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-
-.login-logo {
-  margin-left: 20px;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: relative;
 }
 
 .login-logo img {
   height: 40px;
 }
 
-.login-header-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-right: 20px;
-  position: relative;
-}
-
-.login-menu-label {
+.login-title-header {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
   font-weight: bold;
-}
-
-.login-logout-btn {
-  background-color: black;
-  color: yellow;
-  padding: 5px 15px;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
+  color: black;
+  left: -20px; /* Mantendo o ajuste de centralização visual */
 }
 
 .login-main {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 30px 10px;
+  align-items: center;
+  padding: 80px 20px;
+  min-height: calc(100vh - 80px);
 }
 
-.login-main h1 {
-  margin: 30px 0 20px;
-  font-size: 24px;
+.login-box {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px 25px; /* Um pouco mais compacto */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 525px; /* Reduzido */
+  min-height: 420px;
+  position: relative;
+}
+
+/* Novo título dentro da box */
+.login-box-title {
+  text-align: center;
+  font-size: 22px;
   font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  width: 100%;
-  max-width: 300px;
+  gap: 20px;
 }
 
-.login-form input[type="text"],
+.login-form input[type="email"],
 .login-form input[type="password"],
-.login-form input[type="email"] {
-  padding: 10px;
+.login-form input[type="text"] {
+  padding: 14px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 14px;
 }
 
 .login-senha-container {
@@ -93,6 +90,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
+  font-size: 18px;
 }
 
 .login-links {
@@ -101,34 +99,22 @@ body {
 }
 
 .login-links a {
-  color: #004aad;
+  color: #ffc800; /* Cor amarela igual ao header */
   text-decoration: none;
   font-weight: bold;
 }
 
 .login-btn {
   background-color: #ffc800;
-  padding: 10px;
+  color: black;
+  padding: 14px;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-/* Novo estilo para alinhar o perfil corretamente */
-.login-profile-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  top: -10px;
-}
-
-/* Ícone redondo com borda preta */
-.login-profile-icon img {
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  background-color: #fff;
-  border: 4px solid black;
-  object-fit: cover;
+.login-btn:hover {
+  background-color: #e6b800;
 }

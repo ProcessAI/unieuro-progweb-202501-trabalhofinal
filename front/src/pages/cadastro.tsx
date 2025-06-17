@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Cadastro.css';
@@ -8,6 +7,7 @@ export default function CadastroPage() {
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,8 +40,8 @@ export default function CadastroPage() {
   return (
     <>
       <header className="cadastro-header">
-        <img className="cadastro-logo" src="https://upload.wikimedia.org/wikipedia/commons/1/1c/Clever_Systems_Logo.png" alt="Logo da Empresa" />
-        <span className="cadastro-menu-label">CADASTRO</span>
+        <img className="cadastro-logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCM_0OvsIpEJaDrUEu1SQWkj4wIoPw1xMevQ&s" alt="Clever Systems" />
+        <span className="cadastro-menu-label">Cadastro</span>
       </header>
 
       <div className="cadastro-container">
@@ -55,19 +55,29 @@ export default function CadastroPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <input
-              type="password"
-              placeholder="Senha"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              required
-            />
+            <div className="password-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Senha"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password-btn"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "👁️" : "👁️"}
+              </button>
+            </div>
             <button type="submit" className="cadastro-btn">
               Cadastrar
             </button>
           </form>
           <p className="cadastro-login-link">
-            Já tem uma conta? <span onClick={() => navigate('/login')}>Faça login</span>
+            <span className="cadastro-account-text">Já tem uma conta? </span>
+            <span className="cadastro-login-action" onClick={() => navigate('/login')}>Faça login</span>
           </p>
         </div>
       </div>
