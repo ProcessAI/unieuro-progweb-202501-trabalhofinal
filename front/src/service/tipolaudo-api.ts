@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001/tipolaudo';
+const API_URL = 'http://localhost:5173/tipolaudo';
 
 interface TipoLaudoPayload {
   tipolaudonome: string;

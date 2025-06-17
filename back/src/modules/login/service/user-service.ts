@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../persistence/user-persistence';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
