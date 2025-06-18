@@ -1,27 +1,16 @@
-import * as React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DayPicker } from "react-day-picker";
+import * as React from "react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import { DayPicker } from "react-day-picker"
 
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
-
-// 1. Tipagem para Calendar
-// Use 'type' em vez de 'interface' para estender props de componentes complexos como DayPicker
-// que podem ter uniões de tipos ou sobrecargas.
-type CalendarProps = React.ComponentProps<typeof DayPicker> & {
-  className?: string;
-  // A propriedade 'classNames' já é incluída em React.ComponentProps<typeof DayPicker>
-  // mas se você quiser ser explícito sobre ela poder ser sobrescrita, pode adicioná-la.
-  // classNames?: React.ComponentProps<typeof DayPicker>["classNames"];
-  showOutsideDays?: boolean;
-};
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
 
 function Calendar({
   className,
-  classNames, // classNames já é uma prop do DayPicker e será tipada corretamente
+  classNames,
   showOutsideDays = true,
   ...props
-}: CalendarProps) {
+}) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -45,8 +34,6 @@ function Calendar({
         row: "flex w-full mt-2",
         cell: cn(
           "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-range-end)]:rounded-r-md",
-          // Certifique-se que props.mode é acessível e tipado.
-          // Como CalendarProps agora herda todas as props de DayPicker, `mode` estará lá.
           props.mode === "range"
             ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
             : "[&:has([aria-selected])]:rounded-md"
@@ -68,20 +55,18 @@ function Calendar({
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
-        ...classNames, // Mescla classNames personalizados
+        ...classNames,
       }}
       components={{
-        // Os componentes de ícone também recebem props, tipá-los ajuda
-        IconLeft: ({ className, ...iconProps }: React.ComponentProps<typeof ChevronLeft>) => (
-          <ChevronLeft className={cn("size-4", className)} {...iconProps} />
+        IconLeft: ({ className, ...props }) => (
+          <ChevronLeft className={cn("size-4", className)} {...props} />
         ),
-        IconRight: ({ className, ...iconProps }: React.ComponentProps<typeof ChevronRight>) => (
-          <ChevronRight className={cn("size-4", className)} {...iconProps} />
+        IconRight: ({ className, ...props }) => (
+          <ChevronRight className={cn("size-4", className)} {...props} />
         ),
       }}
-      {...props}
-    />
+      {...props} />
   );
 }
 
-export { Calendar };
+export { Calendar }

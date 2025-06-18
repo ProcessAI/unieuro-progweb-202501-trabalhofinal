@@ -1,37 +1,49 @@
-import dotenv from 'dotenv';
+//NOTE: Não retorne RES direto, retorne void, alguma coisa com o Express 5 causa erro de typagem
+// https://stackoverflow.com/questions/79071082/typescript-error-no-overload-matches-this-call-in-express-route-handler
+
+import express from 'express';
+import dotenv from 'dotenv'; // Importando dotenv para configuração de variáveis ambiente
+import cors from 'cors'; // para permitir requisições do front-end
+import laudoRoutes from '../laudo/routes/laudo-routes';
+import tipoeqRoutes from '../laudo/routes/tipoeq-routes';
+import userRoutes from '../login/routes/usuario-routes';
+import routeCliente from '../laudo/routes/RouteCliente';
+import enderecoRouter from '../laudo/routes/RouteEndereco';
+import sedeRoutes from '../laudo/routes/sede-routes';
+import protegidoRoutes from '../login/routes/auth-middleware-routes';
+
+// Basicamente serve para treazer configuração de ambiente para o nosso código
 dotenv.config();
 
-/* Exportando Class e Métodos da lib express */
-import express, { Request, Response } from "express";
+//const PORT = process.env.PORT || 3000;
+const PORT = 8080;
 
-/* importando todas as rotas criadas em routes */
-import router from "../laudo/routes/RouteCliente";
-import enderecoRouter from "../laudo/routes/RouteEndereco";
-import sedeRouter from "../laudo/routes/RouteSede";
-
-
-/* materializando um objeto do nosso Servidor express */
+/* Materializando um objeto do nosso Servidor express */
 const app = express();
 
-//const port = process.env.PORT || 3000;
-const port = 3000;
+// configurnado o cors para permitir que o vite envie requisições
+app.use(cors({
+  origin: 'http://localhost:5173', // porta do Vite
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 
-app.use(express.json()); // configuramos o nosso express para aceitar requisições json
 
-/* Configurando express para usar as rotas criadas!  */
-app.use('/sede', sedeRouter);
-app.use('/cliente', router);
-app.use('/endereco', enderecoRouter);
+/* Middleware para aceitar requisições JSON e habilitar CORS */
+app.use(express.json());
 
-// express recebendo requisições get no nosso diretório raiz
-app.get('/', (req: Request, res: Response) => {
-    const resposta = res.status(200).json({ messagem: "Diretório Raiz" });
-    console.log(resposta);
+/* Nossos Routes para cada Fucionalidade ou Serviço*/
+app.use('/api/laudos', laudoRoutes);
+app.use('/api/tipoeq', tipoeqRoutes);
+app.use('/api/sede', sedeRoutes);
+app.use('/api/cliente', routeCliente);
+app.use('/api/endereco', enderecoRouter);
+app.use('/api/auth', userRoutes);
+app.use('/api/protected', protegidoRoutes);
+
+/* Criando o nosso servidor express */
+app.listen(PORT, (): void => {
+    console.log(`SERVIDOR RODANDO NA PORTA: ${PORT}!`);
 });
 
-/* Criando o nosso Servidor express */
-app.listen(port, (): void => {
-    const mensagem: string = 'SERVIDOR RODANDO NA PORTA:';
-    console.log(`${mensagem} ${port}`);
-});
-
+export default app;
