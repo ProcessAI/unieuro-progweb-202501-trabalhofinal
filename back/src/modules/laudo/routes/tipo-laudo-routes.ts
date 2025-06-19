@@ -16,6 +16,7 @@ router.post('/', async (req, res) => {
 
 // READ ALL
 router.get('/', async (_req: Request, res: Response) => {
+  console.log
   const lista = await service.listar();
   res.json(lista);
 });

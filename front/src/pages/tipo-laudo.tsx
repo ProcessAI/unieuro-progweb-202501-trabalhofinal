@@ -1,51 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './tipo-laudo.css';
 
-interface Laudo {
-  id: number;
-  descricao: string;
-  tipoLaudo: string;
-  tipoLaudoTemplate: string;
-  dataInclusao: string;
-  dataFechamento: string;
+import {getTiposLaudo,createTipoLaudo,updateTipoLaudo,deleteTipoLaudo} from '../service/tipolaudo-api'
+
+interface TipoLaudo {
+  idtipolaudo: number;
+  tipolaudonome: string;
+  tipolaudotemplate?: string;
 }
 
-export default function App() {
-  const [laudos, setLaudos] = useState<Laudo[]>([
-    {
-      id: 1,
-      descricao: "Vistoria geral da instalação A",
-      tipoLaudo: "Elétrico",
-      tipoLaudoTemplate: "",
-      dataInclusao: "2025-06-09T10:30",
-      dataFechamento: "",
-    },
-    {
-      id: 2,
-      descricao: "Inspeção de segurança predial",
-      tipoLaudo: "Segurança",
-      tipoLaudoTemplate: "",
-      dataInclusao: "2025-06-08T22:45",
-      dataFechamento: "2025-06-08T23:30",
-    },
-  ]);
 
+export default function App() {
+  const [laudos, setLaudos] = useState<TipoLaudo[]>([]);
   const [busca, setBusca] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingLaudo, setEditingLaudo] = useState<Laudo | null>(null);
-  const [viewLaudo, setViewLaudo] = useState<Laudo | null>(null);
+  const [editingLaudo, setEditingLaudo] = useState<TipoLaudo | null>(null);
+  const [viewLaudo, setViewLaudo] = useState<TipoLaudo | null>(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [laudoToDelete, setLaudoToDelete] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const emptyForm: Omit<Laudo, "id"> = {
-    descricao: "",
-    tipoLaudo: "",
-    tipoLaudoTemplate: "",
-    dataInclusao: "",
-    dataFechamento: "",
+  const emptyForm: Omit<TipoLaudo, "idtipolaudo"> = {
+    tipolaudonome: "",
+    tipolaudotemplate: "",
   };
 
-  const [form, setForm] = useState<Omit<Laudo, "id">>(emptyForm);
+  const [form, setForm] = useState<Omit<TipoLaudo, "idtipolaudo">>(emptyForm);
+
+  // Load laudos on component mount
+  useEffect(() => {
+    loadLaudos();
+  }, []);
+
+  const loadLaudos = async () => {
+    try {
+      setLoading(true);
+      const data = await getTiposLaudo();
+      setLaudos(data);
+    } catch (error) {
+      console.error('Error loading laudos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const resetForm = () => setForm(emptyForm);
 
@@ -55,14 +52,14 @@ export default function App() {
     setModalOpen(true);
   };
 
-  const openEditarLaudo = (laudo: Laudo) => {
+  const openEditarLaudo = (laudo: TipoLaudo) => {
     setEditingLaudo(laudo);
-    const { id, ...rest } = laudo;
+    const { idtipolaudo, ...rest } = laudo;
     setForm(rest);
     setModalOpen(true);
   };
 
-  const openVisualizarLaudo = (laudo: Laudo) => {
+  const openVisualizarLaudo = (laudo: TipoLaudo) => {
     setViewLaudo(laudo);
   };
 
@@ -73,16 +70,26 @@ export default function App() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    if (editingLaudo) {
-      setLaudos((prev) =>
-        prev.map((l) => (l.id === editingLaudo.id ? { ...l, ...form } : l))
-      );
-    } else {
-      setLaudos((prev) => [...prev, { id: Date.now(), ...form }]);
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      const payload = {
+        tipolaudonome: form.tipolaudonome,
+        tipolaudotemplate: form.tipolaudotemplate || undefined
+      };
+      if (editingLaudo) {
+        await updateTipoLaudo(editingLaudo.idtipolaudo, payload);
+      } else {
+        await createTipoLaudo(payload);
+      }
+      await loadLaudos(); // Reload data after create/update
+      setModalOpen(false);
+      setEditingLaudo(null);
+    } catch (error) {
+      console.error('Error saving laudo:', error);
+    } finally {
+      setLoading(false);
     }
-    setModalOpen(false);
-    setEditingLaudo(null);
   };
 
   const confirmExcluirLaudo = (id: number) => {
@@ -90,17 +97,25 @@ export default function App() {
     setConfirmDeleteOpen(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (laudoToDelete !== null) {
-      setLaudos((prev) => prev.filter((l) => l.id !== laudoToDelete));
-      setConfirmDeleteOpen(false);
-      setLaudoToDelete(null);
-      setViewLaudo(null);
+      try {
+        setLoading(true);
+        await deleteTipoLaudo(laudoToDelete);
+        await loadLaudos(); // Reload data after delete
+        setConfirmDeleteOpen(false);
+        setLaudoToDelete(null);
+        setViewLaudo(null);
+      } catch (error) {
+        console.error('Error deleting laudo:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   const laudosFiltrados = laudos.filter((l) =>
-    [l.descricao, l.tipoLaudo, l.tipoLaudoTemplate].some((campo) =>
+    [l.tipolaudonome, l.tipolaudotemplate ?? ""].some((campo) =>
       campo.toLowerCase().includes(busca.toLowerCase())
     )
   );
@@ -129,7 +144,7 @@ export default function App() {
       <div className="app-container">
         <div className="laudos-header">
           <h1 className="laudos-title">Tipos de Laudos</h1>
-          <button className="btn-yellow" onClick={openNovoLaudo}>
+          <button className="btn-yellow" onClick={openNovoLaudo} disabled={loading}>
             + Novo Tipo de Laudo
           </button>
         </div>
@@ -144,20 +159,24 @@ export default function App() {
           />
         </div>
 
-        <div className="laudos-grid">
-          {laudosFiltrados.map((laudo) => (
-            <button
-              key={laudo.id}
-              className="laudo-card"
-              onClick={() => openVisualizarLaudo(laudo)}
-              style={{ textAlign: "left", cursor: "pointer" }}
-            >
-              <div className="laudo-icon">📄</div>
-              <h3>{laudo.descricao}</h3>
-              <p>Tipo: {laudo.tipoLaudo}</p>
-            </button>
-          ))}
-        </div>
+        {loading ? (
+          <div>Carregando...</div>
+        ) : (
+          <div className="laudos-grid">
+            {laudosFiltrados.map((laudo) => (
+              <button
+                key={laudo.idtipolaudo}
+                className="laudo-card"
+                onClick={() => openVisualizarLaudo(laudo)}
+                style={{ textAlign: "left", cursor: "pointer" }}
+              >
+                <div className="laudo-icon">📄</div>
+                <h3>{laudo.tipolaudonome}</h3>
+                <p>Template: {laudo.tipolaudotemplate}</p>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* MODAL VISUALIZAR */}
@@ -171,32 +190,24 @@ export default function App() {
               </button>
             </div>
 
-            <p><strong>Descrição / Nome:</strong> {viewLaudo.descricao}</p>
-            <p><strong>Tipo de laudo:</strong> {viewLaudo.tipoLaudo}</p>
-            <p><strong>Tipo de laudo template:</strong> {viewLaudo.tipoLaudoTemplate}</p>
-
-            <p><strong>Data de Inclusão:</strong>{" "}
-              {viewLaudo.dataInclusao
-                ? new Date(viewLaudo.dataInclusao).toLocaleString()
-                : "—"}
-            </p>
-            {viewLaudo.dataFechamento && (
-              <p><strong>Data de Fechamento:</strong>{" "}
-                {new Date(viewLaudo.dataFechamento).toLocaleString()}
-              </p>
-            )}
+            <p><strong>Descrição / Nome:</strong> {viewLaudo?.tipolaudonome}</p>
+            <p><strong>Template:</strong> {viewLaudo?.tipolaudotemplate}</p>
 
             <div style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
               <button className="btn-yellow" onClick={() => {
-                setViewLaudo(null);
-                openEditarLaudo(viewLaudo);
-              }}>
+                if (viewLaudo) {
+                  setViewLaudo(null);
+                  openEditarLaudo(viewLaudo);
+                }
+              }} disabled={loading}>
                 Editar
               </button>
               <button className="btn-red" onClick={() => {
-                setViewLaudo(null);
-                confirmExcluirLaudo(viewLaudo.id);
-              }}>
+                if (viewLaudo) {
+                  setViewLaudo(null);
+                  confirmExcluirLaudo(viewLaudo.idtipolaudo);
+                }
+              }} disabled={loading}>
                 Excluir
               </button>
             </div>
@@ -217,47 +228,23 @@ export default function App() {
 
             <input
               type="text"
-              name="descricao"
+              name="tipolaudonome"
               placeholder="Descrição / Nome"
-              value={form.descricao}
+              value={form.tipolaudonome}
               onChange={handleChange}
             />
 
             <input
               type="text"
-              name="tipoLaudo"
-              placeholder="Tipo de Laudo"
-              value={form.tipoLaudo}
+              name="tipolaudotemplate"
+              placeholder="Template"
+              value={form.tipolaudotemplate}
               onChange={handleChange}
             />
 
-            <input
-              type="text"
-              name="tipoLaudoTemplate"
-              placeholder="Tipo de Laudo Template"
-              value={form.tipoLaudoTemplate}
-              onChange={handleChange}
-            />
-
-            <label><strong>Data de Inclusão</strong></label>
-            <input
-              type="datetime-local"
-              name="dataInclusao"
-              value={form.dataInclusao}
-              onChange={handleChange}
-            />
-
-            <label><strong>Data de Fechamento</strong></label>
-            <input
-              type="datetime-local"
-              name="dataFechamento"
-              value={form.dataFechamento}
-              onChange={handleChange}
-            />
-
-            <div style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
-              <button className="btn-yellow" onClick={handleSubmit}>
-                {editingLaudo ? "Salvar Alterações" : "Salvar"}
+            <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+              <button className="btn-yellow" onClick={handleSubmit} disabled={loading}>
+                {editingLaudo ? "Salvar Alterações" : "Criar"}
               </button>
               <button className="btn-black" onClick={() => setModalOpen(false)}>
                 Cancelar
@@ -273,7 +260,7 @@ export default function App() {
           <div className="modal">
             <h3>Tem certeza que deseja excluir esse tipo de laudo?</h3>
             <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-              <button className="btn-red" onClick={handleDelete}>
+              <button className="btn-red" onClick={handleDelete} disabled={loading}>
                 Sim, excluir
               </button>
               <button className="btn-black" onClick={() => setConfirmDeleteOpen(false)}>
