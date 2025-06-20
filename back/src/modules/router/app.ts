@@ -5,6 +5,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import laudoRoutes from '../laudo/routes/laudo-routes';
 import tipoeqRoutes from '../laudo/routes/tipoeq-routes';
+import tipoInstalacaoRoutes from '../laudo/routes/tipo-de-instalacao-routes';
+
 
 import userRoutes from '../login/routes/usuario-routes';
 import protegidoRoutes from '../login/routes/auth-middleware-routes';
@@ -26,6 +28,8 @@ app.use('/api/sede', sedeRoutes);
 app.use('/api/sede', sedeRouter);
 app.use('/api/cliente', routerCliente);
 app.use('/api/endereco', enderecoRouter);
+app.use('/api/tipo-instalacao', tipoInstalacaoRoutes);
+
 
 app.use('/api/auth', userRoutes);
 app.use('/api/protected', protegidoRoutes);
