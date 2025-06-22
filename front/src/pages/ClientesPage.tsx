@@ -1,4 +1,10 @@
+// import para fazer navegação entre páginas... vai funcionar como se fosse um <a> 
+import { Link } from "react-router-dom";
+
+// 
 import { useState, useEffect, useCallback } from "react";
+
+// 
 import {
   Dialog,
   DialogContent,
@@ -623,7 +629,7 @@ export default function ClientesPage() {
             <a href="#">HOME</a>
             <a href="#">CLIENTES</a>
             <a href="#">PRODUTOS</a>
-            <a href="#">EQUIPAMENTOS</a>
+            <Link to = {"/produto"}>EQUIPAMENTOS</Link>
           </nav>
         </div>
         <div className="flex items-center gap-4">

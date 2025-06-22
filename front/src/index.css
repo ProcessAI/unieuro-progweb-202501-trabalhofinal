@@ -1,4 +1,7 @@
 /* Abaixo veio do laudinho-5 no merge, esse index.css no laudinho-2 e 3 estava vazio */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
   margin: 0;

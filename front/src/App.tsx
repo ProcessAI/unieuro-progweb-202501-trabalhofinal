@@ -1,12 +1,22 @@
+// imports para criar dinâmismo e navegação entre páginas
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import ClientesPage from './pages/ClientesPage'
-import './App.css'
+import ClientesPage from './pages/ClientesPage';
+import './App.css';
 
 function App() {
-  return <ClientesPage />
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/clientes" element={<ClientesPage />} />     
+        {/* Exemplo de redirecionamento para /clientes se o path for raiz */}
+        <Route path="/" element={<Navigate to="/clientes" />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
 
 // Abaixo veio do laudinho-5, pode dar problema pra visualzar algumas páginas. Acima permite que visualize a parte cliente/sede/endereço
 
