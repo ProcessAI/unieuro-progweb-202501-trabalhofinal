@@ -4,7 +4,7 @@ import { SedeService } from '../service/SedeService';
 const sedeRouter = express.Router();
 const service = new SedeService();
 
-sedeRouter.get('/', async (req: Request, res: Response) => {
+sedeRouter.get('/', async (req: Request, res: Response): Promise<any> => {
   try {
     const sedes = await service.listar();
     res.status(200).json(sedes);
@@ -13,7 +13,7 @@ sedeRouter.get('/', async (req: Request, res: Response) => {
   }
 });
 
-sedeRouter.get('/:id', async (req: Request, res: Response) => {
+sedeRouter.get('/:id', async (req: Request, res: Response): Promise<any> => {
   try {
     const id = parseInt(req.params.id);
     const sede = await service.visualizarSede(id);
@@ -27,7 +27,7 @@ sedeRouter.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-sedeRouter.delete('/:id', async (req: Request, res: Response) => {
+sedeRouter.delete('/:id', async (req: Request, res: Response): Promise<any> => {
   try {
     const id = parseInt(req.params.id);
     const sedeDeletada = await service.deletar(id);
@@ -41,7 +41,7 @@ sedeRouter.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 
-sedeRouter.put('/:id', async (req: Request, res: Response) => {
+sedeRouter.put('/:id', async (req: Request, res: Response): Promise<any> => {
   try {
     const id = parseInt(req.params.id);
     const sedeAtualizada = await service.atualizar(id, req.body);
@@ -50,11 +50,9 @@ sedeRouter.put('/:id', async (req: Request, res: Response) => {
     }
     res.status(200).json(sedeAtualizada);
   } catch (error) {
-    console.error(error); // <-- Adicione isso
+    console.error(error);
     res.status(500).json({ error: "Erro ao atualizar sede" });
   }
 });
-
-
 
 export default sedeRouter;

@@ -32,8 +32,6 @@
 # TypeScript 
 *.tsbuildinfo
 
-# Ignorando o tsconfig.json
-tsconfig.json
 
 # Ignorando o package-lock.json
 package-lock.json
