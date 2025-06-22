@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import laudoRoutes from '../laudo/routes/laudo-routes';
 import tipoeqRoutes from '../laudo/routes/tipoeq-routes';
 import tipoInstalacaoRoutes from '../laudo/routes/tipo-de-instalacao-routes';
+import cors from 'cors'; 
 
 
 import userRoutes from '../login/routes/usuario-routes';
@@ -21,6 +22,7 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.use('/api/laudos', laudoRoutes);
 app.use('/api/tipoeq', tipoeqRoutes);
