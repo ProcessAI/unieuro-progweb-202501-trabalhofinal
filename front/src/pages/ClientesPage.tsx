@@ -24,7 +24,7 @@ interface Sede {
   idsede?: number; // ATENÇÃO: NOME DA PROPRIEDADE MUDADO PARA 'idsede'
   sedenome: string;
   sedestatus: 0 | 1;
-  dataDeInclusao: string;
+  sededtinclusao: string;
   idcliente: number;
   endereco?: Endereco;
 }
@@ -64,7 +64,7 @@ export default function ClientesPage() {
     latitude: "",
     longitude: "",
     status: "ativo",
-    dataDeInclusao: "",
+    sededtinclusao: "",
   });
 
   const fetchAllData = useCallback(async () => {
@@ -325,7 +325,7 @@ export default function ClientesPage() {
         const novoStatusNumericoParaBackend: 0 | 1 = sedeAntiga.sedestatus === 1 ? 0 : 1;
 
         if (sedeAntiga.idsede) {
-          fetch(`http://localhost:8080/sede/${sedeAntiga.idsede}`, {
+          fetch(`http://localhost:8080/api/sede/${sedeAntiga.idsede}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -333,7 +333,7 @@ export default function ClientesPage() {
             body: JSON.stringify({
               sedenome: sedeAntiga.sedenome,
               sedestatus: novoStatusNumericoParaBackend,
-              dataDeInclusao: sedeAntiga.dataDeInclusao,
+              sededtinclusao: sedeAntiga.sededtinclusao,
               idcliente: sedeAntiga.idcliente
             }),
           })
@@ -382,7 +382,7 @@ export default function ClientesPage() {
       latitude: "",
       longitude: "",
       status: "ativo",
-      dataDeInclusao: new Date().toLocaleDateString('pt-BR'),
+      sededtinclusao: new Date().toLocaleDateString('pt-BR'),
     });
     setSedeEditandoIndex(null);
     setModalSedeAberto(false);
@@ -397,7 +397,7 @@ export default function ClientesPage() {
       latitude: sede.endereco?.enderecolat?.toString() || "",
       longitude: sede.endereco?.enderecolon?.toString() || "",
       status: sede.sedestatus === 1 ? "ativo" : "inativo",
-      dataDeInclusao: sede.dataDeInclusao || new Date().toLocaleDateString('pt-BR'),
+      sededtinclusao: sede.sededtinclusao || new Date().toLocaleDateString('pt-BR'),
     });
     setSedeEditandoIndex(index);
     setModalSedeAberto(false);
@@ -411,7 +411,7 @@ export default function ClientesPage() {
       return;
     }
 
-    const { sedenome, endereco, cep, latitude, longitude, status, dataDeInclusao } = dadosSedeEditando;
+    const { sedenome, endereco, cep, latitude, longitude, status, sededtinclusao } = dadosSedeEditando;
 
     // --- Validações de Frontend ---
 
@@ -486,7 +486,7 @@ export default function ClientesPage() {
 
     // --- Fim das Validações de Frontend ---
 
-    const dataDeInclusaoFormatada = dataDeInclusao || new Date().toLocaleDateString('pt-BR');
+    const sededtinclusaoFormatada = sededtinclusao || new Date().toLocaleDateString('pt-BR');
     const sedestatusParaBackend: 0 | 1 = status === "ativo" ? 1 : 0;
 
     let sedeIdParaEndereco: number | undefined;
@@ -504,13 +504,13 @@ export default function ClientesPage() {
       const sedeParaBackend = {
         sedenome: sedenome,
         sedestatus: sedestatusParaBackend,
-        dataDeInclusao: dataDeInclusaoFormatada,
+        sededtinclusao: sededtinclusaoFormatada,
         idcliente: clienteAtual.idcliente,
       };
 
       const urlSede = sedeIdParaEndereco
-        ? `http://localhost:8080/sede/${sedeIdParaEndereco}`
-        : "http://localhost:8080/sede";
+        ? `http://localhost:8080/api/sede/${sedeIdParaEndereco}`
+        : "http://localhost:8080/api/sede";
       const methodSede: "POST" | "PUT" = sedeIdParaEndereco ? "PUT" : "POST";
 
       const responseSede = await fetch(urlSede, {
@@ -541,8 +541,8 @@ export default function ClientesPage() {
       };
 
       const urlEndereco = enderecoExistenteId
-        ? `http://localhost:8080/endereco/${enderecoExistenteId}`
-        : "http://localhost:8080/endereco";
+        ? `http://localhost:8080/api/endereco/${enderecoExistenteId}`
+        : "http://localhost:8080/api/endereco";
       const methodEndereco: "POST" | "PUT" = enderecoExistenteId ? "PUT" : "POST";
 
       const responseEndereco = await fetch(urlEndereco, {
@@ -559,7 +559,6 @@ export default function ClientesPage() {
       await fetchAllData();
       setModalCriarEditarSedeAberto(false);
       setModalSedeAberto(true);
-      alert(`Sede e endereço ${methodSede === "POST" ? "criados" : "atualizados"} com sucesso!`);
 
     } catch (error: any) {
       console.error("Erro ao salvar sede e/ou endereço:", error.message);
@@ -582,7 +581,7 @@ export default function ClientesPage() {
 
     try {
       if (sedeParaExcluir.endereco?.id) {
-        const enderecoDeleteResponse = await fetch(`http://localhost:8080/endereco/${sedeParaExcluir.endereco.id}`, {
+        const enderecoDeleteResponse = await fetch(`http://localhost:8080/api/endereco/${sedeParaExcluir.endereco.id}`, {
           method: 'DELETE',
         });
         if (!enderecoDeleteResponse.ok) {
@@ -590,7 +589,7 @@ export default function ClientesPage() {
         }
       }
 
-      const sedeDeleteResponse = await fetch(`http://localhost:8080/sede/${sedeParaExcluir.idsede}`, {
+      const sedeDeleteResponse = await fetch(`http://localhost:8080/api/sede/${sedeParaExcluir.idsede}`, {
         method: 'DELETE',
       });
       if (!sedeDeleteResponse.ok) {
@@ -599,7 +598,6 @@ export default function ClientesPage() {
       }
 
       await fetchAllData();
-      alert("Sede e seu endereço associado (se existia) excluídos com sucesso!");
 
     } catch (error: any) {
       console.error("Erro ao excluir sede:", error.message);
@@ -794,6 +792,7 @@ export default function ClientesPage() {
             <table className="w-full border rounded-md border-gray-300 overflow-hidden">
               <thead className="bg-gray-100 sticky top-0 z-5">
                 <tr>
+                <th className="p-3 text-left w-10"></th> {/* <-- Aqui o espaço reservado para o ícone */}
                   <th className="p-3 text-left">Nome</th>
                   <th className="p-3 text-left">Status</th>
                   <th className="p-3 text-left">Data de Inclusão</th>
@@ -807,6 +806,43 @@ export default function ClientesPage() {
               <tbody>
                 {sedesFiltradas.map((sede, index) => (
                   <tr key={sede.idsede || `temp-${index}`} className="border-b last:border-b-0 hover:bg-gray-50">
+                    
+                    {/* Coluna do Waze */}
+                    <td className="p-3 text-center">
+                      <button
+                        className="w-8 h-8 text-gray-600 hover:text-blue-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`http://localhost:8080/api/sede/${sede.idsede}`);
+                            if (!response.ok) throw new Error('Erro ao buscar dados da sede');
+
+                            const data = await response.json();
+
+                            // Pega o primeiro endereço do array
+                            const endereco = data.endereco && data.endereco.length > 0 ? data.endereco[0] : null;
+
+                            if (endereco && endereco.enderecolat && endereco.enderecolon) {
+                              const lat = endereco.enderecolat;
+                              const lon = endereco.enderecolon;
+                              const wazeUrl = `https://waze.com/ul?ll=${lat},${lon}&navigate=yes`;
+                              window.open(wazeUrl, "_blank");
+                            } else {
+                              alert('Coordenadas não encontradas para esta sede.');
+                            }
+                          } catch (error) {
+                            console.error(error);
+                            alert('Falha ao buscar dados da sede.');
+                          }
+                        }}
+                      >
+                        <img src="/waze.png" alt="Waze" className="w-full h-full object-contain" />
+                      </button>
+                    </td>
+
+
+
+                    
                     <td className="p-3 text-sm">{limitarTexto(sede.sedenome, 20)}</td>
 
                     <td className="p-3 text-sm">
@@ -816,7 +852,7 @@ export default function ClientesPage() {
                       </div>
                     </td>
 
-                    <td className="p-3 text-sm">{sede.dataDeInclusao}</td>
+                    <td className="p-3 text-sm">{sede.sededtinclusao}</td>
 
                     <td className="p-3 text-sm">{limitarTexto(sede.endereco?.enderecoendereco || "N/A", 25)}</td>
                     <td className="p-3 text-sm">{sede.endereco?.enderecocep || "N/A"}</td>

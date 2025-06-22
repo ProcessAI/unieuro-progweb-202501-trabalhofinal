@@ -1,6 +1,6 @@
 <h3>Cadastro de sede:</h3>
 POST 
-http://localhost:3000/sede
+http://localhost:8080/api/sede
 {
   "sedenome": "Nome",
   "sedestatus": 1 (Opcional),
@@ -14,15 +14,15 @@ Processamento:
 
 <h3>Buscar todas as sedes:</h3>
 GET
-http://localhost:3000/sede
+http://localhost:8080/api/sede
 
 <h3>Buscar sede por ID:</h3>
 GET
-http://localhost:3000/sede/{idsede}
+http://localhost:8080/api/sede/{idsede}
 
 <h3>Atualizar sede:</h3>
 PUT
-http://localhost:3000/sede/{idsede}
+http://localhost:8080/api/sede/{idsede}
 {
   "sedenome": "Nome" (Opcional),
   "sedestatus": 1 (Opcional)
@@ -33,8 +33,8 @@ Processamento:
 
 <h3>Apagar sede:</h3>
 DELETE
-http://localhost:3000/sede/{idsede}
+http://localhost:8080/api/sede/{idsede}
 
 <h3>Buscar todas as sedes por ID do cliente:</h3>
 GET
-http://localhost:3000/sede/cliente/{idcliente}
+http://localhost:8080/api/sede/cliente/{idcliente}
