@@ -119,7 +119,7 @@ export default function ClientesPage() {
       setClientes(clientesComSedesEEnderecos);
     } catch (error: any) {
       console.error("Erro ao carregar dados iniciais:", error.message);
-      alert("Erro ao carregar dados iniciais: " + error.message + ". Verifique o console do navegador e o terminal do backend.");
+      alert("Não possui dados inicias no banco de dados ou o back-end está inativo");
     }
   }, []);
 
