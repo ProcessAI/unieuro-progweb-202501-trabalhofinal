@@ -1,0 +1,115 @@
+/* Cadastro.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #fff;
+}
+
+.cadastro-header {
+  background-color: #ffc800;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  font-size: 24px;
+  font-weight: bold;
+  position: relative;
+}
+
+.cadastro-logo {
+  height: 40px;
+  position: absolute;
+  left: 20px;
+}
+
+.cadastro-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 80px);
+}
+
+.cadastro-form-box {
+  background-color: #fff;
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 500px;
+}
+
+.cadastro-title {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.cadastro-form-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Campo de senha com botão de olho */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding: 12px;
+  padding-right: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Botão cadastrar */
+.cadastro-btn {
+  width: 100%;
+  background-color: #ffc800;
+  padding: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Link para login */
+.cadastro-login-link {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.cadastro-account-text {
+  color: black;
+}
+
+.cadastro-login-action {
+  color: #ffc800;
+  cursor: pointer;
+  text-decoration: underline;
+}

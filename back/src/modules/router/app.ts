@@ -3,6 +3,7 @@
 
 import express from 'express';
 import dotenv from 'dotenv'; // Importando dotenv para configuração de variáveis ambiente
+import cors from 'cors'; // para permitir requisições do front-end
 import laudoRoutes from '../laudo/routes/laudo-routes';
 import tipoeqRoutes from '../laudo/routes/tipoeq-routes';
 import userRoutes from '../login/routes/usuario-routes';
@@ -20,6 +21,14 @@ const PORT = 8080;
 /* Materializando um objeto do nosso Servidor express */
 const app = express();
 
+// configurnado o cors para permitir que o vite envie requisições
+app.use(cors({
+  origin: 'http://localhost:5173', // porta do Vite
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
+
 /* Middleware para aceitar requisições JSON e habilitar CORS */
 app.use(express.json());
 
@@ -34,7 +43,7 @@ app.use('/api/protected', protegidoRoutes);
 
 /* Criando o nosso servidor express */
 app.listen(PORT, (): void => {
-    console.log(`SERVIDOR RODANDO NA PORTA: ${PORT}`);
+    console.log(`SERVIDOR RODANDO NA PORTA: ${PORT}!`);
 });
 
 export default app;

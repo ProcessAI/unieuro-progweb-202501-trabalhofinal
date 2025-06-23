@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -29,11 +29,14 @@ interface Sede {
   endereco?: Endereco;
 }
 
+/*
 interface ClienteBackend {
     idcliente: number;
     clientenome: string;
     clientestatus: number;
 }
+    REDUNDANTE EXISTIR ESSA INTERFACE
+*/ 
 
 interface Cliente {
   idcliente?: number;
@@ -66,26 +69,29 @@ export default function ClientesPage() {
 
   const fetchAllData = useCallback(async () => {
     try {
-      const clientesResponse = await fetch("http://localhost:8080/api/cliente/listarCliente");
-      if (!clientesResponse.ok) {
-        throw new Error(`Falha ao buscar clientes: ${clientesResponse.status} ${clientesResponse.statusText}`);
-      }
-      const clientesDataBackend: ClienteBackend[] = await clientesResponse.json();
+    const clientesResponse = await fetch("http://localhost:8080/api/cliente/listarCliente");
+    if (!clientesResponse.ok) {
+      throw new Error(`Falha ao buscar clientes: ${clientesResponse.status} ${clientesResponse.statusText}`);
+    }
 
-      const clientesFormatados: Cliente[] = clientesDataBackend.map(c => ({
-          idcliente: c.idcliente,
-          nome: c.clientenome,
-          status: c.clientestatus === 1 ? "ativo" : "inativo",
-          sedes: []
-      }));
+    // Recebe o JSON com tipo any[]
+    const clientesDataRaw: any[] = await clientesResponse.json();
 
-      const sedesResponse = await fetch("http://localhost:8080/sede");
+    // Faz o mapeamento para o formato Cliente
+    const clientesFormatados: Cliente[] = clientesDataRaw.map(c => ({
+      idcliente: c.idcliente,
+      nome: c.clientenome,                   // transforma clientenome em nome
+      status: c.clientestatus === 1 ? "ativo" : "inativo", // converte número em string
+      sedes: []                             // vazio por enquanto, será preenchido depois
+    }));
+
+      const sedesResponse = await fetch("http://localhost:8080/api/sede");
       if (!sedesResponse.ok) {
         throw new Error(`Falha ao buscar sedes: ${sedesResponse.status} ${sedesResponse.statusText}`);
       }
       const sedesData: Sede[] = await sedesResponse.json();
 
-      const enderecosResponse = await fetch("http://localhost:8080/endereco");
+      const enderecosResponse = await fetch("http://localhost:8080/api/endereco");
       if (!enderecosResponse.ok) {
         throw new Error(`Falha ao buscar endereços: ${enderecosResponse.status} ${enderecosResponse.statusText}`);
       }
@@ -122,7 +128,7 @@ export default function ClientesPage() {
   }, [fetchAllData]);
 
   const clientesFiltrados = clientes.filter((cliente) =>
-    cliente.nome.toLowerCase().includes(search.toLowerCase())
+    (cliente.nome ?? "").toLowerCase().includes((search ?? "").toLowerCase())
   );
 
   const sedesDoCliente =
@@ -132,52 +138,131 @@ export default function ClientesPage() {
     sede.sedenome.toLowerCase().includes(searchSede.toLowerCase())
   );
 
-  function toggleStatusCliente(clienteToToggle: Cliente) {
-    setClientes((oldClientes) => {
-      return oldClientes.map((cliente) => {
-        if (cliente.idcliente === clienteToToggle.idcliente) {
-          return {
-            ...cliente,
-            status: cliente.status === "ativo" ? "inativo" : "ativo",
-          };
-        }
-        return cliente;
-      });
+ async function toggleStatusCliente(clienteToToggle: Cliente): Promise<{ nome: string; status: "ativo" | "inativo" } | void> {
+  const novoStatusNum = clienteToToggle.status === "ativo" ? 0 : 1;
+  try {
+    const response = await fetch(`http://localhost:8080/api/cliente/atualizarCliente/${clienteToToggle.idcliente}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nome: clienteToToggle.nome,
+        status: novoStatusNum,
+      }),
     });
+
+    if (!response.ok) {
+      throw new Error("Erro ao atualizar cliente");
+    }
+
+    const data = await response.json();
+
+    const clienteAtualizado: Cliente = {
+      idcliente: data.idcliente,
+      nome: data.clientenome,
+      status: data.clientestatus === 1 ? "ativo" : "inativo",
+      sedes: clienteToToggle.sedes ?? [],
+    };
+
+    setClientes((clientesAntigos) =>
+      clientesAntigos.map((c) =>
+        c.idcliente === clienteAtualizado.idcliente ? clienteAtualizado : c
+      )
+    );
+
+    return { nome: clienteAtualizado.nome, status: clienteAtualizado.status };
+
+  } catch (error) {
+    console.error("Erro ao atualizar status do cliente:", error);
   }
+}
 
   function abrirEditarCliente(index: number) {
     setClienteEditandoIndex(index);
     setNomeEditando(clientes[index].nome);
   }
 
-  function salvarEdicaoCliente() {
-    setClientes((oldClientes) => {
-      const novosClientes = [...oldClientes];
-      if (clienteEditandoIndex !== null) {
-        novosClientes[clienteEditandoIndex].nome = nomeEditando;
-      }
-      return novosClientes;
+  async function salvarEdicaoCliente() {
+  if (clienteEditandoIndex === null) return;
+
+  const cliente = clientes[clienteEditandoIndex];
+
+  try {
+    const response = await fetch(`http://localhost:8080/api/cliente/atualizarCliente/${cliente.idcliente}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nome: nomeEditando,
+        status: cliente.status === "ativo" ? 1 : 0,
+      }),
     });
+
+    if (!response.ok) {
+      throw new Error("Erro ao atualizar cliente");
+    }
+
+    const data = await response.json();
+
+    const clienteAtualizado: Cliente = {
+      idcliente: data.idcliente,
+      nome: data.clientenome,
+      status: data.clientestatus === 1 ? "ativo" : "inativo",
+      sedes: cliente.sedes ?? [],
+    };
+
+    setClientes((clientesAntigos) =>
+      clientesAntigos.map((c) =>
+        c.idcliente === clienteAtualizado.idcliente ? clienteAtualizado : c
+      )
+    );
+
     fecharEditarCliente();
+    alert(`Cliente "${clienteAtualizado.nome}" atualizado com sucesso!`);
+  } catch (error) {
+    console.error("Erro ao atualizar cliente:", error);
+    alert("Erro ao atualizar cliente. Verifique o console.");
   }
+}
 
   function fecharEditarCliente() {
     setClienteEditandoIndex(null);
     setNomeEditando("");
   }
 
-  function excluirCliente(index: number) {
-    if (!window.confirm(`Tem certeza que deseja excluir o cliente "${clientes[index].nome}" (localmente)?`)) {
-      return;
+  async function excluirCliente(index: number) {
+  const cliente = clientes[index];
+
+  if (!window.confirm(`Tem certeza que deseja excluir o cliente "${cliente.nome}"?`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`http://localhost:8080/api/cliente/deletarCliente/${cliente.idcliente}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao excluir cliente no servidor");
     }
+
+      // Remove localmente após confirmação do backend
     setClientes((oldClientes) => {
       const novosClientes = [...oldClientes];
       novosClientes.splice(index, 1);
       return novosClientes;
     });
+
     if (clienteEditandoIndex === index) {
       fecharEditarCliente();
+    }
+
+    alert(`Cliente "${cliente.nome}" excluído com sucesso!`);
+  } catch (error) {
+    console.error("Erro ao excluir cliente:", error);
+    alert("Erro ao excluir cliente. Verifique o console.");
     }
   }
 
@@ -187,31 +272,13 @@ export default function ClientesPage() {
   }
 
   async function salvarNovoCliente() {
-    try {
-    
-    
-      if (nomeNovoCliente.trim() === "") return;
+  try {
+    if (nomeNovoCliente.trim() === "") {
+      alert("O nome do cliente é obrigatório.");
+      return;
+    }
 
-      const novoId = clientes.length > 0
-      ? Math.max(...clientes.map(c => c.idcliente).filter((id): id is number => typeof id === "number")) + 1
-      :1;
-     
-      const novoCliente: Cliente = {
-        idcliente: novoId,
-        nome: nomeNovoCliente.trim(),
-        status: "ativo",
-        sedes: [],
-      };
-      setClientes((prevClientes) => [...prevClientes, novoCliente]);
-      setModalCriarAberto(false);
-      alert("Cliente criado localmente (sem backend).");
-
-    /*
-      TESTE
-
-    if (nomeNovoCliente.trim() === "") return;
-    
-    const novoCliente: Cliente = {
+    const novoCliente = {
       nome: nomeNovoCliente.trim(),
       status: "ativo",
       sedes: [],
@@ -229,18 +296,25 @@ export default function ClientesPage() {
       throw new Error(`Erro HTTP: ${response.status}`);
     }
 
-    const clienteCriado: Cliente = await response.json();
+    // Recebe o cliente criado com ID e status do backend
+    const clienteCriado = await response.json();
 
-    setClientes((prevClientes) => [...prevClientes, clienteCriado]);
+    // Atualize o estado com o cliente criado pelo backend
+    setClientes((prevClientes) => [...prevClientes, {
+      idcliente: clienteCriado.idcliente,
+      nome: clienteCriado.clientenome, // ajuste conforme o retorno da API
+      status: clienteCriado.clientestatus === 1 ? "ativo" : "inativo",
+      sedes: clienteCriado.sedes ?? [],
+    }]);
+
     setModalCriarAberto(false);
-    alert("Cliente criado com sucesso!");
-    */
+    alert("Cliente criado com sucesso.");
   } catch (error) {
-    console.error("Erro ao inserir um novo cliente!", error);
-    alert("Erro ao inserir um novo cliente!"),error;
+    console.log("Erro ao inserir um novo cliente!", error);
+    alert("Erro ao inserir um novo cliente!");
   }
+
 }
-  
   function toggleStatusSede(indexToToggle: number) {
     setClientes((oldClientes) => {
       const novosClientes = [...oldClientes];
@@ -572,7 +646,7 @@ export default function ClientesPage() {
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md w-full">
-            <DialogTitle className="text-lg font-bold mb-4">Criar Novo Cliente (Apenas Frontend)</DialogTitle>
+            <DialogTitle className="text-lg font-bold mb-4">Criar Novo Cliente </DialogTitle>
             <DialogDescription>
                 Preencha o nome do cliente.
             </DialogDescription> {/* Adicionado para acessibilidade */}
@@ -588,7 +662,7 @@ export default function ClientesPage() {
                 Cancelar
               </Button>
               <Button onClick={salvarNovoCliente} className="bg-yellow-400 text-black text-xs h-7 px-3">
-                Salvar (Apenas Frontend)
+                Inserir
               </Button>
             </div>
           </DialogContent>
@@ -608,7 +682,7 @@ export default function ClientesPage() {
           </thead>
           <tbody>
             {clientesFiltrados.map((cliente, index) => (
-              <tr key={cliente.idcliente} className="border-b hover:bg-gray-50">
+              <tr key={cliente.idcliente ?? `cliente-${index}`} className="border-b hover:bg-gray-50">
                 <td className="p-2">{cliente.idcliente}</td>
                 <td className="p-2 font-bold">{cliente.nome}</td>
                 <td className="p-2">
@@ -619,7 +693,7 @@ export default function ClientesPage() {
                         : "bg-red-500 text-white"
                     } flex items-center justify-center`}
                   >
-                    {cliente.status.toUpperCase()}
+                  {(cliente.status ?? "").toUpperCase()}
                   </div>
                 </td>
                 <td className="p-2">
@@ -627,7 +701,7 @@ export default function ClientesPage() {
                     className="bg-yellow-400 text-black text-xs h-7 px-3"
                     onClick={() => abrirModalSede(index)}
                   >
-                    SEDES ({cliente.sedes.length})
+                    SEDES ({cliente.sedes?.length ?? 0})
                   </Button>
                 </td>
                 <td className="p-2 text-right">
@@ -636,13 +710,13 @@ export default function ClientesPage() {
                       className="bg-black text-white text-xs h-7 px-3"
                       onClick={() => abrirEditarCliente(index)}
                     >
-                      EDITAR (Frontend)
+                      EDITAR
                     </Button>
                     <Button
                       className="bg-red-600 text-white text-xs h-7 px-3"
                       onClick={() => excluirCliente(index)}
                     >
-                      EXCLUIR (Frontend)
+                      EXCLUIR
                     </Button>
                     <Button
                       className={`text-xs h-7 px-3 ${
@@ -652,7 +726,7 @@ export default function ClientesPage() {
                       }`}
                       onClick={() => toggleStatusCliente(cliente)}
                     >
-                      {cliente.status === "ativo" ? "INATIVAR (Frontend)" : "ATIVAR (Frontend)"}
+                      {cliente.status === "ativo" ? "INATIVAR" : "ATIVAR"}
                     </Button>
                   </div>
                 </td>
@@ -684,7 +758,7 @@ export default function ClientesPage() {
               Cancelar
             </Button>
             <Button onClick={salvarEdicaoCliente} className="bg-yellow-400 text-black text-xs h-7 px-3">
-              Salvar (Apenas Frontend)
+              Salvar 
             </Button>
           </div>
         </DialogContent>
