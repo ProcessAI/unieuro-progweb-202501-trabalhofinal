@@ -1,54 +1,80 @@
 import { Router, Request, Response } from 'express';
 import { EquipamentoClass } from '../service/EquipamentoService';
 
-const RouteEquipamento = Router();
+const routeEquipamento = Router();
 const equipamentoService = new EquipamentoClass();
 
-// Criar equipamento
-RouteEquipamento.post('/', async (req: Request, res: Response) => {
+/**
+ * Criar novo equipamento
+ */
+routeEquipamento.post('/criarEquipamento', async (req: Request, res: Response) => {
   try {
-    const equipamento = await equipamentoService.criarEquipamento(req.body);
-    res.status(201).json(equipamento);
+    const novoEquipamento = await equipamentoService.criarEquipamento(req.body);
+    return res.status(201).json(novoEquipamento);
   } catch (error: any) {
-    res.status(400).json({ error: error.message });
+    return res.status(400).json({ error: error.message });
   }
 });
 
-// Listar todos os equipamentos
-RouteEquipamento.get('/', async (req: Request, res: Response) => {
+/**
+ * Listar todos os equipamentos
+ */
+routeEquipamento.get('/', async (_req: Request, res: Response) => {
   try {
     const equipamentos = await equipamentoService.listarEquipamentos();
-    res.json(equipamentos);
-  } catch (error: any) {
-    res.status(400).json({ error: error.message });
-  }
-});
 
-// Consultar equipamento por ID
-RouteEquipamento.get('/:id', async (req: Request, res: Response) => {
-  try {
-    const id = Number(req.params.id);
-    const equipamento = await equipamentoService.ConsuEquipamento(id);
-
-    if (!equipamento) {
-      return res.status(404).json({ error: 'Equipamento não encontrado' });
+    if (!equipamentos || equipamentos.length === 0) {
+      return res.status(404).json({ error: 'Nenhum equipamento encontrado.' });
     }
 
-    res.json(equipamento);
+    return res.status(200).json(equipamentos);
   } catch (error: any) {
-    res.status(400).json({ error: error.message });
+    return res.status(400).json({ error: error.message });
   }
 });
 
-// Atualizar equipamento
-RouteEquipamento.put('/:id', async (req: Request, res: Response) => {
+/**
+ * Consultar equipamento por ID
+ */
+routeEquipamento.get('/:id', async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const equipamento = await equipamentoService.atualizarEquipamento(id, req.body);
-    res.json(equipamento);
+    const equipamento = await equipamentoService.consultarEquipamento(id);
+
+    if (!equipamento) {
+      return res.status(404).json({ error: 'Equipamento não encontrado.' });
+    }
+
+    return res.status(200).json(equipamento);
   } catch (error: any) {
-    res.status(400).json({ error: error.message });
+    return res.status(400).json({ error: error.message });
   }
 });
 
-export default RouteEquipamento;
+/**
+ * Atualizar equipamento
+ */
+routeEquipamento.put('/:id', async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const atualizado = await equipamentoService.atualizarEquipamento(id, req.body);
+    return res.status(200).json(atualizado);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
+/**
+ * Deletar equipamento
+ */
+routeEquipamento.delete('/:id', async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const deletado = await equipamentoService.deletarEquipamento(id);
+    return res.status(200).json(deletado);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
+export default routeEquipamento;

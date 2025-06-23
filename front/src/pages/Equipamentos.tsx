@@ -1,44 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  Equipamento,
+  getEquipamentos,
+  addEquipamento,
+  updateEquipamento,
+  deleteEquipamento
+} from "../service/equipamentoService";
 
 export default function Equipamentos() {
+  const [equipamentos, setEquipamentos] = useState<Equipamento[]>([]);
   const [busca, setBusca] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
   const [detalhesAbertos, setDetalhesAbertos] = useState(false);
   const [editarAberto, setEditarAberto] = useState(false);
-  const [equipamentos, setEquipamentos] = useState([
-    {
-      nome: "capacete",
-      serie: "EQP-0001",
-      tipo: "Gerador Diesel",
-      alugado: "sim",
-      sede: "Águas claras",
-      modelo: "Modelo A",
-      ipv4: "192.168.1.1",
-      ipv6: "::1",
-      anydesk: "123 456 789",
-      dw: "01/01/2023",
-      mac: "AA:BB:CC:DD:EE:FF"
-    },
-    {
-      nome: "torradeira",
-      serie: "EQP-0002",
-      tipo: "Gerador Diesel",
-      alugado: "Não",
-      sede: "Águas claras",
-      modelo: "Modelo B",
-      ipv4: "192.168.1.2",
-      ipv6: "::2",
-      anydesk: "987 654 321",
-      dw: "02/02/2024",
-      mac: "FF:EE:DD:CC:BB:AA"
-    },
-  ]);
 
-  const [novoEquipamento, setNovoEquipamento] = useState({
+  const [novoEquipamento, setNovoEquipamento] = useState<Equipamento>({
     nome: "",
     serie: "",
     tipo: "",
-    alugado: false,
+    alugado: "Não",
     sede: "",
     modelo: "",
     ipv4: "",
@@ -48,11 +28,11 @@ export default function Equipamentos() {
     mac: ""
   });
 
-  const [editarEquipamento, setEditarEquipamento] = useState({
+  const [editarEquipamento, setEditarEquipamento] = useState<Equipamento>({
     nome: "",
     serie: "",
     tipo: "",
-    alugado: false,
+    alugado: "Não",
     sede: "",
     modelo: "",
     ipv4: "",
@@ -62,7 +42,20 @@ export default function Equipamentos() {
     mac: ""
   });
 
-  const [editarIndex, setEditarIndex] = useState(null);
+  const [editarIndex, setEditarIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function carregarEquipamentos() {
+      try {
+        const dados = await getEquipamentos();
+        setEquipamentos(dados);
+      } catch (error) {
+        console.error("Erro ao carregar equipamentos:", error);
+      }
+    }
+
+    carregarEquipamentos();
+  }, []);
 
   const filtrados = busca.trim() === ""
     ? equipamentos
@@ -73,31 +66,51 @@ export default function Equipamentos() {
         eq.sede.toLowerCase().includes(busca.toLowerCase())
       );
 
-  const criarEquipamento = () => {
-    const novo = {
-      ...novoEquipamento,
-      alugado: novoEquipamento.alugado ? "Sim" : "Não",
-      sede: novoEquipamento.sede || "Não informada"
-    };
-    setEquipamentos([...equipamentos, novo]);
-    setModalAberto(false);
-    setNovoEquipamento({ nome: "", serie: "", tipo: "", alugado: false, sede: "", modelo: "", ipv4: "", ipv6: "", anydesk: "", dw: "", mac: "" });
+  const criarEquipamento = async () => {
+    try {
+      await addEquipamento(novoEquipamento);
+      const atualizados = await getEquipamentos();
+      setEquipamentos(atualizados);
+      setModalAberto(false);
+      setNovoEquipamento({
+        nome: "",
+        serie: "",
+        tipo: "",
+        alugado: "Não",
+        sede: "",
+        modelo: "",
+        ipv4: "",
+        ipv6: "",
+        anydesk: "",
+        dw: "",
+        mac: ""
+      });
+    } catch (error) {
+      console.error("Erro ao criar equipamento:", error);
+    }
   };
 
-  const excluirEquipamento = (index) => {
-    const novosEquipamentos = [...equipamentos];
-    novosEquipamentos.splice(index, 1);
-    setEquipamentos(novosEquipamentos);
+  const excluirEquipamento = async (index: number) => {
+    const id = equipamentos[index].id;
+    if (!id) return;
+
+    try {
+      await deleteEquipamento(id);
+      const atualizados = await getEquipamentos();
+      setEquipamentos(atualizados);
+    } catch (error) {
+      console.error("Erro ao excluir equipamento:", error);
+    }
   };
 
-  const abrirEditar = (index) => {
+ const abrirEditar = (index: number) => {
     setEditarIndex(index);
     const eq = equipamentos[index];
     setEditarEquipamento({
       nome: eq.nome,
       serie: eq.serie,
       tipo: eq.tipo,
-      alugado: eq.alugado === "Sim",
+      alugado: eq.alugado,
       sede: eq.sede,
       modelo: eq.modelo,
       ipv4: eq.ipv4,
@@ -111,7 +124,7 @@ export default function Equipamentos() {
     setDetalhesAbertos(false);
   };
 
-  const abrirDetalhes = (index) => {
+  const abrirDetalhes = (index: number) => {
     setEditarIndex(index);
     setDetalhesAbertos(true);
     setModalAberto(false);
@@ -124,17 +137,20 @@ export default function Equipamentos() {
     setEditarAberto(false);
   };
 
-  const salvarEditar = () => {
+  const salvarEditar = async () => {
     if (editarIndex === null) return;
-    const atualizados = [...equipamentos];
-    atualizados[editarIndex] = {
-      ...editarEquipamento,
-      alugado: editarEquipamento.alugado ? "Sim" : "Não",
-      sede: editarEquipamento.sede || "Não informada"
-    };
-    setEquipamentos(atualizados);
-    setEditarAberto(false);
-    setEditarIndex(null);
+    const id = equipamentos[editarIndex].id;
+    if (!id) return;
+
+    try {
+      await updateEquipamento(id, editarEquipamento);
+      const atualizados = await getEquipamentos();
+      setEquipamentos(atualizados);
+      setEditarAberto(false);
+      setEditarIndex(null);
+    } catch (error) {
+      console.error("Erro ao editar equipamento:", error);
+    }
   };
 
   const fecharModais = () => {
@@ -725,8 +741,13 @@ export default function Equipamentos() {
                   type="checkbox" 
                   id="alugado" 
                   className="checkbox"
-                  checked={novoEquipamento.alugado} 
-                  onChange={(e) => setNovoEquipamento({ ...novoEquipamento, alugado: e.target.checked })} 
+                 checked={novoEquipamento.alugado === "Sim"}
+                  onChange={(e) =>
+                    setNovoEquipamento({
+                      ...novoEquipamento,
+                      alugado: e.target.checked ? "Sim" : "Não"
+                    })
+                  }
                 />
                 <label htmlFor="alugado" className="form-label">ALUGADO</label>
               </div>
@@ -876,8 +897,13 @@ export default function Equipamentos() {
                   type="checkbox"
                   id="alugado-editar"
                   className="checkbox"
-                  checked={editarEquipamento.alugado}
-                  onChange={(e) => setEditarEquipamento({ ...editarEquipamento, alugado: e.target.checked })}
+                  checked={editarEquipamento.alugado === "Sim"}
+                  onChange={(e) =>
+                    setEditarEquipamento({
+                      ...editarEquipamento,
+                      alugado: e.target.checked ? "Sim" : "Não"
+                    })
+                  }
                 />
                 <label htmlFor="alugado-editar" className="form-label">ALUGADO</label>
               </div>

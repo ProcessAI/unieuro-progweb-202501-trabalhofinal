@@ -8,6 +8,7 @@ import laudoRoutes from '../laudo/routes/laudo-routes';
 import tipoeqRoutes from '../laudo/routes/tipoeq-routes';
 import userRoutes from '../login/routes/usuario-routes';
 import routeCliente from '../laudo/routes/RouteCliente';
+import routeEquipamento from '../laudo/routes/RouteEquipamento';
 import enderecoRouter from '../laudo/routes/RouteEndereco';
 import sedeRoutes from '../laudo/routes/sede-routes';
 import protegidoRoutes from '../login/routes/auth-middleware-routes';
@@ -40,6 +41,7 @@ app.use('/api/cliente', routeCliente);
 app.use('/api/endereco', enderecoRouter);
 app.use('/api/auth', userRoutes);
 app.use('/api/protected', protegidoRoutes);
+app.use('/api/equipamento',routeEquipamento);
 
 /* Criando o nosso servidor express */
 app.listen(PORT, (): void => {
