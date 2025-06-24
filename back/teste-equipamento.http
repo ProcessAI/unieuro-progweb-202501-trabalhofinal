@@ -1,0 +1,53 @@
+### ✅ Criar novo equipamento
+POST http://localhost:8080/api/equipamento/criarEquipamento
+Content-Type: application/json
+
+{
+  "equipserie": "ABC456",
+  "equipmodel": "Dell DELICIA",
+  "equipmac": "AABBCCDDEEFF", 
+  "equipipv4": "192.168.1.2",
+  "equipipv6": "::1",
+  "equipanydesk": "123456789",
+  "equipdwservice": "01/02/2023",
+  "equipalugado": false,
+  "idsede": 4,
+  "idtipoeq": 4
+}
+
+###
+
+### 📋 Listar todos os equipamentos
+GET http://localhost:8080/api/equipamento/
+Accept: application/json
+
+###
+
+### 🔍 Consultar equipamento por ID
+GET http://localhost:8080/api/equipamento/1
+Accept: application/json
+
+###
+
+### ♻️ Atualizar equipamento
+PUT http://localhost:8080/api/equipamento/1
+Content-Type: application/json
+
+{
+  "equipserie": "Número de série atualizado",       // Ex: "XYZ789"
+  "equipmodel": "Modelo atualizado",                 // Ex: "HP ProBook"
+  "equipmac": "11:22:33:44:55:66",
+  "equipipv4": "192.168.1.20",
+  "equipipv6": "fe80::2",
+  "equipanydesk": "987654321",
+  "equipdwservice": "02/02/2023",
+  "equipalugado": false,
+  "idsede": 1,
+  "idtipoeq": 2
+}
+
+###
+
+### ❌ Deletar equipamento
+DELETE http://localhost:8080/api/equipamento/1
+Accept: application/json

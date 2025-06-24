@@ -88,6 +88,16 @@ CREATE TABLE "tipolaudo" (
     CONSTRAINT "tipolaudo_pkey" PRIMARY KEY ("idtipolaudo")
 );
 
+-- CreateTable
+CREATE TABLE "usuario" (
+    "idusuario" SERIAL NOT NULL,
+    "usuarioemail" VARCHAR(100) NOT NULL,
+    "usuariosenha" VARCHAR(100) NOT NULL,
+    "usuariostatus" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "usuario_pkey" PRIMARY KEY ("idusuario")
+);
+
 -- AddForeignKey
 ALTER TABLE "endereco" ADD CONSTRAINT "endereco_idsede_fkey" FOREIGN KEY ("idsede") REFERENCES "sede"("idsede") ON DELETE NO ACTION ON UPDATE NO ACTION;
 

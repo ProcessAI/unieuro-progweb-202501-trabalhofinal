@@ -1,9 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import Equipamentos from "./pages/Equipamentos";
+// src/main.tsx
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom'; // Importante!
+import App from './App.tsx'; // Use .tsx se for TypeScript
+import './index.css';
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Equipamentos />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );

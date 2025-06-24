@@ -41,12 +41,31 @@ export async function createSede(req: Request, res: Response): Promise<void> {
 export async function getAllSedes(req: Request, res: Response): Promise<void> {
   try {
     const sedes = await sedeManager.findAll();
-    res.status(200).json(sedes);
+
+    const sedesFormatadas = sedes.map(sede => {
+      let dataFormatada: string | null = null;
+
+      if (sede.sededtinclusao) {
+        const data = new Date(sede.sededtinclusao);
+        const dia = String(data.getDate()).padStart(2, '0');
+        const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês começa em 0
+        const ano = data.getFullYear();
+        dataFormatada = `${dia}/${mes}/${ano}`;
+      }
+
+      return {
+        ...sede,
+        sededtinclusao: dataFormatada,
+      };
+    });
+
+    res.status(200).json(sedesFormatadas);
   } catch (error) {
     console.error('Erro em getAllSedes:', error);
     res.status(500).json({ message: 'Erro ao buscar sedes', error });
   }
 }
+
 
 // Buscar sede por ID
 export async function getSedeById(req: Request, res: Response): Promise<void> {
@@ -59,11 +78,28 @@ export async function getSedeById(req: Request, res: Response): Promise<void> {
 
   try {
     const sede = await sedeManager.findById(id);
+
     if (!sede) {
       res.status(404).json({ message: 'Sede não encontrada' });
       return;
     }
-    res.status(200).json(sede);
+
+    let dataFormatada: string | null = null;
+
+    if (sede.sededtinclusao) {
+      const data = new Date(sede.sededtinclusao);
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = data.getFullYear();
+      dataFormatada = `${dia}/${mes}/${ano}`;
+    }
+
+    const sedeFormatada = {
+      ...sede,
+      sededtinclusao: dataFormatada,
+    };
+
+    res.status(200).json(sedeFormatada);
   } catch (error) {
     console.error('Erro em getSedeById:', error);
     res.status(500).json({ message: 'Erro ao buscar sede por ID', error });

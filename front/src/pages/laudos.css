@@ -1,0 +1,195 @@
+.modal {
+ position: fixed;
+ top: 0; left: 0; width: 100vw; height: 100vh;
+ background: #0008;
+ display: flex; align-items: center; justify-content: center;
+ z-index: 1000;
+}
+
+.modal-content {
+ background: #fff;
+ border-radius: 12px;
+ padding: 32px;
+ width: 95vw;
+ height: 90vh;
+ max-width: 1400px;
+ max-height: 900px;
+ overflow-y: auto;
+ overflow-x: hidden;
+ box-shadow: 0 2px 16px #0003;
+}
+
+input, select, textarea {
+ display: block;
+ width: 100%;
+ margin: 8px 0;
+ padding: 8px;
+ border-radius: 6px;
+ border: 1px solid #ccc;
+ box-sizing: border-box;
+}
+
+textarea { min-height: 60px; }
+
+button {
+ border: none;
+ padding: 8px 16px;
+ border-radius: 6px;
+ cursor: pointer;
+ font-weight: bold;
+}
+
+.laudo-card {
+ background: #fff;
+ margin: 16px;
+ padding: 16px;
+ border-radius: 8px;
+ box-shadow: 0 2px 8px #0001;
+ cursor: pointer;
+ max-width: 320px;
+ min-width: 220px;
+}
+
+.laudos-list {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 16px;
+}
+
+.menu-superior {
+ background: #FFD600;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: 8px 16px;
+ border-bottom: 1px solid #eee;
+ position: relative;
+ z-index: 1100;
+}
+
+.user-area {
+ display: flex;
+ align-items: center;
+ gap: 16px;
+}
+
+.hamburger {
+ display: none;
+ flex-direction: column;
+ justify-content: center;
+ gap: 4px;
+ width: 36px;
+ height: 36px;
+ background: transparent;
+ border: none;
+ cursor: pointer;
+ margin-right: 8px;
+}
+
+.hamburger span {
+ display: block;
+ height: 4px;
+ width: 28px;
+ background: #222;
+ border-radius: 2px;
+}
+
+.side-menu {
+ display: none;
+}
+
+.menu-superior .links {
+ display: flex;
+ align-items: center;
+ gap: 24px;
+}
+
+.menu-superior .links a {
+ color: #222;
+ text-decoration: none;
+ font-weight: bold;
+ padding: 0 8px;
+}
+
+@media (max-width: 600px) {
+ .menu-superior .links {
+   display: none;
+ }
+ .hamburger {
+   display: flex;
+ }
+ .side-menu {
+   display: flex;
+   flex-direction: column;
+   position: fixed;
+   top: 0; left: -220px;
+   width: 200px;
+   height: 100vh;
+   background: #FFD600;
+   box-shadow: 2px 0 8px #0002;
+   padding-top: 24px;
+   transition: left 0.2s;
+   z-index: 2000;
+ }
+ .side-menu a {
+   color: #222;
+   text-decoration: none;
+   font-weight: bold;
+   padding: 12px 24px;
+   font-size: 17px;
+   border-bottom: 1px solid #fff3;
+ }
+ .side-menu.open {
+   left: 0;
+ }
+ .user-area {
+   flex-direction: row;
+   align-items: center;
+   gap: 8px;
+   margin: 0;
+   width: auto;
+ }
+ .top-bar {
+   flex-direction: row;
+   align-items: center;
+   gap: 8px;
+   margin: 8px 0;
+   justify-content: center;
+ }
+ .top-bar input {
+   width: 100px !important;
+   font-size: 14px;
+   padding: 6px;
+ }
+ .novo-laudo-btn {
+   width: 90px;
+   font-size: 14px;
+   padding: 8px 0;
+   margin-top: 0;
+   align-self: auto;
+ }
+ .laudos-list {
+   flex-direction: column;
+   gap: 8px;
+   align-items: center;
+ }
+ .laudo-card {
+   max-width: 95vw;
+   min-width: unset;
+   width: 100%;
+   margin: 8px 0;
+   padding: 12px;
+   font-size: 15px;
+ }
+ .modal-content {
+   width: 98vw;
+   height: 95vh;
+   padding: 16px;
+ }
+ input, select, textarea {
+   font-size: 16px;
+ }
+ button {
+   font-size: 16px;
+ }
+}
