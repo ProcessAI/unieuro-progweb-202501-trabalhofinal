@@ -2,32 +2,50 @@
 // https://stackoverflow.com/questions/79071082/typescript-error-no-overload-matches-this-call-in-express-route-handler
 
 import express from 'express';
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'; // Importando dotenv para configuração de variáveis ambiente
+import cors from 'cors'; // para permitir requisições do front-end
 import laudoRoutes from '../laudo/routes/laudo-routes';
 import tipoeqRoutes from '../laudo/routes/tipoeq-routes';
-
 import userRoutes from '../login/routes/usuario-routes';
-import protegidoRoutes from '../login/routes/auth-middleware-routes';
+import routeCliente from '../laudo/routes/RouteCliente';
+import routeEquipamento from '../laudo/routes/RouteEquipamento';
+import enderecoRouter from '../laudo/routes/RouteEndereco';
 import sedeRoutes from '../laudo/routes/sede-routes';
+import protegidoRoutes from '../login/routes/auth-middleware-routes';
 
-import routerCliente from "../laudo/routes/RouteCliente";
-import enderecoRouter from "../laudo/routes/RouteEndereco";
-import sedeRouter from "../laudo/routes/RouteSede";
-
+// Basicamente serve para treazer configuração de ambiente para o nosso código
 dotenv.config();
 
+//const PORT = process.env.PORT || 3000;
+const PORT = 8080;
+
+/* Materializando um objeto do nosso Servidor express */
 const app = express();
 
+// configurnado o cors para permitir que o vite envie requisições
+app.use(cors({
+  origin: 'http://localhost:5173', // porta do Vite
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
+
+/* Middleware para aceitar requisições JSON e habilitar CORS */
 app.use(express.json());
 
+/* Nossos Routes para cada Fucionalidade ou Serviço*/
 app.use('/api/laudos', laudoRoutes);
 app.use('/api/tipoeq', tipoeqRoutes);
 app.use('/api/sede', sedeRoutes);
-app.use('/api/sede', sedeRouter);
-app.use('/api/cliente', routerCliente);
+app.use('/api/cliente', routeCliente);
 app.use('/api/endereco', enderecoRouter);
-
 app.use('/api/auth', userRoutes);
 app.use('/api/protected', protegidoRoutes);
+app.use('/api/equipamento',routeEquipamento);
+
+/* Criando o nosso servidor express */
+app.listen(PORT, (): void => {
+    console.log(`SERVIDOR RODANDO NA PORTA: ${PORT}!`);
+});
 
 export default app;

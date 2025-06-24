@@ -10,7 +10,7 @@ import {
 const router = Router();
 
 // Listar todos os tipos de equipamento
-router.get('/', async (req: Request, res: Response): Promise<void> => {
+router.get('/listarTipoEquipamento', async (req: Request, res: Response): Promise<void> => {
   try {
     const tipos = await findAll();
     res.json(tipos);
@@ -35,7 +35,7 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
 });
 
 // Criar novo tipo de equipamento
-router.post('/', async (req: Request, res: Response): Promise<void> => {
+router.post('/criarTipoEquipamento', async (req: Request, res: Response): Promise<void> => {
   const { tipoeqnome } = req.body;
   try {
     const novoTipo = await create({ tipoeqnome });
@@ -46,7 +46,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
 });
 
 // Atualizar tipo de equipamento pelo id
-router.put('/:id', async (req: Request, res: Response): Promise<void> => {
+router.put('/atualizarTipoEquipamento/:id', async (req: Request, res: Response): Promise<void> => {
   const id = Number(req.params.id);
   const { tipoeqnome } = req.body;
   try {
@@ -58,7 +58,7 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
 });
 
 // Deletar tipo de equipamento pelo id
-router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
+router.delete('/deletarTipoEquipamento/:id', async (req: Request, res: Response): Promise<void> => {
   const id = Number(req.params.id);
   try {
     await deleteTipoEquipamento(id);
