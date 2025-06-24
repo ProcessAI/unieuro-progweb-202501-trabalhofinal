@@ -3,16 +3,16 @@ POST http://localhost:8080/api/equipamento/criarEquipamento
 Content-Type: application/json
 
 {
-  "equipserie": "ABC123",
-  "equipmodel": "Dell DELL",
-  "equipmac": "AABBCCDDEEFG", 
-  "equipipv4": "192.168.1.1",
+  "equipserie": "ABC456",
+  "equipmodel": "Dell DELICIA",
+  "equipmac": "AABBCCDDEEFF", 
+  "equipipv4": "192.168.1.2",
   "equipipv6": "::1",
   "equipanydesk": "123456789",
-  "equipdwservice": "01/01/2023",
-  "equipalugado": true,
-  "idsede": 3,
-  "idtipoeq": 3
+  "equipdwservice": "01/02/2023",
+  "equipalugado": false,
+  "idsede": 4,
+  "idtipoeq": 4
 }
 
 ###

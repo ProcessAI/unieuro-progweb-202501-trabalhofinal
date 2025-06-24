@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000';
+const API_URL = "http://localhost:8080/api/tipoeq";
 
 export interface Tipoeq {
   idtipoeq: number;
@@ -7,7 +7,7 @@ export interface Tipoeq {
 
 export async function fetchTipoeqs(): Promise<Tipoeq[]> {
   try {
-    const res = await fetch(`${API_URL}/tipoeq`);
+    const res = await fetch(`${API_URL}/listarTipoEquipamento`);
     if (!res.ok) throw new Error('Erro ao buscar tipos de equipamento');
     return await res.json();
   } catch (error) {
@@ -18,7 +18,7 @@ export async function fetchTipoeqs(): Promise<Tipoeq[]> {
 
 export async function createTipoeq(tipoeqnome: string): Promise<Tipoeq | null> {
   try {
-    const res = await fetch(`${API_URL}/tipoeq`, {
+    const res = await fetch(`${API_URL}/criarTipoEquipamento`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tipoeqnome }),
@@ -33,7 +33,7 @@ export async function createTipoeq(tipoeqnome: string): Promise<Tipoeq | null> {
 
 export async function updateTipoeq(idtipoeq: number, tipoeqnome: string): Promise<Tipoeq | null> {
   try {
-    const res = await fetch(`${API_URL}/tipoeq/${idtipoeq}`, {
+    const res = await fetch(`${API_URL}/atualizarTipoEquipamento/${idtipoeq}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tipoeqnome }),
@@ -48,7 +48,7 @@ export async function updateTipoeq(idtipoeq: number, tipoeqnome: string): Promis
 
 export async function deleteTipoeq(idtipoeq: number): Promise<boolean> {
   try {
-    const res = await fetch(`${API_URL}/tipoeq/${idtipoeq}`, { method: 'DELETE' });
+    const res = await fetch(`${API_URL}/deletarTipoEquipamento/${idtipoeq}`, { method: 'DELETE' });
     return res.ok;
   } catch {
     return false;

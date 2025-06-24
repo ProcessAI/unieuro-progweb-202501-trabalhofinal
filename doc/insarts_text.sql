@@ -1,3 +1,4 @@
+-- Active: 1750708565763@@127.0.0.1@5432@laudinho
 SELECT *  FROM laudo.cliente;
 
 -- Fazendo insarts em sql
@@ -18,6 +19,8 @@ INSERT INTO laudo.tipoeq (tipoeqnome) VALUES
 ('Impressora'),
 ('Switch'),
 ('Servidor');
+
+SELECT * FROM laudo.cliente;
 
 SELECT * FROM laudo.equipamento;
 
