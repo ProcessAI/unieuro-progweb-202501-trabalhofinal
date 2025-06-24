@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 
 // Interfaces atualizadas
 interface Endereco {
-  id?: number; // ID do endereço, pode ser opcional ao criar
+  idendereco?: number; // ID do endereço, pode ser opcional ao criar
   enderecoendereco: string;
   enderecocep: string;
   enderecolat: number;
@@ -24,7 +24,7 @@ interface Sede {
   idsede?: number; // ATENÇÃO: NOME DA PROPRIEDADE MUDADO PARA 'idsede'
   sedenome: string;
   sedestatus: 0 | 1;
-  dataDeInclusao: string;
+  sededtinclusao: string;
   idcliente: number;
   endereco?: Endereco;
 }
@@ -36,7 +36,7 @@ interface ClienteBackend {
     clientestatus: number;
 }
     REDUNDANTE EXISTIR ESSA INTERFACE
-*/ 
+*/
 
 interface Cliente {
   idcliente?: number;
@@ -64,26 +64,26 @@ export default function ClientesPage() {
     latitude: "",
     longitude: "",
     status: "ativo",
-    dataDeInclusao: "",
+    sededtinclusao: "",
   });
 
   const fetchAllData = useCallback(async () => {
     try {
-    const clientesResponse = await fetch("http://localhost:8080/api/cliente/listarCliente");
-    if (!clientesResponse.ok) {
-      throw new Error(`Falha ao buscar clientes: ${clientesResponse.status} ${clientesResponse.statusText}`);
-    }
+      const clientesResponse = await fetch("http://localhost:8080/api/cliente/listarCliente");
+      if (!clientesResponse.ok) {
+        throw new Error(`Falha ao buscar clientes: ${clientesResponse.status} ${clientesResponse.statusText}`);
+      }
 
-    // Recebe o JSON com tipo any[]
-    const clientesDataRaw: any[] = await clientesResponse.json();
+      // Recebe o JSON com tipo any[]
+      const clientesDataRaw: any[] = await clientesResponse.json();
 
-    // Faz o mapeamento para o formato Cliente
-    const clientesFormatados: Cliente[] = clientesDataRaw.map(c => ({
-      idcliente: c.idcliente,
-      nome: c.clientenome,                   // transforma clientenome em nome
-      status: c.clientestatus === 1 ? "ativo" : "inativo", // converte número em string
-      sedes: []                             // vazio por enquanto, será preenchido depois
-    }));
+      // Faz o mapeamento para o formato Cliente
+      const clientesFormatados: Cliente[] = clientesDataRaw.map(c => ({
+        idcliente: c.idcliente,
+        nome: c.clientenome,
+        status: c.clientestatus === 1 ? "ativo" : "inativo",
+        sedes: []
+      }));
 
       const sedesResponse = await fetch("http://localhost:8080/api/sede");
       if (!sedesResponse.ok) {
@@ -105,8 +105,15 @@ export default function ClientesPage() {
               (endereco) => endereco.idsede === sede.idsede
             );
             return {
-              ...sede,
-              endereco: enderecoAssociado ? { ...enderecoAssociado } : undefined,
+              ...sede, // *** ESSA LINHA É CRÍTICA: COPIA TODAS AS PROPRIEDADES EXISTENTES DA SEDE ***
+              endereco: enderecoAssociado ? {
+                  id: enderecoAssociado.idendereco, // Garante que o ID é copiado
+                  enderecoendereco: enderecoAssociado.enderecoendereco,
+                  enderecocep: enderecoAssociado.enderecocep,
+                  enderecolat: enderecoAssociado.enderecolat,
+                  enderecolon: enderecoAssociado.enderecolon,
+                  idsede: enderecoAssociado.idsede,
+              } : undefined,
             };
           });
 
@@ -315,58 +322,128 @@ export default function ClientesPage() {
   }
 
 }
-  function toggleStatusSede(indexToToggle: number) {
-    setClientes((oldClientes) => {
-      const novosClientes = [...oldClientes];
-      if (clienteSelecionadoIndex !== null) {
-        const sedes = [...novosClientes[clienteSelecionadoIndex].sedes];
-        const sedeAntiga = sedes[indexToToggle];
+  // ... (código anterior inalterado) ...
 
-        const novoStatusNumericoParaBackend: 0 | 1 = sedeAntiga.sedestatus === 1 ? 0 : 1;
+function toggleStatusSede(indexToToggle: number) {
+  setClientes((oldClientes) => {
+    const novosClientes = [...oldClientes];
+    if (clienteSelecionadoIndex !== null) {
+      const clienteAlvo = { ...novosClientes[clienteSelecionadoIndex] };
+      const sedesAtualizadas = [...clienteAlvo.sedes];
+      const sedeAntiga = sedesAtualizadas[indexToToggle];
 
-        if (sedeAntiga.idsede) {
-          fetch(`http://localhost:8080/sede/${sedeAntiga.idsede}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              sedenome: sedeAntiga.sedenome,
-              sedestatus: novoStatusNumericoParaBackend,
-              dataDeInclusao: sedeAntiga.dataDeInclusao,
-              idcliente: sedeAntiga.idcliente
-            }),
-          })
-            .then(async response => {
-              if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ message: response.statusText }));
-                console.error("Erro ao atualizar status da sede no backend. Resposta:", response.status, errorData);
-                alert(`Não foi possível atualizar o status da sede no servidor: ${errorData.message}`);
-                setClientes((prev) => prev.map((cli, cliIdx) =>
-                  cliIdx === clienteSelecionadoIndex
-                    ? { ...cli, sedes: cli.sedes.map((s, sIdx) => sIdx === indexToToggle ? sedeAntiga : s) }
-                    : cli
-                ));
+      const novoStatusNumericoParaBackend: 0 | 1 = sedeAntiga.sedestatus === 1 ? 0 : 1;
+
+      if (sedeAntiga.idsede) {
+        // Objeto para a requisição da Sede
+        const sedeBody = {
+          sedenome: sedeAntiga.sedenome,
+          sedestatus: novoStatusNumericoParaBackend,
+          dataDeInclusao: sedeAntiga.dataDeInclusao,
+          idcliente: sedeAntiga.idcliente
+        };
+
+        // Requisição para atualizar a Sede
+        fetch(`http://localhost:8080/api/sede/${sedeAntiga.idsede}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sedeBody),
+        })
+          .then(async (response) => {
+            if (!response.ok) {
+              const errorData = await response.json().catch(() => ({ message: response.statusText }));
+              console.error("Erro ao atualizar status da sede no backend. Resposta:", response.status, errorData);
+              alert(`Não foi possível atualizar o status da sede no servidor: ${errorData.message}`);
+            } else {
+              // --- Sede atualizada com sucesso, agora tente atualizar o endereço (se existir) ---
+              if (sedeAntiga.endereco && sedeAntiga.endereco.id) {
+                const enderecoId = sedeAntiga.endereco.id;
+                
+                // Crie o corpo do endereço com o novo status
+                const enderecoBody = {
+                  enderecoendereco: sedeAntiga.endereco.enderecoendereco,
+                  enderecocep: sedeAntiga.endereco.enderecocep,
+                  enderecolat: sedeAntiga.endereco.enderecolat,
+                  enderecolon: sedeAntiga.endereco.enderecolon,
+                  enderecostatus: novoStatusNumericoParaBackend, // <--- ATENÇÃO: AQUI ESTÁ A MUDANÇA
+                  idsede: sedeAntiga.idsede,
+                };
+
+                fetch(`http://localhost:8080/api/endereco/${enderecoId}`, { // ATENÇÃO: URL para PUT de endereço
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(enderecoBody),
+                })
+                  .then(async (enderecoResponse) => {
+                    if (!enderecoResponse.ok) {
+                      const errorData = await enderecoResponse.json().catch(() => ({ message: enderecoResponse.statusText }));
+                      console.error("Erro ao atualizar status do endereço no backend. Resposta:", enderecoResponse.status, errorData);
+                      alert(`A sede foi atualizada, mas não foi possível atualizar o status do endereço: ${errorData.message}`);
+                    } else {
+                      // Ambas as atualizações (sede e endereço) foram bem-sucedidas
+                      // Atualize o estado no frontend para refletir as mudanças
+                      setClientes((prevClientes) => {
+                        return prevClientes.map((cliente, cliIdx) => {
+                          if (cliIdx === clienteSelecionadoIndex) {
+                            return {
+                              ...cliente,
+                              sedes: cliente.sedes.map((s, sIdx) =>
+                                sIdx === indexToToggle
+                                  ? {
+                                      ...s,
+                                      sedestatus: novoStatusNumericoParaBackend,
+                                      endereco: s.endereco ? { ...s.endereco, enderecostatus: novoStatusNumericoParaBackend } : s.endereco // Atualiza status do endereço no estado
+                                    }
+                                  : s
+                              ),
+                            };
+                          }
+                          return cliente;
+                        });
+                      });
+                    }
+                  })
+                  .catch((error) => {
+                    console.error("Erro de rede ao atualizar status do endereço:", error);
+                    alert("A sede foi atualizada, mas ocorreu um erro de rede ao atualizar o status do endereço.");
+                  });
               } else {
-                fetchAllData();
+                // Sede atualizada com sucesso, mas sem endereço para atualizar
+                setClientes((prevClientes) => {
+                  return prevClientes.map((cliente, cliIdx) => {
+                    if (cliIdx === clienteSelecionadoIndex) {
+                      return {
+                        ...cliente,
+                        sedes: cliente.sedes.map((s, sIdx) =>
+                          sIdx === indexToToggle
+                            ? { ...s, sedestatus: novoStatusNumericoParaBackend }
+                            : s
+                        ),
+                      };
+                    }
+                    return cliente;
+                  });
+                });
+                alert(`Status da sede atualizado com sucesso para ${novoStatusNumericoParaBackend === 1 ? 'Ativo' : 'Inativo'}! (Sem endereço associado para atualizar)`);
               }
-            })
-            .catch(error => {
-              console.error("Erro de rede ao atualizar status da sede:", error);
-              alert("Erro de rede ao atualizar status da sede. Verifique sua conexão.");
-              setClientes((prev) => prev.map((cli, cliIdx) =>
-                cliIdx === clienteSelecionadoIndex
-                  ? { ...cli, sedes: cli.sedes.map((s, sIdx) => sIdx === indexToToggle ? sedeAntiga : s) }
-                  : cli
-              ));
-            });
-        } else {
-          console.warn("Sede sem ID. Não é possível atualizar o status no backend.");
-        }
+            }
+          })
+          .catch((error) => {
+            console.error("Erro de rede ao atualizar status da sede:", error);
+            alert("Erro de rede ao atualizar status da sede. Verifique sua conexão.");
+          });
+      } else {
+        console.warn("Sede sem ID. Não é possível atualizar o status no backend.");
       }
-      return novosClientes;
-    });
-  }
+    }
+    return novosClientes; // Retorna a cópia inicial (antes da atualização assíncrona)
+  });
+}
+
 
   function abrirModalSede(index: number) {
     setClienteSelecionadoIndex(index);
@@ -382,7 +459,7 @@ export default function ClientesPage() {
       latitude: "",
       longitude: "",
       status: "ativo",
-      dataDeInclusao: new Date().toLocaleDateString('pt-BR'),
+      sededtinclusao: new Date().toLocaleDateString('pt-BR'),
     });
     setSedeEditandoIndex(null);
     setModalSedeAberto(false);
@@ -397,175 +474,204 @@ export default function ClientesPage() {
       latitude: sede.endereco?.enderecolat?.toString() || "",
       longitude: sede.endereco?.enderecolon?.toString() || "",
       status: sede.sedestatus === 1 ? "ativo" : "inativo",
-      dataDeInclusao: sede.dataDeInclusao || new Date().toLocaleDateString('pt-BR'),
+      sededtinclusao: sede.sededtinclusao || new Date().toLocaleDateString('pt-BR'),
     });
     setSedeEditandoIndex(index);
     setModalSedeAberto(false);
     setModalCriarEditarSedeAberto(true);
   }
 
-  async function salvarSede() {
-    const clienteAtual = clienteSelecionadoIndex !== null ? clientes[clienteSelecionadoIndex] : null;
-    if (!clienteAtual) {
-      alert("Nenhum cliente selecionado para criar a sede.");
-      return;
-    }
-
-    const { sedenome, endereco, cep, latitude, longitude, status, dataDeInclusao } = dadosSedeEditando;
-
-    // --- Validações de Frontend ---
-
-    // 1. Campos obrigatórios preenchidos (trim)
-    if (sedenome.trim() === "") {
-        alert("O nome da sede é obrigatório.");
-        return;
-    }
-    if (endereco.trim() === "") {
-        alert("O endereço é obrigatório.");
-        return;
-    }
-    if (cep.trim() === "") {
-        alert("O CEP é obrigatório.");
-        return;
-    }
-    if (latitude.trim() === "") {
-        alert("A Latitude é obrigatória.");
-        return;
-    }
-    if (longitude.trim() === "") {
-        alert("A Longitude é obrigatória.");
-        return;
-    }
-
-    // 2. Nome da Sede e Endereço devem conter pelo menos uma letra
-    const letterRegex = /[a-zA-Z]/;
-    if (!letterRegex.test(sedenome)) {
-        alert("O nome da sede deve conter pelo menos uma letra.");
-        return;
-    }
-    if (!letterRegex.test(endereco)) {
-        alert("O endereço deve conter pelo menos uma letra.");
-        return;
-    }
-
-    // 3. CEP: Exatamente 8 dígitos numéricos
-    const cleanedCep = cep.replace(/\D/g, ''); // Remove não-dígitos
-    if (cleanedCep.length !== 8) {
-        alert("O CEP deve conter exatamente 8 dígitos numéricos.");
-        return;
-    }
-    // Adicionalmente, garante que o input do CEP não está em branco após a limpeza
-    if (!/^\d{8}$/.test(cleanedCep)) { // Confirma que são 8 dígitos
-        alert("O CEP deve conter apenas números e ter 8 dígitos.");
-        return;
-    }
-
-
-    // 4. Latitude e Longitude: Devem ser números válidos
-    const latNum = parseFloat(latitude);
-    const lonNum = parseFloat(longitude);
-
-    if (isNaN(latNum)) {
-        alert("Latitude inválida. Por favor, insira um número válido.");
-        return;
-    }
-    if (isNaN(lonNum)) {
-        alert("Longitude inválida. Por favor, insira um número válido.");
-        return;
-    }
-    // Opcional: Regex mais rigorosa para o formato -23.55052
-    // A validação parseFloat já é a mais importante. Se você quer
-    // forçar um formato visual, pode adicionar uma regex, mas
-    // para funcionalidade, parseFloat é o suficiente.
-    // Exemplo:
-    // const coordRegex = /^-?\d+(\.\d+)?$/; // Aceita inteiros e decimais com ponto, com ou sem sinal
-    // if (!coordRegex.test(latitude) || !coordRegex.test(longitude)) {
-    //     alert("Latitude e Longitude devem estar no formato numérico (ex: -23.55052).");
-    //     return;
-    // }
-
-    // --- Fim das Validações de Frontend ---
-
-    const dataDeInclusaoFormatada = dataDeInclusao || new Date().toLocaleDateString('pt-BR');
-    const sedestatusParaBackend: 0 | 1 = status === "ativo" ? 1 : 0;
-
-    let sedeIdParaEndereco: number | undefined;
-    let enderecoExistenteId: number | undefined;
-
-    if (sedeEditandoIndex !== null) {
-      const sedeExistente = clienteAtual.sedes[sedeEditandoIndex];
-      if (sedeExistente && sedeExistente.idsede) {
-        sedeIdParaEndereco = sedeExistente.idsede;
-        enderecoExistenteId = sedeExistente.endereco?.id;
-      }
-    }
-
-    try {
-      const sedeParaBackend = {
-        sedenome: sedenome,
-        sedestatus: sedestatusParaBackend,
-        dataDeInclusao: dataDeInclusaoFormatada,
-        idcliente: clienteAtual.idcliente,
-      };
-
-      const urlSede = sedeIdParaEndereco
-        ? `http://localhost:8080/sede/${sedeIdParaEndereco}`
-        : "http://localhost:8080/sede";
-      const methodSede: "POST" | "PUT" = sedeIdParaEndereco ? "PUT" : "POST";
-
-      const responseSede = await fetch(urlSede, {
-        method: methodSede,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(sedeParaBackend),
-      });
-
-      if (!responseSede.ok) {
-        const errorData = await responseSede.json().catch(() => ({ message: responseSede.statusText }));
-        throw new Error(`Erro ao ${methodSede === "POST" ? "criar" : "atualizar"} sede: ${errorData.message}`);
-      }
-
-      const sedeResposta = await responseSede.json();
-
-      sedeIdParaEndereco = sedeResposta.sede?.idsede;
-
-      if (!sedeIdParaEndereco) {
-        throw new Error("ID da sede não foi retornado na estrutura esperada (sede.idsede) após a criação/atualização. Verifique o backend para garantir que ele retorna o 'idsede' dentro do objeto 'sede' na resposta POST e PUT.");
-      }
-
-      const dadosEndereco = {
-        enderecoendereco: endereco,
-        enderecocep: cleanedCep, // Usar o CEP limpo para o backend
-        enderecolat: latNum,     // Usar o número parseado
-        enderecolon: lonNum,    // Usar o número parseado
-        idsede: sedeIdParaEndereco,
-      };
-
-      const urlEndereco = enderecoExistenteId
-        ? `http://localhost:8080/endereco/${enderecoExistenteId}`
-        : "http://localhost:8080/endereco";
-      const methodEndereco: "POST" | "PUT" = enderecoExistenteId ? "PUT" : "POST";
-
-      const responseEndereco = await fetch(urlEndereco, {
-        method: methodEndereco,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dadosEndereco),
-      });
-
-      if (!responseEndereco.ok) {
-        const errorData = await responseEndereco.json().catch(() => ({ message: responseEndereco.statusText }));
-        throw new Error(`Erro ao ${methodEndereco === "POST" ? "criar" : "atualizar"} endereço: ${errorData.message}`);
-      }
-
-      await fetchAllData();
-      setModalCriarEditarSedeAberto(false);
-      setModalSedeAberto(true);
-      alert(`Sede e endereço ${methodSede === "POST" ? "criados" : "atualizados"} com sucesso!`);
-
-    } catch (error: any) {
-      console.error("Erro ao salvar sede e/ou endereço:", error.message);
-      alert(`Erro ao salvar a sede e/ou endereço: ${error.message}. Por favor, verifique o console para mais detalhes e certifique-se de que o backend está retornando o ID da sede.`);
-    }
+async function salvarSede() {
+  if (clienteSelecionadoIndex === null) {
+    console.error("Erro: Nenhum cliente selecionado.");
+    alert("Nenhum cliente selecionado para salvar a sede.");
+    return;
   }
+
+  const clienteAtual = clientes[clienteSelecionadoIndex];
+  console.log("Cliente Atual Selecionado:", clienteAtual);
+
+  const sedesDoCliente = clienteAtual.sedes || [];
+  console.log("Sedes do Cliente (antes de tentar acessar sedeEditandoIndex):", sedesDoCliente);
+
+  const { sedenome, endereco, cep, latitude, longitude, status, sededtinclusao } = dadosSedeEditando;
+
+  // 1. Validações Iniciais
+  if (!sedenome.trim()) {
+    alert("O nome da sede é obrigatório.");
+    return;
+  }
+  const letterRegex = /[a-zA-Z]/;
+  if (!letterRegex.test(sedenome)) {
+    alert("O nome da sede deve conter pelo menos uma letra.");
+    return;
+  }
+
+  if (!endereco.trim()) {
+    alert("O endereço é obrigatório.");
+    return;
+  }
+  if (!cep.trim()) {
+    alert("O CEP é obrigatório.");
+    return;
+  }
+
+  const cleanedCep = cep.replace(/\D/g, '');
+  if (cleanedCep.length !== 8) {
+    alert("O CEP deve conter 8 dígitos numéricos.");
+    return;
+  }
+
+  let latNum: number | undefined;
+  let lonNum: number | undefined;
+
+  // Validação e conversão de Latitude
+  if (latitude.trim() === "") {
+    alert("A latitude é obrigatória.");
+    return;
+  }
+  latNum = parseFloat(latitude.replace(',', '.'));
+  if (isNaN(latNum) || latNum < -90 || latNum > 90) {
+    alert("Latitude inválida. Deve ser um número entre -90 e 90.");
+    return;
+  }
+
+  // Validação e conversão de Longitude
+  if (longitude.trim() === "") {
+    alert("A longitude é obrigatória.");
+    return;
+  }
+  lonNum = parseFloat(longitude.replace(',', '.'));
+  if (isNaN(lonNum) || lonNum < -180 || lonNum > 180) {
+    alert("Longitude inválida. Deve ser um número entre -180 e 180.");
+    return;
+  }
+
+  // Define o status numérico para ser usado tanto na sede quanto no endereço
+  const novoStatusNumerico: 0 | 1 = status === "ativo" ? 1 : 0; // <--- NOVO: Definido aqui para reutilização
+
+  // Decide se a sede está sendo editada (existe um ID de sede)
+  const isEditingSede = sedeEditandoIndex !== null;
+  console.log("Is Editing Sede:", isEditingSede, "Sede Editando Index:", sedeEditandoIndex);
+
+  let sedeAtualNoEstado;
+  if (isEditingSede && typeof sedeEditandoIndex === 'number' && sedesDoCliente[sedeEditandoIndex]) {
+    sedeAtualNoEstado = sedesDoCliente[sedeEditandoIndex];
+    console.log("Sede Atual no Estado (para edição):", sedeAtualNoEstado);
+  } else {
+    sedeAtualNoEstado = undefined;
+    console.log("Não está editando uma sede existente ou sede não encontrada no índice.");
+  }
+
+  // Decide se o endereço já existe para esta sede
+  const enderecoIdParaBackend = sedeAtualNoEstado?.endereco?.id;
+  console.log("enderecoIdParaBackend FINAL (antes da requisição do endereço):", enderecoIdParaBackend);
+
+  // 1. Requisição para a Sede (Criação ou Atualização)
+  let idsedeParaAssociarEndereco;
+
+  try {
+    let sedeResponse;
+    let sedeResponseBody;
+
+    if (isEditingSede && sedeAtualNoEstado?.idsede) {
+      // Lógica de atualização da Sede existente
+      console.log("Requisição Sede: URL=" + `http://localhost:8080/api/sede/${sedeAtualNoEstado.idsede}` + ", Método=PUT", "Body:", JSON.stringify({
+        sedenome: sedenome,
+        sedestatus: novoStatusNumerico, // Usa o novoStatusNumerico
+        dataDeInclusao: sededtinclusao,
+        idcliente: clienteAtual.idcliente,
+      }));
+      sedeResponse = await fetch(`http://localhost:8080/api/sede/${sedeAtualNoEstado.idsede}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sedenome: sedenome,
+          sedestatus: novoStatusNumerico, // Usa o novoStatusNumerico
+          dataDeInclusao: sededtinclusao,
+          idcliente: clienteAtual.idcliente,
+        }),
+      });
+      sedeResponseBody = await sedeResponse.json();
+      idsedeParaAssociarEndereco = sedeAtualNoEstado.idsede;
+    } else {
+      // Lógica de criação de Nova Sede
+      const dataDeInclusao = new Date().toLocaleDateString('pt-BR');
+      console.log("Requisição Sede: URL=" + "http://localhost:8080/api/sede" + ", Método=POST", "Body:", JSON.stringify({
+        sedenome: sedenome,
+        sedestatus: novoStatusNumerico, // Usa o novoStatusNumerico
+        dataDeInclusao: dataDeInclusao,
+        idcliente: clienteAtual.idcliente,
+      }));
+      sedeResponse = await fetch("http://localhost:8080/api/sede", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sedenome: sedenome,
+          sedestatus: novoStatusNumerico, // Usa o novoStatusNumerico
+          dataDeInclusao: dataDeInclusao,
+          idcliente: clienteAtual.idcliente,
+        }),
+      });
+      sedeResponseBody = await sedeResponse.json();
+      idsedeParaAssociarEndereco = sedeResponseBody.sede?.idsede;
+      console.log("Corpo da Resposta da Sede ao Criar:", sedeResponseBody);
+      console.log("ID da Nova Sede pego do corpo da resposta:", idsedeParaAssociarEndereco);
+    }
+
+    if (!sedeResponse.ok) {
+      const errorData = sedeResponseBody || await sedeResponse.json().catch(() => ({ message: sedeResponse.statusText }));
+      throw new Error(`Erro ao salvar sede: ${errorData.message}`);
+    }
+    console.log("Resposta da Sede (final):", sedeResponseBody);
+    console.log("idsedeParaAssociarEndereco (final para endereço):", idsedeParaAssociarEndereco);
+
+    if (!idsedeParaAssociarEndereco && !isEditingSede) {
+        throw new Error("Não foi possível obter o ID da sede recém-criada para associar ao endereço.");
+    }
+
+    // 2. Requisição para o Endereço (Criação ou Atualização)
+    const enderecoBody = {
+      enderecoendereco: endereco,
+      enderecocep: cleanedCep,
+      enderecolat: latNum,
+      enderecolon: lonNum,
+      idsede: idsedeParaAssociarEndereco,
+      enderecostatus: novoStatusNumerico, // <--- ADIÇÃO: O status do endereço acompanha o da sede
+    };
+
+    let enderecoResponse;
+    if (enderecoIdParaBackend) {
+      console.log("Requisição Endereço: URL=" + `http://localhost:8080/api/endereco/${enderecoIdParaBackend}` + ", Método=PUT", "Body:", JSON.stringify(enderecoBody));
+      enderecoResponse = await fetch(`http://localhost:8080/api/endereco/${enderecoIdParaBackend}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(enderecoBody),
+      });
+    } else {
+      console.log("Requisição Endereço: URL=" + "http://localhost:8080/api/endereco" + ", Método=POST", "Body:", JSON.stringify(enderecoBody));
+      enderecoResponse = await fetch("http://localhost:8080/api/endereco", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(enderecoBody),
+      });
+    }
+
+    if (!enderecoResponse.ok) {
+      const errorData = await enderecoResponse.json().catch(() => ({ message: enderecoResponse.statusText }));
+      throw new Error(`Erro ao salvar endereço: ${errorData.message}`);
+    }
+
+    await fetchAllData();
+    setModalCriarEditarSedeAberto(false);
+    setModalSedeAberto(true);
+    alert("Sede e endereço salvos com sucesso!");
+
+  } catch (error: any) {
+    console.error("Erro ao salvar sede e endereço:", error.message);
+    alert("Erro ao salvar sede e endereço: " + error.message);
+  }
+}
 
   async function excluirSede(index: number) {
     if (clienteSelecionadoIndex === null) return;
@@ -582,7 +688,7 @@ export default function ClientesPage() {
 
     try {
       if (sedeParaExcluir.endereco?.id) {
-        const enderecoDeleteResponse = await fetch(`http://localhost:8080/endereco/${sedeParaExcluir.endereco.id}`, {
+        const enderecoDeleteResponse = await fetch(`http://localhost:8080/api/endereco/${sedeParaExcluir.endereco.id}`, {
           method: 'DELETE',
         });
         if (!enderecoDeleteResponse.ok) {
@@ -590,7 +696,7 @@ export default function ClientesPage() {
         }
       }
 
-      const sedeDeleteResponse = await fetch(`http://localhost:8080/sede/${sedeParaExcluir.idsede}`, {
+      const sedeDeleteResponse = await fetch(`http://localhost:8080/api/sede/${sedeParaExcluir.idsede}`, {
         method: 'DELETE',
       });
       if (!sedeDeleteResponse.ok) {
@@ -599,7 +705,6 @@ export default function ClientesPage() {
       }
 
       await fetchAllData();
-      alert("Sede e seu endereço associado (se existia) excluídos com sucesso!");
 
     } catch (error: any) {
       console.error("Erro ao excluir sede:", error.message);
@@ -707,6 +812,16 @@ export default function ClientesPage() {
                 <td className="p-2 text-right">
                   <div className="flex gap-2 justify-end">
                     <Button
+                      className={`text-xs h-7 px-3 ${
+                        cliente.status === "ativo"
+                          ? "bg-red-600 text-white"
+                          : "bg-green-600 text-white"
+                      }`}
+                      onClick={() => toggleStatusCliente(cliente)}
+                    >
+                      {cliente.status === "ativo" ? "INATIVAR" : "ATIVAR"}
+                    </Button>
+                    <Button
                       className="bg-black text-white text-xs h-7 px-3"
                       onClick={() => abrirEditarCliente(index)}
                     >
@@ -717,16 +832,6 @@ export default function ClientesPage() {
                       onClick={() => excluirCliente(index)}
                     >
                       EXCLUIR
-                    </Button>
-                    <Button
-                      className={`text-xs h-7 px-3 ${
-                        cliente.status === "ativo"
-                          ? "bg-red-600 text-white"
-                          : "bg-green-600 text-white"
-                      }`}
-                      onClick={() => toggleStatusCliente(cliente)}
-                    >
-                      {cliente.status === "ativo" ? "INATIVAR" : "ATIVAR"}
                     </Button>
                   </div>
                 </td>
@@ -794,6 +899,7 @@ export default function ClientesPage() {
             <table className="w-full border rounded-md border-gray-300 overflow-hidden">
               <thead className="bg-gray-100 sticky top-0 z-5">
                 <tr>
+                <th className="p-3 text-left w-10"></th> {/* <-- Aqui o espaço reservado para o ícone */}
                   <th className="p-3 text-left">Nome</th>
                   <th className="p-3 text-left">Status</th>
                   <th className="p-3 text-left">Data de Inclusão</th>
@@ -807,6 +913,43 @@ export default function ClientesPage() {
               <tbody>
                 {sedesFiltradas.map((sede, index) => (
                   <tr key={sede.idsede || `temp-${index}`} className="border-b last:border-b-0 hover:bg-gray-50">
+                    
+                    {/* Coluna do Waze */}
+                    <td className="p-3 text-center">
+                      <button
+                        className="w-8 h-8 text-gray-600 hover:text-blue-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`http://localhost:8080/api/sede/${sede.idsede}`);
+                            if (!response.ok) throw new Error('Erro ao buscar dados da sede');
+
+                            const data = await response.json();
+
+                            // Pega o primeiro endereço do array
+                            const endereco = data.endereco && data.endereco.length > 0 ? data.endereco[0] : null;
+
+                            if (endereco && endereco.enderecolat && endereco.enderecolon) {
+                              const lat = endereco.enderecolat;
+                              const lon = endereco.enderecolon;
+                              const wazeUrl = `https://waze.com/ul?ll=${lat},${lon}&navigate=yes`;
+                              window.open(wazeUrl, "_blank");
+                            } else {
+                              alert('Coordenadas não encontradas para esta sede.');
+                            }
+                          } catch (error) {
+                            console.error(error);
+                            alert('Falha ao buscar dados da sede.');
+                          }
+                        }}
+                      >
+                        <img src="/waze.png" alt="Waze" className="w-full h-full object-contain" />
+                      </button>
+                    </td>
+
+
+
+                    
                     <td className="p-3 text-sm">{limitarTexto(sede.sedenome, 20)}</td>
 
                     <td className="p-3 text-sm">
@@ -816,7 +959,7 @@ export default function ClientesPage() {
                       </div>
                     </td>
 
-                    <td className="p-3 text-sm">{sede.dataDeInclusao}</td>
+                    <td className="p-3 text-sm">{sede.sededtinclusao}</td>
 
                     <td className="p-3 text-sm">{limitarTexto(sede.endereco?.enderecoendereco || "N/A", 25)}</td>
                     <td className="p-3 text-sm">{sede.endereco?.enderecocep || "N/A"}</td>
