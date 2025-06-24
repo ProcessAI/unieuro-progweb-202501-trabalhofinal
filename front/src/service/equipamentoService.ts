@@ -31,7 +31,7 @@ export async function getSedes(): Promise<Sede[]> {
 }
 
 export async function getTipos(): Promise<TipoEq[]> {
-  const res = await fetch("http://localhost:8080/api/tipoeq");
+  const res = await fetch("http://localhost:8080/api/tipoeq/listarTipoEquipamento");
   if (!res.ok) throw new Error("Erro ao buscar tipos");
   return res.json();
 }

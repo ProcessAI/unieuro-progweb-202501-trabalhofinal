@@ -10,6 +10,7 @@ VALUES
   ('Unidade Rio de Janeiro', 1, 2),
   ('Escritório Salvador', 0, 2),
   ('Polo Belo Horizonte', 1, 3);
+  ('Samambaia Norte', 1, 4);
 
 SELECT * FROM laudo.tipoeq;
 
@@ -25,5 +26,7 @@ SELECT * FROM laudo.cliente;
 SELECT * FROM laudo.equipamento;
 
 SELECT * FROM laudo.sede;
+
+SELECT * FROM laudo.endereco;
 
 SELECT * FROM laudo.tipoeq;

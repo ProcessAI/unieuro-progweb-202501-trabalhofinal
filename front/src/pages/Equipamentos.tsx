@@ -85,8 +85,10 @@ export default function Equipamentos() {
         dw: "",
         mac: ""
       });
+      alert("Cliente criado com sucesso!");
     } catch (error) {
       console.error("Erro ao criar equipamento:", error);
+      alert("Erro ao criar equipamento, clique f12 e va no console e veja qual é o error!");
     }
   };
 
@@ -98,8 +100,10 @@ export default function Equipamentos() {
       await deleteEquipamento(id);
       const atualizados = await getEquipamentos();
       setEquipamentos(atualizados);
+      alert("Equipamento Excluido com Sucesso");
     } catch (error) {
       console.error("Erro ao excluir equipamento:", error);
+      alert("Erro ao excluir equipamento, clique f12 e va no console e veja qual é o error!");
     }
   };
 
@@ -148,8 +152,10 @@ export default function Equipamentos() {
       setEquipamentos(atualizados);
       setEditarAberto(false);
       setEditarIndex(null);
+      alert("Equipamento atualizado com sucesso!");
     } catch (error) {
       console.error("Erro ao editar equipamento:", error);
+      alert("Erro ao atualizar equipamento, clique f12 e va no console e veja qual é o error!");
     }
   };
 
