@@ -1,0 +1,438 @@
+/* -------------------------------------------------------------------------- */
+/* CSS GLOBAL – VISUAL PADRÃO                                                */
+/* -------------------------------------------------------------------------- */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #213547;
+  background-color: #f5f6f8;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.app-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* NAVBAR                                                                     */
+/* -------------------------------------------------------------------------- */
+.navbar {
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: #facc15;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 65px;
+  box-sizing: border-box;
+}
+
+.navbar-left {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-links a {
+  font-weight: 600;
+  font-size: .95rem;
+  color: #000;
+  text-decoration: none;
+  background: #facc15;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  display: inline-block;
+}
+
+.nav-links a:hover {
+  transform: scale(1.05);
+  background-color: #facc15;
+}
+
+.navbar-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: .95rem;
+}
+
+.user-icon {
+  width: 20px;
+  height: 20px;
+  background: #000;
+  border-radius: 50%;
+}
+
+.navbar-right button {
+  padding: 6px 12px;
+  font-size: .9rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* CABEÇALHO LAUDOS                                                          */
+/* -------------------------------------------------------------------------- */
+.laudos-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 100px 0 1rem; /* Empurrei para baixo */
+}
+
+.laudos-title {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.busca-container {
+  margin-bottom: 20px;
+  margin-top: 20px; /* Empurrei o campo de busca para baixo também */
+}
+
+/* -------------------------------------------------------------------------- */
+/* LINKS, TÍTULOS, BOTÕES                                                    */
+/* -------------------------------------------------------------------------- */
+a {
+  font-weight: 500;
+  color: #213547;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #555;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: .6em 1.2em;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .25s, border-color .25s, transform .2s ease-in-out;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.btn-yellow {
+  background: #facc15;
+  color: #000;
+}
+
+.btn-yellow:hover {
+  background: #eab308;
+}
+
+.btn-black {
+  background: #000;
+  color: #fff;
+}
+
+.btn-black:hover {
+  background: #1f1f1f;
+}
+
+.btn-red {
+  background: #e53935;
+  color: #fff;
+}
+
+.btn-red:hover {
+  background: #c62828;
+}
+
+.logout {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.logout:hover {
+  background-color: #333;
+}
+
+/* -------------------------------------------------------------------------- */
+/* BUSCA COM ANIMAÇÃO                                                         */
+/* -------------------------------------------------------------------------- */
+.campo-busca {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px 14px;
+  font-size: .95rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  transition: all 0.3s ease;
+}
+
+.campo-busca:focus {
+  outline: none;
+  border-color: #000;
+  box-shadow: 0 4px 12px rgba(34, 34, 34, 0.4);
+  transform: scale(1.03);
+}
+
+/* -------------------------------------------------------------------------- */
+/* GRADE DE LAUDOS E CARDS                                                    */
+/* -------------------------------------------------------------------------- */
+.laudos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+  gap: 16px;
+}
+
+.laudo-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.05);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  word-break: break-word;
+}
+
+.laudo-card h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.laudo-card p {
+  margin: 2px 0;
+  font-size: .9rem;
+  color: #333;
+}
+
+.laudo-icon {
+  font-size: 2rem;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.laudo-card-button {
+  all: unset;
+  cursor: pointer;
+  border-radius: 10px;
+  background: #fff;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.05);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform .2s ease-in-out, box-shadow .2s ease-in-out;
+}
+
+.laudo-card-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(0,0,0,.08);
+}
+
+/* -------------------------------------------------------------------------- */
+/* INPUTS, SELECTS, TEXTAREAS                                                 */
+/* -------------------------------------------------------------------------- */
+input[type='text'], input[type='date'], input[type='datetime-local'],
+select, textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: .9rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f9f9f9;
+  box-sizing: border-box;
+  color: #000;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #999;
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg fill='gray' viewBox='0 0 20 20' height='14' width='14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.516 7.548A.5.5 0 0 1 5.9 7h8.2a.5.5 0 0 1 .384.831l-4.1 4.735a.5.5 0 0 1-.768 0l-4.1-4.735a.5.5 0 0 1-.001-.283z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+
+label {
+  display: block;
+  margin: 4px 0;
+  font-size: .9rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+textarea[readonly] {
+  background: #eee;
+  color: #555;
+  cursor: not-allowed;
+}
+
+/* -------------------------------------------------------------------------- */
+/* MODAL GENÉRICO                                                             */
+/* -------------------------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  width: 450px;
+  max-width: 90%;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 30px rgba(0,0,0,.2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.modal-header h2 {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #555;
+}
+
+/* -------------------------------------------------------------------------- */
+/* RESPONSIVIDADE                                                             */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-left,
+  .navbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .laudos-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 100px; /* Garante espaço no mobile também */
+  }
+
+  .modal {
+    width: 100%;
+    padding: 1.2rem;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .laudos-title {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-left,
+  .navbar-right {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* OUTROS DADOS TÉCNICOS – FORM EXTRA                                         */
+/* -------------------------------------------------------------------------- */
+.outros-dados-container {
+  margin-top: 16px;
+  border-top: 1px solid #ddd;
+  padding-top: 16px;
+}
+
+.outros-dados-container h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.outros-dados-grid {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 600px) {
+  .outros-dados-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+}

@@ -1,6 +1,5 @@
 //NOTE: Não retorne RES direto, retorne void, alguma coisa com o Express 5 causa erro de typagem
 // https://stackoverflow.com/questions/79071082/typescript-error-no-overload-matches-this-call-in-express-route-handler
-
 import express from 'express';
 import dotenv from 'dotenv'; // Importando dotenv para configuração de variáveis ambiente
 import cors from 'cors'; // para permitir requisições do front-end
@@ -9,6 +8,7 @@ import cors from 'cors'; // para permitir requisições do front-end
 import laudoRoutes from '../laudo/routes/laudo-routes';
 import tipoeqRoutes from '../laudo/routes/tipoeq-routes';
 import tipoInstalacaoRoutes from '../laudo/routes/tipo-de-instalacao-routes';
+import tipoLaudoRoutes from '../laudo/routes/tipo-laudo-routes'
 import userRoutes from '../login/routes/usuario-routes';
 import routeCliente from '../laudo/routes/RouteCliente';
 import routeEquipamento from '../laudo/routes/RouteEquipamento';
@@ -35,7 +35,6 @@ app.use(cors({
 
 /* Middleware para aceitar requisições JSON e habilitar CORS */
 app.use(express.json());
-app.use(cors());
 
 /* Nossos Routes para cada Fucionalidade ou Serviço*/
 app.use('/api/laudos', laudoRoutes);
@@ -44,6 +43,7 @@ app.use('/api/sede', sedeRoutes);
 app.use('/api/cliente', routeCliente);
 app.use('/api/endereco', enderecoRouter);
 app.use('/api/tipo-instalacao', tipoInstalacaoRoutes);
+app.use('/api/tipo-laudo',tipoLaudoRoutes)
 app.use('/api/auth', userRoutes);
 app.use('/api/protected', protegidoRoutes);
 app.use('/api/equipamento',routeEquipamento);
