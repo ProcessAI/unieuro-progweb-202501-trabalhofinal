@@ -6,6 +6,8 @@ import {
   update,
   deleteLaudo
 } from '../service/laudo-service';
+import { PrismaClient } from '@prisma/client'; // Adicionado
+const prisma = new PrismaClient(); // Adicionado
 
 const router = Router();
 
@@ -36,11 +38,25 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
 
 // Criar novo laudo
 router.post('/', async (req: Request, res: Response): Promise<void> => {
-  const { titulo, descricao, tipoEquipamentoId } = req.body;
+  const {
+    laudodescricao,
+    laudohtmlmd,
+    idtipolaudo,
+    idtipoinstalacao,
+    laudoosclickup
+  } = req.body;
+
   try {
-    const novoLaudo = await create({ titulo, descricao, tipoEquipamentoId });
+    const novoLaudo = await create({
+      laudodescricao,
+      laudohtmlmd,
+      idtipolaudo,
+      idtipoinstalacao,
+      laudoosclickup
+    });
     res.status(201).json(novoLaudo);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Erro ao criar laudo' });
   }
 });
@@ -48,15 +64,32 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
 // Atualizar laudo pelo id
 router.put('/:id', async (req: Request, res: Response): Promise<void> => {
   const id = Number(req.params.id);
-  const { titulo, descricao, tipoEquipamentoId } = req.body;
+  const {
+    laudodescricao,
+    laudohtmlmd,
+    idtipolaudo,
+    idtipoinstalacao,
+    laudoosclickup,
+    laudofechamento
+  } = req.body;
+
   try {
-    const laudoAtualizado = await update(id, { titulo, descricao, tipoEquipamentoId });
+    const laudoAtualizado = await update(id, {
+      laudodescricao,
+      laudohtmlmd,
+      idtipolaudo,
+      idtipoinstalacao,
+      laudoosclickup,
+      laudofechamento
+    });
+
     if (!laudoAtualizado) {
       res.status(404).json({ error: 'Laudo não encontrado' });
     } else {
       res.json(laudoAtualizado);
     }
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Erro ao atualizar laudo' });
   }
 });
@@ -69,6 +102,28 @@ router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
     res.json({ message: 'Laudo deletado com sucesso' });
   } catch (error) {
     res.status(500).json({ error: 'Erro ao deletar laudo' });
+  }
+});
+
+// Nova rota: Listar todos os tipos de instalação
+router.get('/tipos-instalacao', async (req: Request, res: Response) => {
+  try {
+    const tipos = await prisma.tipoinstalacao.findMany();
+    res.json(tipos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar tipos de instalação' });
+  }
+});
+
+// Nova rota: Listar todos os tipos de laudo
+router.get('/tipos-laudo', async (req: Request, res: Response) => {
+  try {
+    const tipos = await prisma.tipolaudo.findMany();
+    res.json(tipos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar tipos de laudo' });
   }
 });
 

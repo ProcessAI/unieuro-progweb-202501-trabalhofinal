@@ -8,6 +8,7 @@ import Equipamentos from './pages/Equipamentos';
 import CadastroPage from './pages/cadastro'; // com "C" maiúsculo (match com o export)
 import LoginPage from './pages/login'; // caso exista
 import TipoeqCrud from './pages/TipoeqCrud';
+import Laudos from './pages/laudos';
 
 import './App.css';
 
@@ -20,6 +21,7 @@ function App() {
       <Route path="/clientes" element={<ClientesPage />} />
       <Route path="/equipamentos" element={<Equipamentos />} />
       <Route path="/tipoeq" element={<TipoeqCrud/>} />
+      <Route path="/laudo" element={<Laudos/>} />
     </Routes>
   );
 }
