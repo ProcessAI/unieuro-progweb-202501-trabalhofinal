@@ -1,6 +1,6 @@
-// /back/src/modules/laudo/service/laudo-service.ts
-
 import { LaudoPersistence } from '../persistence/laudo-persistence';
+
+const persistence = new LaudoPersistence();
 
 export const create = async (data: {
   laudodescricao: string;
@@ -8,9 +8,8 @@ export const create = async (data: {
   idtipolaudo: number;
   idtipoinstalacao: number;
   laudoosclickup?: string | null;
-  // se precisar, pode adicionar outros campos aqui
 }) => {
-  return await LaudoPersistence.create({
+  return await persistence.create({
     laudodescricao: data.laudodescricao,
     laudohtmlmd: data.laudohtmlmd,
     idtipolaudo: data.idtipolaudo,
@@ -20,11 +19,11 @@ export const create = async (data: {
 };
 
 export const findAll = async () => {
-  return await LaudoPersistence.findAll();
+  return await persistence.findAll();
 };
 
 export const findById = async (id: number) => {
-  return await LaudoPersistence.findById(id);
+  return await persistence.findById(id);
 };
 
 export const update = async (
@@ -38,9 +37,9 @@ export const update = async (
     laudofechamento?: Date | null;
   }
 ) => {
-  return await LaudoPersistence.update(id, data);
+  return await persistence.update(id, data);
 };
 
 export const deleteLaudo = async (id: number) => {
-  return await LaudoPersistence.delete(id);
+  return await persistence.delete(id);
 };

@@ -1,11 +1,15 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:8080/api';
 
 export interface Laudo {
-  id: number;
-  nome: string;
-  descricao: string;
-  data: string;
-  // Adicione aqui os outros campos conforme necessário
+  idlaudo: number;
+  laudodescricao: string;
+  laudohtmlmd: string;
+  laudodatainclusao: string;
+  laudofechamento?: string | null;
+  laudostatus: number;
+  idtipolaudo: number;
+  idtipoinstalacao: number;
+  laudoosclickup?: string | null;
 }
 
 export async function listarLaudos(): Promise<Laudo[]> {
@@ -14,13 +18,13 @@ export async function listarLaudos(): Promise<Laudo[]> {
   return response.json();
 }
 
-export async function buscarLaudoPorId(id: number): Promise<Laudo> {
-  const response = await fetch(`${API_BASE_URL}/laudos/${id}`);
+export async function buscarLaudoPorId(idlaudo: number): Promise<Laudo> {
+  const response = await fetch(`${API_BASE_URL}/laudos/${idlaudo}`);
   if (!response.ok) throw new Error('Erro ao buscar o laudo');
   return response.json();
 }
 
-export async function criarLaudo(laudo: Omit<Laudo, 'id'>): Promise<Laudo> {
+export async function criarLaudo(laudo: Omit<Laudo, 'idlaudo' | 'laudodatainclusao'>): Promise<Laudo> {
   const response = await fetch(`${API_BASE_URL}/laudos`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -30,8 +34,8 @@ export async function criarLaudo(laudo: Omit<Laudo, 'id'>): Promise<Laudo> {
   return response.json();
 }
 
-export async function atualizarLaudo(id: number, laudo: Partial<Laudo>): Promise<Laudo> {
-  const response = await fetch(`${API_BASE_URL}/laudos/${id}`, {
+export async function atualizarLaudo(idlaudo: number, laudo: Partial<Laudo>): Promise<Laudo> {
+  const response = await fetch(`${API_BASE_URL}/laudos/${idlaudo}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(laudo),
@@ -40,8 +44,8 @@ export async function atualizarLaudo(id: number, laudo: Partial<Laudo>): Promise
   return response.json();
 }
 
-export async function deletarLaudo(id: number): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/laudos/${id}`, {
+export async function deletarLaudo(idlaudo: number): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/laudos/${idlaudo}`, {
     method: 'DELETE',
   });
   if (!response.ok) throw new Error('Erro ao deletar laudo');
