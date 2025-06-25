@@ -1,6 +1,12 @@
 # unieuro-progweb-202501-trabalhofinal
 Trabalho final de programação web 202501
 
+## ESSA BRANCH FOI CRIADA PARA FAZERMOS TESTE DE MERGE ANTES DA DE VERSÃO
+
+### Objetivo:
+
+- Corrigit conflitos
+
 ## Acesso ao sistema
 
 [Laudinho](https://laudinho.cleversystems.net/)

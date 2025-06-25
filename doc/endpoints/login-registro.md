@@ -1,6 +1,6 @@
 <h3>Cadastro de usuário:</h3>
 POST 
-http://localhost:3000/auth/register
+http://localhost:8080/auth/register
 {
   "usuarioemail": "testeemail@gmail.com",
   "usuariosenha": "Aa@"
@@ -8,7 +8,7 @@ http://localhost:3000/auth/register
 
 <h3>Login de usuário de usuário:</h3>
 POST
-http://localhost:3000/auth/login 
+http://localhost:8080/auth/login 
 {
   "usuarioemail": "testeemail@gmail.com",
   "usuariosenha": "Aa@"

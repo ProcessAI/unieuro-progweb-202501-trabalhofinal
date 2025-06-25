@@ -11,20 +11,29 @@ export class equipamentoPersistence {
     try {
       const equipamento = await this.prisma.equipamento.create({
         data: equipamentoData,
+        include: {
+          tipoeq: true,
+          sede: true,
+        },
       });
       return equipamento;
     } catch (error) {
-      console.error("Error creating equipamento:", error);
+      console.error("Erro ao criar equipamento:", error);
       throw error;
     }
   }
 
   async findAll() {
     try {
-      const equipamentos = await this.prisma.equipamento.findMany();
+      const equipamentos = await this.prisma.equipamento.findMany({
+        include: {
+          tipoeq: true,
+          sede: true,
+        },
+      });
       return equipamentos;
     } catch (error) {
-      console.error("Error fetching equipamentos:", error);
+      console.error("Erro ao buscar equipamentos:", error);
       throw error;
     }
   }
@@ -33,35 +42,43 @@ export class equipamentoPersistence {
     try {
       const equipamento = await this.prisma.equipamento.findUnique({
         where: { idequipamento: id },
+        include: {
+          tipoeq: true,
+          sede: true,
+        },
       });
       return equipamento;
     } catch (error) {
-      console.error("Error fetching equipamento by ID:", error);
+      console.error("Erro ao buscar equipamento por ID:", error);
       throw error;
     }
   }
 
   async update(id: number, equipamentoData: Prisma.equipamentoUpdateInput) {
     try {
-      const updatedEquipamento = await this.prisma.equipamento.update({
+      const equipamentoAtualizado = await this.prisma.equipamento.update({
         where: { idequipamento: id },
         data: equipamentoData,
+        include: {
+          tipoeq: true,
+          sede: true,
+        },
       });
-      return updatedEquipamento;
+      return equipamentoAtualizado;
     } catch (error) {
-      console.error("Error updating equipamento:", error);
+      console.error("Erro ao atualizar equipamento:", error);
       throw error;
     }
   }
 
   async delete(id: number) {
     try {
-      const deletedEquipamento = await this.prisma.equipamento.delete({
+      const equipamentoDeletado = await this.prisma.equipamento.delete({
         where: { idequipamento: id },
       });
-      return deletedEquipamento;
+      return equipamentoDeletado;
     } catch (error) {
-      console.error("Error deleting equipamento:", error);
+      console.error("Erro ao deletar equipamento:", error);
       throw error;
     }
   }

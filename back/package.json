@@ -2,32 +2,42 @@
   "name": "back",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/modules/router/app.ts",
   "type": "commonjs",
   "scripts": {
+    "dev": "tsx watch src/modules/router/app.ts",
+    "dev:main": "tsx watch src/modules/router/app.ts",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc"
+    "prisma:generate": "npx prisma generate --schema=prisma/schema.prisma",
+    "prisma:migrate": "npx prisma migrate dev --schema=prisma/schema.prisma",
+    "prisma:studio": "npx prisma studio --schema=prisma/schema.prisma",
+    "prisma:migrate-reset": "npx prisma migrate reset --schema=prisma/schema.prisma",
+    "prisma:pull": "npx prisma db pull --schema=prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
-    "@types/cors": "^2.8.18",
-    "@types/jsonwebtoken": "^9.0.9",
-    "@types/node": "^22.15.24",
-    "prisma": "^6.9.0",
-    "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
-  },
   "dependencies": {
-    "@prisma/client": "^6.8.2",
-    "@types/express": "^5.0.3",
+    "@prisma/client": "^6.9.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.15.31",
+    "globals": "^16.2.0",
+    "prisma": "^6.9.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.0",
+    "undici-types": "^6.21.0"
   }
 }
