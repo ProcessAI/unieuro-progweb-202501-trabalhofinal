@@ -240,36 +240,41 @@ export default function ClientesPage() {
   }
 
   async function excluirCliente(index: number) {
-  const cliente = clientes[index];
+    const cliente = clientes[index];
 
-  if (!window.confirm(`Tem certeza que deseja excluir o cliente "${cliente.nome}"?`)) {
-    return;
-  }
-
-  try {
-    const response = await fetch(`http://localhost:8080/api/cliente/deletarCliente/${cliente.idcliente}`, {
-      method: "DELETE",
-    });
-
-    if (!response.ok) {
-      throw new Error("Erro ao excluir cliente no servidor");
+    if (!window.confirm(`Tem certeza que deseja excluir o cliente "${cliente.nome}"?`)) {
+      return;
     }
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/cliente/deletarCliente/${cliente.idcliente}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        if (response.status === 500) {
+          alert("Não é possível excluir o Cliente, deve-se excluir as sedes primeiro.");
+        } else {
+          alert(`Erro ao excluir cliente: ${response.statusText}`);
+        }
+        return;
+      }
 
       // Remove localmente após confirmação do backend
-    setClientes((oldClientes) => {
-      const novosClientes = [...oldClientes];
-      novosClientes.splice(index, 1);
-      return novosClientes;
-    });
+      setClientes((oldClientes) => {
+        const novosClientes = [...oldClientes];
+        novosClientes.splice(index, 1);
+        return novosClientes;
+      });
 
-    if (clienteEditandoIndex === index) {
-      fecharEditarCliente();
-    }
+      if (clienteEditandoIndex === index) {
+        fecharEditarCliente();
+      }
 
-    alert(`Cliente "${cliente.nome}" excluído com sucesso!`);
-  } catch (error) {
-    console.error("Erro ao excluir cliente:", error);
-    alert("Erro ao excluir cliente. Verifique o console.");
+      alert(`Cliente "${cliente.nome}" excluído com sucesso!`);
+    } catch (error) {
+      console.error("Erro ao excluir cliente:", error);
+      alert("Erro ao excluir cliente. Verifique o console.");
     }
   }
 

@@ -130,7 +130,8 @@ routeCliente.delete("/deletarCliente/:id", async (req:Request,res:Response)=>{
   }catch(e){
 
     console.log(`Erro ao deletar o cliente: ${e}`)
-  
+
+    res.status(500).json({error:"E necessário deletar primeiro as sedes e depois o cliente!"});
   }
 });
 

@@ -30,3 +30,5 @@ SELECT * FROM laudo.sede;
 SELECT * FROM laudo.endereco;
 
 SELECT * FROM laudo.tipoeq;
+
+SELECT * FROM laudo.usuario;
