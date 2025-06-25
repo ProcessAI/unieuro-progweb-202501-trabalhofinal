@@ -4,8 +4,11 @@
 import express from 'express';
 import dotenv from 'dotenv'; // Importando dotenv para configuração de variáveis ambiente
 import cors from 'cors'; // para permitir requisições do front-end
+
+// importando os nossos Routes
 import laudoRoutes from '../laudo/routes/laudo-routes';
 import tipoeqRoutes from '../laudo/routes/tipoeq-routes';
+import tipoInstalacaoRoutes from '../laudo/routes/tipo-de-instalacao-routes';
 import userRoutes from '../login/routes/usuario-routes';
 import routeCliente from '../laudo/routes/RouteCliente';
 import routeEquipamento from '../laudo/routes/RouteEquipamento';
@@ -32,6 +35,7 @@ app.use(cors({
 
 /* Middleware para aceitar requisições JSON e habilitar CORS */
 app.use(express.json());
+app.use(cors());
 
 /* Nossos Routes para cada Fucionalidade ou Serviço*/
 app.use('/api/laudos', laudoRoutes);
@@ -39,6 +43,7 @@ app.use('/api/tipoeq', tipoeqRoutes);
 app.use('/api/sede', sedeRoutes);
 app.use('/api/cliente', routeCliente);
 app.use('/api/endereco', enderecoRouter);
+app.use('/api/tipo-instalacao', tipoInstalacaoRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/api/protected', protegidoRoutes);
 app.use('/api/equipamento',routeEquipamento);
