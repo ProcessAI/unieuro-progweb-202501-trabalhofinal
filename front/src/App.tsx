@@ -9,6 +9,10 @@ import CadastroPage from './pages/cadastro'; // com "C" maiúsculo (match com o 
 import LoginPage from './pages/login'; // caso exista
 import TipoeqCrud from './pages/TipoeqCrud';
 import Laudos from './pages/laudos';
+import TipoLaudo from './pages/tipo-laudo';
+import TipoInstalacao from './pages/tipoinstalacao';
+
+
 
 import './App.css';
 
@@ -22,6 +26,8 @@ function App() {
       <Route path="/equipamentos" element={<Equipamentos />} />
       <Route path="/tipoeq" element={<TipoeqCrud/>} />
       <Route path="/laudo" element={<Laudos/>} />
+      <Route path="/tipolaudo" element={<TipoLaudo />} />
+      <Route path="/tipoinstalacao" element={<TipoInstalacao />} />
     </Routes>
   );
 }

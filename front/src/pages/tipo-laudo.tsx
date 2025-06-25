@@ -9,8 +9,7 @@ interface TipoLaudo {
   tipolaudotemplate?: string;
 }
 
-
-export default function App() {
+export default function TipoLaudo() {
   const [laudos, setLaudos] = useState<TipoLaudo[]>([]);
   const [busca, setBusca] = useState("");
   const [modalOpen, setModalOpen] = useState(false);

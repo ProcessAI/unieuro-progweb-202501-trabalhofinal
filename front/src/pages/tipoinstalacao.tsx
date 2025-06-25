@@ -8,7 +8,7 @@ interface TipoInstalacao {
   tipoinstalacaonome: string;
 }
 
-export default function App() {
+export default function TipoInstalacao() {
   const [instalacoes, setInstalacoes] = useState<TipoInstalacao[]>([]);
   const [busca, setBusca] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
