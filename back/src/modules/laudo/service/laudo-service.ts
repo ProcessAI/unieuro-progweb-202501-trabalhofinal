@@ -21,8 +21,8 @@ export const create = async (data: {
   return await persistence.create({
     laudodescricao: data.laudodescricao,
     laudohtmlmd: data.laudohtmlmd,
-    idtipolaudo: data.idtipolaudo,
-    idtipoinstalacao: data.idtipoinstalacao,
+    tipolaudo: { connect: { idtipolaudo: data.idtipolaudo } },
+    tipoinstalacao: { connect: { idtipoinstalacao: data.idtipoinstalacao } },
     laudoosclickup: data.laudoosclickup ?? null,
     laudostatus: data.laudostatus, 
   });
