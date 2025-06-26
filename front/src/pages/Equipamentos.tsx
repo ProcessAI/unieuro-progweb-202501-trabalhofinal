@@ -64,8 +64,8 @@ export default function Equipamentos() {
       try {
         const [dadosEquip, dadosTipos, dadosSedes] = await Promise.all([
           getEquipamentos(),
-          fetch("http://localhost:8080/api/tiposequipamentos").then(res => res.json()),
-          fetch("http://localhost:8080/api/sedes").then(res => res.json())
+          fetch("http://localhost:8080/api/tipoeq/listarTipoEquipamento").then(res => res.json()),
+          fetch("http://localhost:8080/api/sede").then(res => res.json())
         ]);
         setEquipamentos(dadosEquip);
         setTiposEquipamento(dadosTipos);
@@ -300,14 +300,22 @@ export default function Equipamentos() {
                   onChange={(e) => setNovoEquipamento({ ...novoEquipamento, ipv6: e.target.value })} 
                 />
               </div>
-              <div className="form-group">
+             <div className="form-group">
                 <label className="form-label">Tipo de Equipamento</label>
-                <input 
-                  className="input" 
-                  placeholder="Ex: Gerador Diesel" 
-                  value={novoEquipamento.tipo} 
-                  onChange={(e) => setNovoEquipamento({ ...novoEquipamento, tipo: e.target.value })} 
-                />
+                <select
+                  className="input"
+                  value={novoEquipamento.tipo}
+                  onChange={(e) =>
+                    setNovoEquipamento({ ...novoEquipamento, tipo: e.target.value })
+                  }
+                >
+                  <option value="">Selecione o tipo</option>
+                  {tiposEquipamento.map((tipo) => (
+                    <option key={tipo.idtipoeq} value={tipo.tipoeqnome}>
+                      {tipo.tipoeqnome}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="form-group">
                 <label className="form-label">AnyDesk</label>
