@@ -109,10 +109,10 @@ export default function Equipamentos() {
         dw: "",
         mac: ""
       });
-      alert("Cliente criado com sucesso!");
+      alert("Equipamento criado com sucesso!");
     } catch (error) {
       console.error("Erro ao criar equipamento:", error);
-      alert("Erro ao criar equipamento, clique f12 e va no console e veja qual é o error!");
+      alert("Preencha os dados para poder cadastrar o equipamento!");
     }
   };
 

@@ -23,9 +23,11 @@ routeEquipamento.get('/', async (_req: Request, res: Response) => {
   try {
     const equipamentos = await equipamentoService.listarEquipamentos();
 
-    if (!equipamentos || equipamentos.length === 0) {
+    /*if (!equipamentos || equipamentos.length === 0) {
       return res.status(404).json({ error: 'Nenhum equipamento encontrado.' });
-    }
+    
+      isso está retornando erro de graça kkkk
+    }*/
 
     return res.status(200).json(equipamentos);
   } catch (error: any) {
