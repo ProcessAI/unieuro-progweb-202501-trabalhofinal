@@ -25,6 +25,7 @@ const laudoVazio: Omit<Laudo, 'idlaudo' | 'laudodatainclusao'> = {
   idtipolaudo: 0,
   idtipoinstalacao: 0,
   laudoosclickup: '',
+  laudofechamento: '',
 };
 
 const Laudos: React.FC = () => {
@@ -251,6 +252,18 @@ const Laudos: React.FC = () => {
               onChange={(e) => setLaudoAtual({ ...laudoAtual, laudoosclickup: e.target.value } as any)}
             />
 
+            <div className="form-group">
+              <label className="form-label">Horário de Fechamento:</label>
+              <input
+                type="time"
+                value={laudoAtual.laudofechamento ?? ''}
+                onChange={(e) =>
+                  setLaudoAtual({ ...laudoAtual, laudofechamento: e.target.value })
+                }
+              />
+            </div>
+
+
             <Markdown
               value={'laudohtmlmd' in laudoAtual ? laudoAtual.laudohtmlmd : ''}
               onChange={(value) => setLaudoAtual({ ...laudoAtual, laudohtmlmd: value } as any)}
@@ -297,6 +310,14 @@ const Laudos: React.FC = () => {
             <div>
               <b>OS Clickup:</b> {laudoAtual.laudoosclickup}
             </div>
+
+            <div>
+              <b>Horário de Fechamento:</b>{' '}
+              {laudoAtual.laudofechamento
+                ? new Date(laudoAtual.laudofechamento).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : 'Sem horário definido'}
+            </div>
+            
             <div>
               <b>Conteúdo:</b>
             </div>

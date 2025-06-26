@@ -45,6 +45,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     idtipoinstalacao,
     laudoosclickup,
     laudostatus,
+    laudofechamento
   } = req.body;
 
   console.log("Requisição recebida:", req.body);
@@ -57,6 +58,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       idtipoinstalacao,
       laudoosclickup,
       laudostatus,
+      laudofechamento
     });
     res.status(201).json(novoLaudo);
   } catch (error) {

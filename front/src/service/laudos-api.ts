@@ -5,7 +5,7 @@ export interface Laudo {
   laudodescricao: string;
   laudohtmlmd: string;
   laudodatainclusao: string;
-  laudofechamento?: string | null;
+  laudofechamento?: string | Date | null;
   laudostatus: number;
   idtipolaudo: number;
   idtipoinstalacao: number;

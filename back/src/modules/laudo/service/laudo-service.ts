@@ -9,6 +9,7 @@ export const create = async (data: {
   idtipoinstalacao: number;
   laudoosclickup?: string | null;
   laudostatus: number;
+  laudofechamento?: string | Date | null;
 }) => {
   if (!data.idtipolaudo || data.idtipolaudo === 0) {
     throw new Error('Tipo de laudo inválido');
@@ -18,6 +19,13 @@ export const create = async (data: {
     throw new Error('Tipo de instalação inválido');
   }
 
+  let horarioConvertido: Date | undefined = undefined;
+
+  if (data.laudofechamento) {
+    // Junta com uma data fixa para criar um Date válido
+    horarioConvertido = new Date(`1970-01-01T${data.laudofechamento}:00Z`);
+  }
+
   return await persistence.create({
     laudodescricao: data.laudodescricao,
     laudohtmlmd: data.laudohtmlmd,
@@ -25,6 +33,7 @@ export const create = async (data: {
     idtipoinstalacao: data.idtipoinstalacao,
     laudoosclickup: data.laudoosclickup ?? null,
     laudostatus: data.laudostatus, 
+    laudofechamento: horarioConvertido,
   });
 };
 
