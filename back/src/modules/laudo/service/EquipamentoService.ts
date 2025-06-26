@@ -123,4 +123,26 @@ export class EquipamentoClass {
       throw new Error("Falha na exclusão do equipamento.");
     }
   }
+  
+  async listarTiposEquipamento() {
+  try {
+    return await this.equipamentoRepo.listarTiposEquipamento();
+  } catch (e) {
+    console.error("Erro ao listar tipos de equipamento:", e);
+    throw new Error("Falha na listagem de tipos de equipamento.");
+  }
 }
+
+// Listar sedes
+  async listarSedes() {
+    try {
+      return await this.equipamentoRepo.listarSedes();
+    } catch (e) {
+      console.error("Erro ao listar sedes:", e);
+      throw new Error("Falha na listagem de sedes.");
+    }
+  }
+}
+
+// Listar tipos de equipamento
+

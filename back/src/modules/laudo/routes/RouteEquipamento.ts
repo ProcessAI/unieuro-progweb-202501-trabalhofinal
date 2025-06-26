@@ -77,4 +77,25 @@ routeEquipamento.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 
+routeEquipamento.get('/tipos-equipamento', async (_req: Request, res: Response) => {
+  try {
+    const tipos = await equipamentoService.listarTiposEquipamento();
+    return res.status(200).json(tipos);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
+/**
+ * Listar sedes
+ */
+routeEquipamento.get('/sedes', async (_req: Request, res: Response) => {
+  try {
+    const sedes = await equipamentoService.listarSedes();
+    return res.status(200).json(sedes);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
 export default routeEquipamento;

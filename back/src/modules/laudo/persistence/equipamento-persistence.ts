@@ -7,6 +7,24 @@ export class equipamentoPersistence {
     this.prisma = new PrismaClient();
   }
 
+  async listarTiposEquipamento() {
+    return this.prisma.tipoeq.findMany({
+      select: {
+        idtipoeq: true,
+        tipoeqnome: true,
+      },
+    });
+  }
+
+  async listarSedes() {
+    return this.prisma.sede.findMany({
+      select: {
+        idsede: true,
+        sedenome: true,
+      },
+    });
+  }
+
   async create(equipamentoData: Prisma.equipamentoCreateInput) {
     try {
       const equipamento = await this.prisma.equipamento.create({

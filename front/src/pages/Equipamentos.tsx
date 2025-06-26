@@ -6,9 +6,24 @@ import {
   updateEquipamento,
   deleteEquipamento
 } from "../service/equipamentoService";
+import './Equipamentos.css';
+
+// Novos tipos
+interface TipoEquipamento {
+  idtipoeq: number;
+  tipoeqnome: string;
+}
+
+interface Sede {
+  idsede: number;
+  sedenome: string;
+}
 
 export default function Equipamentos() {
   const [equipamentos, setEquipamentos] = useState<Equipamento[]>([]);
+  const [tiposEquipamento, setTiposEquipamento] = useState<TipoEquipamento[]>([]);
+  const [sedes, setSedes] = useState<Sede[]>([]);
+
   const [busca, setBusca] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
   const [detalhesAbertos, setDetalhesAbertos] = useState(false);
@@ -45,16 +60,22 @@ export default function Equipamentos() {
   const [editarIndex, setEditarIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    async function carregarEquipamentos() {
+    async function carregarDados() {
       try {
-        const dados = await getEquipamentos();
-        setEquipamentos(dados);
+        const [dadosEquip, dadosTipos, dadosSedes] = await Promise.all([
+          getEquipamentos(),
+          fetch("http://localhost:8080/api/tiposequipamentos").then(res => res.json()),
+          fetch("http://localhost:8080/api/sedes").then(res => res.json())
+        ]);
+        setEquipamentos(dadosEquip);
+        setTiposEquipamento(dadosTipos);
+        setSedes(dadosSedes);
       } catch (error) {
-        console.error("Erro ao carregar equipamentos:", error);
+        console.error("Erro ao carregar dados:", error);
       }
     }
 
-    carregarEquipamentos();
+    carregarDados();
   }, []);
 
   const filtrados = busca.trim() === ""
@@ -167,416 +188,7 @@ export default function Equipamentos() {
 
   return (
     <div style={{ backgroundColor: '#f3f4f6', minHeight: '100vh', fontSize: '14px' }}>
-      <style>{`
-        /* Reset básico */
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        body {
-          background-color: #f3f4f6;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          font-size: 14px;
-          line-height: 1.4;
-        }
-
-        /* Header */
-        .header {
-          background-color: #fbbf24;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 8px 16px;
-          font-size: 14px;
-        }
-
-        .header-left {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-
-        .logo {
-          height: 40px;
-        }
-
-        .nav {
-          display: flex;
-          gap: 16px;
-          font-weight: bold;
-        }
-
-        .nav a {
-          text-decoration: none;
-          color: inherit;
-        }
-
-        .nav-active {
-          color: #000;
-        }
-
-        .header-right {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-
-        .user-name {
-          font-weight: 500;
-        }
-
-        .logout-btn {
-          background-color: #000;
-          color: white;
-          font-size: 14px;
-          padding: 8px 16px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-
-        /* Table Container */
-        .table-container {
-          padding: 16px;
-        }
-
-        .table-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 16px;
-        }
-
-        .search-input {
-          width: 50%;
-          font-size: 14px;
-          padding: 8px;
-          border: 1px solid #d1d5db;
-          border-radius: 4px;
-        }
-
-        .new-equipment-btn {
-          background-color: #fbbf24;
-          color: black;
-          font-weight: bold;
-          margin-left: 16px;
-          font-size: 14px;
-          padding: 8px 16px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-
-        /* Table */
-        .equipment-table {
-          width: 100%;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          font-size: 14px;
-          border-collapse: collapse;
-        }
-
-        .table-header-row {
-          text-align: left;
-          border-bottom: 1px solid #e5e7eb;
-        }
-
-        .table-header-cell {
-          padding: 8px;
-          font-weight: 600;
-        }
-
-        .table-row {
-          border-bottom: 1px solid #e5e7eb;
-        }
-
-        .table-row:hover {
-          background-color: #f9fafb;
-        }
-
-        .table-cell {
-          padding: 8px;
-        }
-
-        .table-actions {
-          display: flex;
-          gap: 8px;
-        }
-
-        .details-btn {
-          background-color: #fbbf24;
-          font-size: 12px;
-          padding: 6px 12px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-
-        .edit-btn {
-          background-color: #000;
-          color: white;
-          font-size: 12px;
-          padding: 6px 12px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-
-        .delete-btn {
-          background-color: #ef4444;
-          color: white;
-          font-size: 12px;
-          padding: 6px 12px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-
-        /* Modal Overlay */
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          animation: fadeIn 0.2s ease-out;
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        /* Modal Content */
-        .modal-content {
-          background: white;
-          border-radius: 8px;
-          padding: 24px;
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-          max-height: 90vh;
-          overflow-y: auto;
-          animation: slideIn 0.3s ease-out;
-          position: relative;
-        }
-
-        @keyframes slideIn {
-          from { 
-            opacity: 0;
-            transform: scale(0.95) translateY(-20px);
-          }
-          to { 
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-
-        .modal-small {
-          width: 90%;
-          max-width: 500px;
-        }
-
-        .modal-large {
-          width: 90%;
-          max-width: 800px;
-        }
-
-        /* Modal Header */
-        .modal-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-          border-bottom: 1px solid #e5e7eb;
-          padding-bottom: 16px;
-        }
-
-        .modal-title {
-          font-size: 18px;
-          font-weight: 600;
-          margin: 0;
-        }
-
-        .close-btn {
-          background: none;
-          border: none;
-          font-size: 24px;
-          cursor: pointer;
-          color: #6b7280;
-          padding: 0;
-          width: 32px;
-          height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 4px;
-        }
-
-        .close-btn:hover {
-          background-color: #f3f4f6;
-          color: #000;
-        }
-
-        /* Form Styles */
-        .modal-form {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 12px;
-          margin-bottom: 20px;
-        }
-
-        .form-group {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .form-label {
-          font-size: 12px;
-          font-weight: 500;
-          color: #374151;
-          text-transform: uppercase;
-        }
-
-        .checkbox-container {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          grid-column: span 2;
-        }
-
-        .checkbox {
-          width: 16px;
-          height: 16px;
-        }
-
-        .modal-actions {
-          display: flex;
-          justify-content: center;
-          gap: 12px;
-          margin-top: 20px;
-          padding-top: 16px;
-          border-top: 1px solid #e5e7eb;
-        }
-
-        .save-btn {
-          background-color: #fbbf24;
-          color: black;
-          font-weight: bold;
-          padding: 10px 20px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 14px;
-        }
-
-        .save-btn:hover {
-          background-color: #f59e0b;
-        }
-
-        /* Input Styles */
-        .input {
-          padding: 10px 12px;
-          border: 1px solid #d1d5db;
-          border-radius: 4px;
-          font-size: 14px;
-          transition: border-color 0.2s;
-          width: 100%;
-        }
-
-        .input:focus {
-          outline: none;
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .input::placeholder {
-          color: #9ca3af;
-        }
-
-        /* Details Table */
-        .details-table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 16px;
-        }
-
-        .details-table th,
-        .details-table td {
-          padding: 12px;
-          text-align: left;
-          border-bottom: 1px solid #e5e7eb;
-        }
-
-        .details-table th {
-          background-color: #f9fafb;
-          font-weight: 600;
-          font-size: 12px;
-          text-transform: uppercase;
-          color: #374151;
-        }
-
-        .details-table td {
-          font-size: 14px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-          .header {
-            flex-direction: column;
-            gap: 8px;
-            padding: 12px 8px;
-          }
-          
-          .header-left {
-            flex-direction: column;
-            gap: 8px;
-          }
-          
-          .nav {
-            gap: 8px;
-          }
-          
-          .table-header {
-            flex-direction: column;
-            gap: 12px;
-          }
-          
-          .search-input {
-            width: 100%;
-          }
-          
-          .new-equipment-btn {
-            margin-left: 0;
-            width: 100%;
-          }
-          
-          .equipment-table {
-            font-size: 12px;
-          }
-          
-          .table-actions {
-            flex-direction: column;
-            gap: 4px;
-          }
-          
-          .modal-form {
-            grid-template-columns: 1fr;
-          }
-
-          .modal-content {
-            margin: 16px;
-            max-height: calc(100vh - 32px);
-          }
-        }
-      `}</style>
+      
 
       <header className="header">
         <div className="header-left">
@@ -735,12 +347,20 @@ export default function Equipamentos() {
               </div>
               <div className="form-group">
                 <label className="form-label">Sede</label>
-                <input 
-                  className="input" 
-                  placeholder="Local da sede" 
-                  value={novoEquipamento.sede} 
-                  onChange={(e) => setNovoEquipamento({ ...novoEquipamento, sede: e.target.value })} 
-                />
+                <select
+                  className="input"
+                  value={novoEquipamento.sede}
+                  onChange={(e) =>
+                    setNovoEquipamento({ ...novoEquipamento, sede: e.target.value })
+                  }
+                >
+                  <option value="">Selecione a sede</option>
+                  {sedes.map((sede) => (
+                    <option key={sede.idsede} value={sede.sedenome}>
+                      {sede.sedenome}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="checkbox-container">
                 <input 
@@ -846,12 +466,20 @@ export default function Equipamentos() {
               </div>
               <div className="form-group">
                 <label className="form-label">Tipo de Equipamento</label>
-                <input
+                <select
                   className="input"
-                  placeholder="Ex: Gerador Diesel"
-                  value={editarEquipamento.tipo}
-                  onChange={(e) => setEditarEquipamento({ ...editarEquipamento, tipo: e.target.value })}
-                />
+                  value={novoEquipamento.tipo}
+                  onChange={(e) =>
+                    setNovoEquipamento({ ...novoEquipamento, tipo: e.target.value })
+                  }
+                >
+                  <option value="">Selecione o tipo</option>
+                  {tiposEquipamento.map((tipo) => (
+                    <option key={tipo.idtipoeq} value={tipo.tipoeqnome}>
+                      {tipo.tipoeqnome}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="form-group">
                 <label className="form-label">AnyDesk</label>
