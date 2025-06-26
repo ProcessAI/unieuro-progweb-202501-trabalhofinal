@@ -16,12 +16,6 @@ import enderecoRouter from '../laudo/routes/RouteEndereco';
 import sedeRoutes from '../laudo/routes/sede-routes';
 import protegidoRoutes from '../login/routes/auth-middleware-routes';
 
-// Basicamente serve para treazer configuração de ambiente para o nosso código
-dotenv.config();
-
-//const PORT = process.env.PORT || 3000;
-const PORT = 8080;
-
 /* Materializando um objeto do nosso Servidor express */
 const app = express();
 
@@ -47,10 +41,5 @@ app.use('/api/tipo-laudo',tipoLaudoRoutes)
 app.use('/api/auth', userRoutes);
 app.use('/api/protected', protegidoRoutes);
 app.use('/api/equipamento',routeEquipamento);
-
-/* Criando o nosso servidor express */
-app.listen(PORT, (): void => {
-    console.log(`SERVIDOR RODANDO NA PORTA: ${PORT}!`);
-});
 
 export default app;
