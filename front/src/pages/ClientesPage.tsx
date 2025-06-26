@@ -9,7 +9,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
+import Navbar from "@/components/Navbar";
 // Interfaces atualizadas
 interface Endereco {
   idendereco?: number; // ID do endereço, pode ser opcional ao criar
@@ -726,21 +726,7 @@ async function salvarSede() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="bg-yellow-400 flex items-center justify-between px-4 py-2 shadow-md sticky top-0 z-50">
-        <div className="flex items-center gap-4">
-          <img src="/logo.png" alt="Logo" className="h-8" />
-          <nav className="flex gap-4 font-bold">
-            <a href="#">HOME</a>
-            <a href="#">CLIENTES</a>
-            <a href="#">PRODUTOS</a>
-            <a href="#">EQUIPAMENTOS</a>
-          </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="font-bold">Rafael Marconi</span>
-          <Button className="bg-black text-white">SAIR</Button>
-        </div>
-      </div>
+      <Navbar />
 
       <div className="bg-gray-100 px-6 py-4 max-w-5xl mx-auto sticky top-[48px] z-40 border-b border-gray-300 flex justify-between items-center">
         <Input
