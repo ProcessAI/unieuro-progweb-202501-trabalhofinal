@@ -1,26 +1,27 @@
 /* importando a classe Router do express e Classes de requisição e resposta do express */
-import {Request,Response, Router} from 'express';
+import { Request, Response, Router } from 'express';
 
 /* importando a classe ClienteService da camada service*/
-import {ClienteService} from '../service/ClienteService'
+import { ClienteService } from '../service/ClienteService'
 
 // Materializando um objeto Router da class Router do express
-const routeCliente:Router = Router();
+const routeCliente: Router = Router();
 
 // Materializando um objeto ClienteService da class ClienteService
-const clientes:ClienteService = new ClienteService();
+const clientes: ClienteService = new ClienteService();
 
 // Criar um novo cliente
-routeCliente.post("/criarCliente", async(req:Request,res:Response) => {
+routeCliente.post("/criarCliente", async (req: Request, res: Response) => {
 
-  try{
+  try {
 
-    const {nome, status } = req.body;
+    const { nome, status } = req.body;
 
     // Validar se 'status' é uma string antes de tentar a conversão
 
     if (typeof status !== 'string') {
-      return res.status(400).json({ error: "O status deve ser uma string." });
+      res.status(400).json({ error: "O status deve ser uma string." });
+      return
     }
 
     // Converte o status de string para numérico
@@ -38,18 +39,18 @@ routeCliente.post("/criarCliente", async(req:Request,res:Response) => {
       ...cliente,
       idcliente: Number(cliente.idcliente),
     };
-  
+
     res.status(201).json(clienteConvertido)
     return;
-    
-  }catch(e){
+
+  } catch (e) {
     console.log(`Erro ao inserir o cliente: ${e}`)
   }
 });
 
 // Listar todos os clientes
 routeCliente.get("/listarCliente", async (req: Request, res: Response) => {
-  
+
   try {
     const listClientes = await clientes.listarCliente();
 
@@ -69,10 +70,10 @@ routeCliente.get("/listarCliente", async (req: Request, res: Response) => {
 
 // Buscar cliente pelo ID
 
-routeCliente.get("/buscarCliente/:id", async(req:Request,res:Response) => {
-  
-  try{
-    
+routeCliente.get("/buscarCliente/:id", async (req: Request, res: Response) => {
+
+  try {
+
     const idcliente = parseInt(req.params.id);
     const buscarCliente = await clientes.visualizarCliente(idcliente);
 
@@ -83,55 +84,55 @@ routeCliente.get("/buscarCliente/:id", async(req:Request,res:Response) => {
     };
 
     res.status(200).json(buscarClienteConvertido);
-  
-  }catch(e){
+
+  } catch (e) {
     console.log(`Erro ao buscar o cliente: ${e}`)
   }
 });
 
 // Atualizar cliente pelo ID
-routeCliente.put("/atualizarCliente/:id", async (req:Request,res:Response) => {
-  try{
-  
-  const {nome, status } = req.body;
-  const idcliente = parseInt(req.params.id);
-  
-  const atualizarCliente = await clientes.atualizarCliente(idcliente,{nome:nome,status:status}); 
-  
-  const atualizarClienteConvertido = {
-    ...atualizarCliente,
-    idcliente: Number(atualizarCliente.idcliente)
-  }
-  
-  res.status(200).json(atualizarClienteConvertido)
+routeCliente.put("/atualizarCliente/:id", async (req: Request, res: Response) => {
+  try {
 
-}catch(e){
-    
+    const { nome, status } = req.body;
+    const idcliente = parseInt(req.params.id);
+
+    const atualizarCliente = await clientes.atualizarCliente(idcliente, { nome: nome, status: status });
+
+    const atualizarClienteConvertido = {
+      ...atualizarCliente,
+      idcliente: Number(atualizarCliente.idcliente)
+    }
+
+    res.status(200).json(atualizarClienteConvertido)
+
+  } catch (e) {
+
     console.log(`Erro ao atualizar o cliente: ${e}`)
   }
 
 });
 
 // Deletar cliente pelo ID
-routeCliente.delete("/deletarCliente/:id", async (req:Request,res:Response)=>{
+routeCliente.delete("/deletarCliente/:id", async (req: Request, res: Response) => {
 
-  try{
+  try {
 
     const idcliente = parseInt(req.params.id)
-    const deletarCliente = await clientes.deletarCliente(idcliente) 
+    const deletarCliente = await clientes.deletarCliente(idcliente)
 
     const deletarClientesConvertidos = {
       ...deletarCliente,
       idcliente: Number(deletarCliente.idcliente)
     }
-    
+
     res.status(200).send('Cliente Deletado com Sucesso!')
-  
-  }catch(e){
+
+  } catch (e) {
 
     console.log(`Erro ao deletar o cliente: ${e}`)
 
-    res.status(500).json({error:"E necessário deletar primeiro as sedes e depois o cliente!"});
+    res.status(500).json({ error: "E necessário deletar primeiro as sedes e depois o cliente!" });
   }
 });
 
