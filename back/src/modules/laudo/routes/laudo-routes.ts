@@ -43,7 +43,8 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     laudohtmlmd,
     idtipolaudo,
     idtipoinstalacao,
-    laudoosclickup
+    laudoosclickup,
+    laudostatus,
   } = req.body;
 
   console.log("Requisição recebida:", req.body);
@@ -54,7 +55,8 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       laudohtmlmd,
       idtipolaudo,
       idtipoinstalacao,
-      laudoosclickup
+      laudoosclickup,
+      laudostatus,
     });
     res.status(201).json(novoLaudo);
   } catch (error) {
@@ -72,7 +74,8 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
     idtipolaudo,
     idtipoinstalacao,
     laudoosclickup,
-    laudofechamento
+    laudofechamento,
+    laudostatus 
   } = req.body;
 
   try {
@@ -82,7 +85,8 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
       idtipolaudo,
       idtipoinstalacao,
       laudoosclickup,
-      laudofechamento
+      laudofechamento,
+      laudostatus 
     });
 
     if (!laudoAtualizado) {
