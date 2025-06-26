@@ -180,11 +180,11 @@ export default function TipoLaudo() {
 
       {/* MODAL VISUALIZAR */}
       {viewLaudo && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <div className="modal-header">
+        <div className="modal-overlay-tipolaudo">
+          <div className="modal-tipolaudo">
+            <div className="modal-header-tipolaudo">
               <h2>Visualizar Tipo de Laudo</h2>
-              <button className="modal-close" onClick={() => setViewLaudo(null)}>
+              <button className="modal-close-tipolaudo" onClick={() => setViewLaudo(null)}>
                 ×
               </button>
             </div>
@@ -216,11 +216,11 @@ export default function TipoLaudo() {
 
       {/* MODAL NOVO / EDITAR */}
       {modalOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <div className="modal-header">
+        <div className="modal-overlay-tipolaudo">
+          <div className="modal-tipolaudo">
+            <div className="modal-header-tipolaudo">
               <h2>{editingLaudo ? "Editar Tipo de Laudo Técnico" : "Novo Tipo de Laudo Técnico"}</h2>
-              <button className="modal-close" onClick={() => setModalOpen(false)}>
+              <button className="modal-close-tipolaudo" onClick={() => setModalOpen(false)}>
                 ×
               </button>
             </div>
@@ -255,8 +255,8 @@ export default function TipoLaudo() {
 
       {/* CONFIRMAR EXCLUSÃO */}
       {confirmDeleteOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div className="modal-overlay-tipolaudo">
+          <div className="modal-tipolaudo">
             <h3>Tem certeza que deseja excluir esse tipo de laudo?</h3>
             <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
               <button className="btn-red" onClick={handleDelete} disabled={loading}>

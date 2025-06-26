@@ -325,7 +325,7 @@ textarea[readonly] {
 /* -------------------------------------------------------------------------- */
 /* MODAL GENÉRICO                                                             */
 /* -------------------------------------------------------------------------- */
-.modal-overlay {
+.modal-overlay-tipolaudo {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,.4);
@@ -335,7 +335,7 @@ textarea[readonly] {
   z-index: 1000;
 }
 
-.modal {
+.modal-tipolaudo {
   background: #fff;
   width: 450px;
   max-width: 90%;
@@ -347,20 +347,21 @@ textarea[readonly] {
   gap: 12px;
 }
 
-.modal-header {
+
+.modal-header-tipolaudo {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.modal-header h2 {
+.modal-header-tipolaudo h2 {
   font-size: 1.1rem;
   margin: 0;
   color: #1a1a1a;
 }
 
-.modal-close {
+.modal-close-tipolaudo {
   background: none;
   border: none;
   font-size: 1.5rem;

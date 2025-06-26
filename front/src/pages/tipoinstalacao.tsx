@@ -167,11 +167,11 @@ export default function TipoInstalacao() {
 
       {/* MODAL VISUALIZAR */}
       {viewInstalacao && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <div className="modal-header">
+        <div className="modal-overlay-tipoinstalacao">
+          <div className="modal-tipoinstalacao">
+            <div className="modal-header-tipoinstalacao">
               <h2>Visualizar Tipo de Instalação</h2>
-              <button className="modal-close" onClick={() => setViewInstalacao(null)}>×</button>
+              <button className="modal-close-tipoinstalacao" onClick={() => setViewInstalacao(null)}>×</button>
             </div>
             <p><strong>Descrição / Nome:</strong> {viewInstalacao.tipoinstalacaonome}</p>
             <div style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
@@ -194,11 +194,11 @@ export default function TipoInstalacao() {
 
       {/* MODAL NOVO / EDITAR */}
       {modalOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <div className="modal-header">
+        <div className="modal-overlay-tipoinstalacao">
+          <div className="modal-tipoinstalacao">
+            <div className="modal-header-tipoinstalacao">
               <h2>{editingInstalacao ? "Editar Tipo de Instalação" : "Novo Tipo de Instalação"}</h2>
-              <button className="modal-close" onClick={() => setModalOpen(false)}>×</button>
+              <button className="modal-close-tipoinstalacao" onClick={() => setModalOpen(false)}>×</button>
             </div>
             <input
               type="text"
@@ -221,8 +221,8 @@ export default function TipoInstalacao() {
 
       {/* CONFIRMAR EXCLUSÃO */}
       {confirmDeleteOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div className="modal-overlay-tipoinstalacao">
+          <div className="modal-tipoinstalacao">
             <h3>Tem certeza que deseja excluir esse tipo de instalação?</h3>
             <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
               <button className="btn-red" onClick={handleDelete} disabled={loading}>
