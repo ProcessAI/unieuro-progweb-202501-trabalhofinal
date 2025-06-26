@@ -46,6 +46,8 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     laudoosclickup
   } = req.body;
 
+  console.log("Requisição recebida:", req.body);
+
   try {
     const novoLaudo = await create({
       laudodescricao,
