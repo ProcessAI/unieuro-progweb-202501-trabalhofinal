@@ -8,15 +8,26 @@ export const create = async (data: {
   idtipolaudo: number;
   idtipoinstalacao: number;
   laudoosclickup?: string | null;
+  laudostatus: number;
 }) => {
+  if (!data.idtipolaudo || data.idtipolaudo === 0) {
+    throw new Error('Tipo de laudo inválido');
+  }
+
+  if (!data.idtipoinstalacao || data.idtipoinstalacao === 0) {
+    throw new Error('Tipo de instalação inválido');
+  }
+
   return await persistence.create({
     laudodescricao: data.laudodescricao,
     laudohtmlmd: data.laudohtmlmd,
     idtipolaudo: data.idtipolaudo,
     idtipoinstalacao: data.idtipoinstalacao,
     laudoosclickup: data.laudoosclickup ?? null,
+    laudostatus: data.laudostatus, 
   });
 };
+
 
 export const findAll = async () => {
   return await persistence.findAll();
@@ -35,6 +46,7 @@ export const update = async (
     idtipoinstalacao?: number;
     laudoosclickup?: string | null;
     laudofechamento?: Date | null;
+    laudostatus?: number; 
   }
 ) => {
   return await persistence.update(id, data);

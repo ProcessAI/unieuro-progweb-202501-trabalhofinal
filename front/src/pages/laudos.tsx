@@ -22,7 +22,6 @@ interface TipoLaudo {
 const laudoVazio: Omit<Laudo, 'idlaudo' | 'laudodatainclusao'> = {
   laudodescricao: '',
   laudohtmlmd: '',
-  laudostatus: 0,
   idtipolaudo: 0,
   idtipoinstalacao: 0,
   laudoosclickup: '',
@@ -89,23 +88,57 @@ const Laudos: React.FC = () => {
 
   const criarLaudoHandler = async () => {
     try {
-      // @ts-ignore para simplificar aqui
+      const { idtipolaudo, idtipoinstalacao, laudostatus } = laudoAtual;
+
+      if (!idtipolaudo || idtipolaudo === 0) {
+        alert("Selecione um tipo de laudo válido.");
+        return;
+      }
+
+      if (!idtipoinstalacao || idtipoinstalacao === 0) {
+        alert("Selecione um tipo de instalação válido.");
+        return;
+      }
+
+      if (!laudostatus || ![1, 2, 3].includes(laudostatus)) {
+        alert("Selecione um status válido.");
+        return;
+      }
+
       const novo = await criarLaudo(laudoAtual);
       setLaudos([...laudos, novo]);
       setModal(null);
     } catch (err) {
-      console.error('Erro ao criar laudo:', err);
+      console.error("Erro ao criar laudo:", err);
     }
   };
 
   const atualizarLaudoHandler = async () => {
     try {
       if (!('idlaudo' in laudoAtual)) return;
+
+      const { idtipolaudo, idtipoinstalacao, laudostatus } = laudoAtual;
+
+      if (!idtipolaudo || idtipolaudo === 0) {
+        alert("Selecione um tipo de laudo válido.");
+        return;
+      }
+
+      if (!idtipoinstalacao || idtipoinstalacao === 0) {
+        alert("Selecione um tipo de instalação válido.");
+        return;
+      }
+
+      if (!laudostatus || ![1, 2, 3].includes(laudostatus)) {
+        alert("Selecione um status válido.");
+        return;
+      }
+
       const atualizado = await atualizarLaudo(laudoAtual.idlaudo, laudoAtual);
       setLaudos(laudos.map((l) => (l.idlaudo === atualizado.idlaudo ? atualizado : l)));
       setModal(null);
     } catch (err) {
-      console.error('Erro ao atualizar laudo:', err);
+      console.error("Erro ao atualizar laudo:", err);
     }
   };
 
