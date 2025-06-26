@@ -1,4 +1,6 @@
+import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
+
 import {
   Equipamento,
   getEquipamentos,
@@ -20,6 +22,7 @@ interface Sede {
 }
 
 export default function Equipamentos() {
+  const navigate = useNavigate();
   const [equipamentos, setEquipamentos] = useState<Equipamento[]>([]);
   const [tiposEquipamento, setTiposEquipamento] = useState<TipoEquipamento[]>([]);
   const [sedes, setSedes] = useState<Sede[]>([]);
@@ -188,24 +191,28 @@ export default function Equipamentos() {
 
   return (
     <div style={{ backgroundColor: '#f3f4f6', minHeight: '100vh', fontSize: '14px' }}>
-      
-
       <header className="header">
         <div className="header-left">
           <img src="/logo.png" alt="Logo" className="logo" />
           <nav className="nav">
-            <a href="#">HOME</a>
-            <a href="#">CLIENTES</a>
-            <a href="#" className="nav-active">EQUIPAMENTOS</a>
-            <a href="#">LAUDOS</a>
+            <a href="/clientes">HOME</a>
+            <a href="/clientes">CLIENTES</a>
+            <a href="/tipoeq">TIPO EQUIPAMENTO</a>
+            <a href="/tipoinstalacao">TIPO INSTALAÇÃO</a>
+            <a href="/tipolaudo">TIPO LAUDO</a>
+            <a href="/equipamentos" className="nav-active">EQUIPAMENTOS</a>
+            <a href="/laudo">LAUDOS</a>
           </nav>
         </div>
         <div className="header-right">
-          <span className="user-name">Rafael Marconi</span>
-          <button className="logout-btn">SAIR</button>
+          <button
+            className="logout-btn"
+            onClick={() => navigate('/login')}
+          >
+            SAIR
+          </button>
         </div>
       </header>
-
       <div className="table-container">
         <div className="table-header">
           <input

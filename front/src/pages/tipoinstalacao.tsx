@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './tipoinstalacao.css';
 
 import { getTiposInstalacao, createTipoInstalacao, updateTipoInstalacao, deleteTipoInstalacao } from '../service/tipoinstalacao-api';
@@ -9,6 +10,7 @@ interface TipoInstalacao {
 }
 
 export default function TipoInstalacao() {
+  const navigate = useNavigate();
   const [instalacoes, setInstalacoes] = useState<TipoInstalacao[]>([]);
   const [busca, setBusca] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -107,23 +109,28 @@ export default function TipoInstalacao() {
   return (
     <>
       {/* NAVBAR */}
-      <nav className="navbar">
-        <div className="navbar-left">
+      <header className="header">
+        <div className="header-left">
           <img src="/logo.png" alt="Logo" className="logo" />
-          <div className="nav-links">
-            <a href="#">HOME</a>
-            <a href="#">CLIENTES</a>
-            <a href="#">EQUIPAMENTOS</a>
-            <a href="#">LAUDOS</a>
-          </div>
+          <nav className="nav">
+            <a href="/clientes">HOME</a>
+            <a href="/clientes">CLIENTES</a>
+            <a href="/tipoeq">TIPO EQUIPAMENTO</a>
+            <a href="/tipoinstalacao">TIPO INSTALAÇÃO</a>
+            <a href="/tipolaudo">TIPO LAUDO</a>
+            <a href="/equipamentos" className="nav-active">EQUIPAMENTOS</a>
+            <a href="/laudo">LAUDOS</a>
+          </nav>
         </div>
-        <div className="navbar-right">
-          <span className="user-name">Rafael Marconi</span>
-          <div className="user-icon">👤</div>
-          <button className="logout">SAIR</button>
+          <div className="header-right">
+            <button
+              className="logout-btn"
+              onClick={() => navigate('/login')}
+            >
+              SAIR
+            </button>
         </div>
-      </nav>
-
+      </header>
       {/* LISTAGEM */}
       <div className="app-container">
         <div className="instalacoes-header">

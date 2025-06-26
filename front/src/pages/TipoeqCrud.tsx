@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { tipoEquipamentoSchema } from '../hooks/tipoEquipamentoSchema';
@@ -17,6 +18,7 @@ type TipoEqForm = {
 };
 
 const TipoeqCrud: React.FC = () => {
+  const navigate = useNavigate();
   const [tipos, setTipos] = useState<Tipoeq[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
@@ -81,6 +83,28 @@ const TipoeqCrud: React.FC = () => {
 
   return (
     <div className="container">
+      <header className="header">
+        <div className="header-left">
+          <img src="/logo.png" alt="Logo" className="logo" />
+          <nav className="nav">
+            <a href="/clientes">HOME</a>
+            <a href="/clientes">CLIENTES</a>
+            <a href="/tipoeq">TIPO EQUIPAMENTO</a>
+            <a href="/tipoinstalacao">TIPO INSTALAÇÃO</a>
+            <a href="/tipolaudo">TIPO LAUDO</a>
+            <a href="/equipamentos" className="nav-active">EQUIPAMENTOS</a>
+            <a href="/laudo">LAUDOS</a>
+          </nav>
+        </div>
+        <div className="header-right">
+          <button
+            className="logout-btn"
+            onClick={() => navigate('/login')}
+          >
+            SAIR
+          </button>
+        </div>
+      </header>
       <input
         type="text"
         className="search"

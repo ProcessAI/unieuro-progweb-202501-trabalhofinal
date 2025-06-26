@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './laudos.css';
 import Markdown from '../components/Markdown';
 import {
@@ -29,6 +30,7 @@ const laudoVazio: Omit<Laudo, 'idlaudo' | 'laudodatainclusao'> = {
 };
 
 const Laudos: React.FC = () => {
+  const navigate = useNavigate();
   const [laudos, setLaudos] = useState<Laudo[]>([]);
   const [modal, setModal] = useState<'novo' | 'editar' | 'visualizar' | 'excluir' | null>(null);
   const [laudoAtual, setLaudoAtual] = useState<
@@ -122,6 +124,28 @@ const Laudos: React.FC = () => {
 
   return (
     <div>
+      <header className="header">
+        <div className="header-left">
+          <img src="/logo.png" alt="Logo" className="logo" />
+          <nav className="nav">
+            <a href="/clientes">HOME</a>
+            <a href="/clientes">CLIENTES</a>
+            <a href="/tipoeq">TIPO EQUIPAMENTO</a>
+            <a href="/tipoinstalacao">TIPO INSTALAÇÃO</a>
+            <a href="/tipolaudo">TIPO LAUDO</a>
+            <a href="/equipamentos" className="nav-active">EQUIPAMENTOS</a>
+            <a href="/laudo">LAUDOS</a>
+          </nav>
+        </div>
+        <div className="header-right">
+          <button
+            className="logout-btn"
+            onClick={() => navigate('/login')}
+          >
+            SAIR
+          </button>
+        </div>
+      </header>
       <div
         className="top-bar"
         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: 16 }}
