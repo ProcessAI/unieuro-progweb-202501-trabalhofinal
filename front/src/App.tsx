@@ -12,8 +12,6 @@ import Laudos from './pages/laudos';
 import TipoLaudo from './pages/tipo-laudo';
 import TipoInstalacao from './pages/tipoinstalacao';
 
-
-
 import './App.css';
 
 function App() {
