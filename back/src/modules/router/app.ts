@@ -1,7 +1,6 @@
 //NOTE: Não retorne RES direto, retorne void, alguma coisa com o Express 5 causa erro de typagem
 // https://stackoverflow.com/questions/79071082/typescript-error-no-overload-matches-this-call-in-express-route-handler
 import express from 'express';
-import dotenv from 'dotenv'; // Importando dotenv para configuração de variáveis ambiente
 import cors from 'cors'; // para permitir requisições do front-end
 
 // importando os nossos Routes
@@ -15,8 +14,6 @@ import routeEquipamento from '../laudo/routes/RouteEquipamento';
 import enderecoRouter from '../laudo/routes/RouteEndereco';
 import sedeRoutes from '../laudo/routes/sede-routes';
 import protegidoRoutes from '../login/routes/auth-middleware-routes';
-
-import { authMiddleware } from '../login/auth-middleware';
 /* Materializando um objeto do nosso Servidor express */
 const app = express();
 
@@ -32,15 +29,15 @@ app.use(cors({
 app.use(express.json());
 
 /* Nossos Routes para cada Fucionalidade ou Serviço*/
-app.use('/api/laudos', authMiddleware, laudoRoutes);
-app.use('/api/tipoeq',authMiddleware,  tipoeqRoutes);
-app.use('/api/sede',authMiddleware, sedeRoutes);
-app.use('/api/cliente',authMiddleware, routeCliente);
-app.use('/api/endereco',authMiddleware, enderecoRouter);
-app.use('/api/tipo-instalacao',authMiddleware, tipoInstalacaoRoutes);
-app.use('/api/tipo-laudo',authMiddleware,tipoLaudoRoutes)
+app.use('/api/laudos',  laudoRoutes);
+app.use('/api/tipoeq',  tipoeqRoutes);
+app.use('/api/sede', sedeRoutes);
+app.use('/api/cliente', routeCliente);
+app.use('/api/endereco', enderecoRouter);
+app.use('/api/tipo-instalacao', tipoInstalacaoRoutes);
+app.use('/api/tipo-laudo',tipoLaudoRoutes)
 app.use('/api/auth', userRoutes);
-app.use('/api/protected',authMiddleware ,protegidoRoutes);
-app.use('/api/equipamento',authMiddleware,routeEquipamento);
+app.use('/api/protected',protegidoRoutes);
+app.use('/api/equipamento',routeEquipamento);
 
 export default app;
