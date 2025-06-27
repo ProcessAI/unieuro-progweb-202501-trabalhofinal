@@ -21,9 +21,6 @@ const Login: React.FC = () => {
 
       if (response.ok) {
         await response.json();
-        const data = await response.json();
-        const {token} = data;
-        localStorage.setItem('token', token);
         alert('Login realizado com sucesso!');
         navigate('/clientes');
       } else {
