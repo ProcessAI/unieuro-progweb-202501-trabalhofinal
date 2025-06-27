@@ -38,6 +38,8 @@ const Laudos: React.FC = () => {
   // Estado para armazenar os tipos carregados do backend
   const [tiposInstalacao, setTiposInstalacao] = useState<TipoInstalacao[]>([]);
   const [tiposLaudo, setTiposLaudo] = useState<TipoLaudo[]>([]);
+  const [errors, setErrors] = useState<{ descricao?: string; osClickup?: string }>({});
+
 
   // Função para carregar laudos, tipos de instalação e tipos de laudo
   useEffect(() => {
@@ -89,22 +91,35 @@ const Laudos: React.FC = () => {
 
   const criarLaudoHandler = async () => {
     try {
-      const { idtipolaudo, idtipoinstalacao, laudostatus } = laudoAtual;
+      const { idtipolaudo, idtipoinstalacao, laudostatus, laudodescricao, laudoosclickup } = laudoAtual;
+      const novosErros: typeof errors = {};
+
+      if (!laudodescricao.trim()) {
+        novosErros.descricao = "A descrição é obrigatória.";
+      }
+
+      if (!laudoosclickup.trim()) {
+        novosErros.osClickup = "O campo OS Clickup é obrigatório.";
+      }
 
       if (!idtipolaudo || idtipolaudo === 0) {
-        alert("Selecione um tipo de laudo válido.");
-        return;
+        novosErros.tipoLaudo = "Selecione um tipo de laudo válido.";
       }
 
       if (!idtipoinstalacao || idtipoinstalacao === 0) {
-        alert("Selecione um tipo de instalação válido.");
-        return;
+        novosErros.tipoInstalacao = "Selecione um tipo de instalação válido.";
       }
 
       if (!laudostatus || ![1, 2, 3].includes(laudostatus)) {
-        alert("Selecione um status válido.");
+        novosErros.status = "Selecione um status válido.";
+      }
+
+      if (Object.keys(novosErros).length > 0) {
+        setErrors(novosErros);
         return;
       }
+
+      setErrors({}); // limpa os erros anteriores
 
       const novo = await criarLaudo(laudoAtual);
       setLaudos([...laudos, novo]);
@@ -119,21 +134,34 @@ const Laudos: React.FC = () => {
       if (!('idlaudo' in laudoAtual)) return;
 
       const { idtipolaudo, idtipoinstalacao, laudostatus } = laudoAtual;
+      const novosErros: typeof errors = {};
 
       if (!idtipolaudo || idtipolaudo === 0) {
-        alert("Selecione um tipo de laudo válido.");
-        return;
+        novosErros.tipoLaudo = "Selecione um tipo de laudo válido.";
       }
 
       if (!idtipoinstalacao || idtipoinstalacao === 0) {
-        alert("Selecione um tipo de instalação válido.");
-        return;
+        novosErros.tipoInstalacao = "Selecione um tipo de instalação válido.";
       }
 
       if (!laudostatus || ![1, 2, 3].includes(laudostatus)) {
-        alert("Selecione um status válido.");
+        novosErros.status = "Selecione um status válido.";
+      }
+
+      if (!laudoAtual.laudodescricao.trim()) {
+        novosErros.descricao = "A descrição é obrigatória.";
+      }
+
+      if (!laudoAtual.laudoosclickup.trim()) {
+        novosErros.osClickup = "O campo OS Clickup é obrigatório.";
+      }
+
+      if (Object.keys(novosErros).length > 0) {
+        setErrors(novosErros);
         return;
       }
+
+      setErrors({});
 
       const atualizado = await atualizarLaudo(laudoAtual.idlaudo, laudoAtual);
       setLaudos(laudos.map((l) => (l.idlaudo === atualizado.idlaudo ? atualizado : l)));
@@ -193,11 +221,17 @@ const Laudos: React.FC = () => {
         <div className="modal">
           <div className="modal-content">
             <h2>{modal === 'novo' ? 'Novo Laudo Técnico' : 'Editar Laudo'}</h2>
-            <input
-              placeholder="Descrição"
-              value={'laudodescricao' in laudoAtual ? laudoAtual.laudodescricao : ''}
-              onChange={(e) => setLaudoAtual({ ...laudoAtual, laudodescricao: e.target.value } as any)}
-            />
+            <div className="input-wrapper">
+              <input
+                placeholder="Descrição"
+                className={errors.descricao ? 'input-error' : ''}
+                value={'laudodescricao' in laudoAtual ? laudoAtual.laudodescricao : ''}
+                onChange={(e) => setLaudoAtual({ ...laudoAtual, laudodescricao: e.target.value } as any)}
+              />
+              {errors.descricao && (
+                <span className="input-error-message">{errors.descricao}</span>
+              )}
+            </div>
 
             <input
               placeholder="Conteúdo Markdown"
@@ -206,51 +240,75 @@ const Laudos: React.FC = () => {
               style={{ display: 'none' }}
             />
 
-            <select
-              value={'idtipolaudo' in laudoAtual ? laudoAtual.idtipolaudo : 0}
-              onChange={(e) =>
-                setLaudoAtual({ ...laudoAtual, idtipolaudo: Number(e.target.value) } as any)
-              }
-            >
-              <option value={0}>Tipo de Laudo</option>
-              {tiposLaudo.map((tipo) => (
-                <option key={tipo.idtipolaudo} value={tipo.idtipolaudo}>
-                  {tipo.tipolaudonome}
-                </option>
-              ))}
-            </select>
+            <div className="input-wrapper">
+              <select
+                className={errors.tipoLaudo ? 'input-error' : ''}
+                value={'idtipolaudo' in laudoAtual ? laudoAtual.idtipolaudo : 0}
+                onChange={(e) =>
+                  setLaudoAtual({ ...laudoAtual, idtipolaudo: Number(e.target.value) } as any)
+                }
+              >
+                <option value={0}>Tipo de Laudo</option>
+                {tiposLaudo.map((tipo) => (
+                  <option key={tipo.idtipolaudo} value={tipo.idtipolaudo}>
+                    {tipo.tipolaudonome}
+                  </option>
+                ))}
+              </select>
+              {errors.tipoLaudo && (
+                <span className="input-error-message">{errors.tipoLaudo}</span>
+              )}
+            </div>
 
-            <select
-              value={'idtipoinstalacao' in laudoAtual ? laudoAtual.idtipoinstalacao : 0}
-              onChange={(e) =>
-                setLaudoAtual({ ...laudoAtual, idtipoinstalacao: Number(e.target.value) } as any)
-              }
-            >
-              <option value={0}>Tipo de Instalação</option>
-              {tiposInstalacao.map((tipo) => (
-                <option key={tipo.idtipoinstalacao} value={tipo.idtipoinstalacao}>
-                  {tipo.tipoinstalacaonome}
-                </option>
-              ))}
-            </select>
+            <div className="input-wrapper">
+              <select
+                className={errors.tipoInstalacao ? 'input-error' : ''}
+                value={'idtipoinstalacao' in laudoAtual ? laudoAtual.idtipoinstalacao : 0}
+                onChange={(e) =>
+                  setLaudoAtual({ ...laudoAtual, idtipoinstalacao: Number(e.target.value) } as any)
+                }
+              >
+                <option value={0}>Tipo de Instalação</option>
+                {tiposInstalacao.map((tipo) => (
+                  <option key={tipo.idtipoinstalacao} value={tipo.idtipoinstalacao}>
+                    {tipo.tipoinstalacaonome}
+                  </option>
+                ))}
+              </select>
+              {errors.tipoInstalacao && (
+                <span className="input-error-message">{errors.tipoInstalacao}</span>
+              )}
+            </div>
 
-            <select
-              value={'laudostatus' in laudoAtual ? laudoAtual.laudostatus : 0}
-              onChange={(e) =>
-                setLaudoAtual({ ...laudoAtual, laudostatus: Number(e.target.value) } as any)
-              }
-            >
-              <option value={0}>Status</option>
-              <option value={1}>Pendente</option>
-              <option value={2}>Em andamento</option>
-              <option value={3}>Finalizado</option>
-            </select>
+            <div className="input-wrapper">
+              <select
+                className={errors.status ? 'input-error' : ''}
+                value={'laudostatus' in laudoAtual ? laudoAtual.laudostatus : 0}
+                onChange={(e) =>
+                  setLaudoAtual({ ...laudoAtual, laudostatus: Number(e.target.value) } as any)
+                }
+              >
+                <option value={0}>Status</option>
+                <option value={1}>Pendente</option>
+                <option value={2}>Em andamento</option>
+                <option value={3}>Finalizado</option>
+              </select>
+              {errors.status && (
+                <span className="input-error-message">{errors.status}</span>
+              )}
+            </div>
 
-            <input
-              placeholder="OS Clickup"
-              value={'laudoosclickup' in laudoAtual ? laudoAtual.laudoosclickup ?? '' : ''}
-              onChange={(e) => setLaudoAtual({ ...laudoAtual, laudoosclickup: e.target.value } as any)}
-            />
+            <div className="input-wrapper">
+              <input
+                placeholder="OS Clickup"
+                className={errors.osClickup ? 'input-error' : ''}
+                value={'laudoosclickup' in laudoAtual ? laudoAtual.laudoosclickup ?? '' : ''}
+                onChange={(e) => setLaudoAtual({ ...laudoAtual, laudoosclickup: e.target.value } as any)}
+              />
+              {errors.osClickup && (
+                <span className="input-error-message">{errors.osClickup}</span>
+              )}
+            </div>
 
             <div className="form-group">
               <label className="form-label">Horário de Fechamento:</label>
@@ -262,7 +320,6 @@ const Laudos: React.FC = () => {
                 }
               />
             </div>
-
 
             <Markdown
               value={'laudohtmlmd' in laudoAtual ? laudoAtual.laudohtmlmd : ''}
