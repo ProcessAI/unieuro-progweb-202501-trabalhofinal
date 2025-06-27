@@ -31,15 +31,15 @@ app.use(cors({
 app.use(express.json());
 
 /* Nossos Routes para cada Fucionalidade ou Serviço*/
-app.use('/api/laudos', laudoRoutes);
-app.use('/api/tipoeq', tipoeqRoutes);
-app.use('/api/sede', sedeRoutes);
-app.use('/api/cliente', routeCliente);
-app.use('/api/endereco', enderecoRouter);
-app.use('/api/tipo-instalacao', tipoInstalacaoRoutes);
-app.use('/api/tipo-laudo',tipoLaudoRoutes)
-app.use('/api/auth', userRoutes);
-app.use('/api/protected', protegidoRoutes);
-app.use('/api/equipamento',routeEquipamento);
+app.use('/laudos', laudoRoutes);
+app.use('/tipoeq', tipoeqRoutes);
+app.use('/sede', sedeRoutes);
+app.use('/cliente', routeCliente);
+app.use('/endereco', enderecoRouter);
+app.use('/tipo-instalacao', tipoInstalacaoRoutes);
+app.use('/tipo-laudo',tipoLaudoRoutes)
+app.use('/auth', userRoutes);
+app.use('/protected', protegidoRoutes);
+app.use('/equipamento',routeEquipamento);
 
 export default app;
