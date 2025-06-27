@@ -32,15 +32,15 @@ app.use(cors({
 app.use(express.json());
 
 /* Nossos Routes para cada Fucionalidade ou Serviço*/
-app.use('/laudos', authMiddleware, laudoRoutes);
-app.use('/tipoeq',authMiddleware,  tipoeqRoutes);
-app.use('/sede',authMiddleware, sedeRoutes);
-app.use('/cliente',authMiddleware, routeCliente);
-app.use('/endereco',authMiddleware, enderecoRouter);
-app.use('/tipo-instalacao',authMiddleware, tipoInstalacaoRoutes);
-app.use('/tipo-laudo',authMiddleware,tipoLaudoRoutes)
-app.use('/auth', userRoutes);
-app.use('/protected',authMiddleware ,protegidoRoutes);
-app.use('/equipamento',authMiddleware,routeEquipamento);
+app.use('/api/laudos', authMiddleware, laudoRoutes);
+app.use('/api/tipoeq',authMiddleware,  tipoeqRoutes);
+app.use('/api/sede',authMiddleware, sedeRoutes);
+app.use('/api/cliente',authMiddleware, routeCliente);
+app.use('/api/endereco',authMiddleware, enderecoRouter);
+app.use('/api/tipo-instalacao',authMiddleware, tipoInstalacaoRoutes);
+app.use('/api/tipo-laudo',authMiddleware,tipoLaudoRoutes)
+app.use('/api/auth', userRoutes);
+app.use('/api/protected',authMiddleware ,protegidoRoutes);
+app.use('/api/equipamento',authMiddleware,routeEquipamento);
 
 export default app;
