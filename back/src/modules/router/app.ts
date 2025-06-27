@@ -16,6 +16,7 @@ import enderecoRouter from '../laudo/routes/RouteEndereco';
 import sedeRoutes from '../laudo/routes/sede-routes';
 import protegidoRoutes from '../login/routes/auth-middleware-routes';
 
+import { authMiddleware } from '../login/auth-middleware';
 /* Materializando um objeto do nosso Servidor express */
 const app = express();
 
@@ -31,15 +32,15 @@ app.use(cors({
 app.use(express.json());
 
 /* Nossos Routes para cada Fucionalidade ou Serviço*/
-app.use('/laudos', laudoRoutes);
-app.use('/tipoeq', tipoeqRoutes);
-app.use('/sede', sedeRoutes);
-app.use('/cliente', routeCliente);
-app.use('/endereco', enderecoRouter);
-app.use('/tipo-instalacao', tipoInstalacaoRoutes);
-app.use('/tipo-laudo',tipoLaudoRoutes)
+app.use('/laudos', authMiddleware, laudoRoutes);
+app.use('/tipoeq',authMiddleware,  tipoeqRoutes);
+app.use('/sede',authMiddleware, sedeRoutes);
+app.use('/cliente',authMiddleware, routeCliente);
+app.use('/endereco',authMiddleware, enderecoRouter);
+app.use('/tipo-instalacao',authMiddleware, tipoInstalacaoRoutes);
+app.use('/tipo-laudo',authMiddleware,tipoLaudoRoutes)
 app.use('/auth', userRoutes);
-app.use('/protected', protegidoRoutes);
-app.use('/equipamento',routeEquipamento);
+app.use('/protected',authMiddleware ,protegidoRoutes);
+app.use('/equipamento',authMiddleware,routeEquipamento);
 
 export default app;
