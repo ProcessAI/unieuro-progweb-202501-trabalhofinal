@@ -77,10 +77,6 @@ const Login: React.FC = () => {
               </button>
             </div>
 
-            <div className="login-links">
-              Esqueceu a senha? <a href="#">Clique aqui!</a>
-            </div>
-
             <button className="login-btn" type="submit">Entrar</button>
             <button
               className="login-btn"
