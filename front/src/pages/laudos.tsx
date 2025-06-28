@@ -110,10 +110,6 @@ const Laudos: React.FC = () => {
         novosErros.tipoInstalacao = "Selecione um tipo de instalação válido.";
       }
 
-      if (!laudostatus || ![1, 2, 3].includes(laudostatus)) {
-        novosErros.status = "Selecione um status válido.";
-      }
-
       if (Object.keys(novosErros).length > 0) {
         setErrors(novosErros);
         return;
@@ -121,7 +117,12 @@ const Laudos: React.FC = () => {
 
       setErrors({}); // limpa os erros anteriores
 
-      const novo = await criarLaudo(laudoAtual);
+      const novo = await criarLaudo({
+        ...laudoAtual,
+        laudostatus: 2, // Em andamento
+      });
+
+      
       setLaudos([...laudos, novo]);
       setModal(null);
     } catch (err) {
@@ -282,23 +283,26 @@ const Laudos: React.FC = () => {
               )}
             </div>
 
-            <div className="input-wrapper">
-              <select
-                className={errors.status ? 'input-error' : ''}
-                value={'laudostatus' in laudoAtual ? laudoAtual.laudostatus : 0}
-                onChange={(e) =>
-                  setLaudoAtual({ ...laudoAtual, laudostatus: Number(e.target.value) } as any)
-                }
-              >
-                <option value={0}>Status</option>
-                <option value={1}>Pendente</option>
-                <option value={2}>Em andamento</option>
-                <option value={3}>Finalizado</option>
-              </select>
-              {errors.status && (
-                <span className="input-error-message">{errors.status}</span>
-              )}
-            </div>
+            {modal === 'editar' && (
+              <div className="input-wrapper">
+                <select
+                  className={errors.status ? 'input-error' : ''}
+                  value={'laudostatus' in laudoAtual ? laudoAtual.laudostatus : 2}
+                  onChange={(e) =>
+                    setLaudoAtual({ ...laudoAtual, laudostatus: Number(e.target.value) } as any)
+                  }
+                >
+                  <option value={0}>Status</option>
+                  <option value={1}>Pendente</option>
+                  <option value={2}>Em andamento</option>
+                  <option value={3}>Finalizado</option>
+                </select>
+                {errors.status && (
+                  <span className="input-error-message">{errors.status}</span>
+                )}
+              </div>
+            )}
+
 
             <div className="input-wrapper">
               <input
