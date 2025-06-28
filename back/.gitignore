@@ -5,6 +5,7 @@
 
 # ignorar arquivos de ambiente de variáveis
 *.env
+.env
 
 # ignorar client gerado pelo prisma
 .prisma/

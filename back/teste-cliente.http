@@ -1,2 +1,2 @@
 ### Listar clientes
-GET http://localhost:8080/api/cliente/atualizarCliente/:id
+GET http://localhost:8080/api/cliente/listarCliente

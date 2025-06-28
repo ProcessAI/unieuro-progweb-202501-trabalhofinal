@@ -13,7 +13,7 @@ const Login: React.FC = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch('https://laudinho.cleversystems.net/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ usuarioemail: email, usuariosenha: senha }),
@@ -75,10 +75,6 @@ const Login: React.FC = () => {
               >
                 {mostrarSenha ? '👁️' : '👁️'}
               </button>
-            </div>
-
-            <div className="login-links">
-              Esqueceu a senha? <a href="#">Clique aqui!</a>
             </div>
 
             <button className="login-btn" type="submit">Entrar</button>

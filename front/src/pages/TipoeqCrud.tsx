@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { tipoEquipamentoSchema } from '../hooks/tipoEquipamentoSchema';
@@ -13,6 +14,7 @@ import './TipoeqCrud.css';
 import toast from 'react-hot-toast';
 
 const TipoeqCrud: React.FC = () => {
+  const navigate = useNavigate();
   const [tipos, setTipos] = useState<Tipoeq[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);

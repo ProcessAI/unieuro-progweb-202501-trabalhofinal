@@ -13,20 +13,20 @@ export async function createSede(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const todasSedes = await sedeManager.findAll();
-    const nomeExistente = todasSedes.find(
-      (s) => s.sedenome.toLowerCase() === sedenome.toLowerCase()
+    const sedesDoCliente = await sedeManager.findByClienteId(idcliente);
+    const nomeExistente = sedesDoCliente.find(
+      s => s.sedenome.toLowerCase() === sedenome.toLowerCase()
     );
 
     if (nomeExistente) {
-      res.status(409).json({ message: 'Já existe uma sede com esse nome' });
+      res.status(409).json({ message: 'Já existe uma sede com esse nome para este cliente' });
       return;
     }
 
     const sedeData = {
       sedenome,
       idcliente,
-      ...(sedestatus !== undefined && { sedestatus })
+      ...(sedestatus !== undefined && { sedestatus }),
     };
 
     const newSede = await sedeManager.create(sedeData);
@@ -44,11 +44,10 @@ export async function getAllSedes(req: Request, res: Response): Promise<void> {
 
     const sedesFormatadas = sedes.map(sede => {
       let dataFormatada: string | null = null;
-
       if (sede.sededtinclusao) {
         const data = new Date(sede.sededtinclusao);
         const dia = String(data.getDate()).padStart(2, '0');
-        const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês começa em 0
+        const mes = String(data.getMonth() + 1).padStart(2, '0');
         const ano = data.getFullYear();
         dataFormatada = `${dia}/${mes}/${ano}`;
       }
@@ -66,11 +65,9 @@ export async function getAllSedes(req: Request, res: Response): Promise<void> {
   }
 }
 
-
 // Buscar sede por ID
 export async function getSedeById(req: Request, res: Response): Promise<void> {
-  const id = parseInt(req.params.id);
-
+  const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
     res.status(400).json({ message: 'ID inválido' });
     return;
@@ -78,14 +75,12 @@ export async function getSedeById(req: Request, res: Response): Promise<void> {
 
   try {
     const sede = await sedeManager.findById(id);
-
     if (!sede) {
       res.status(404).json({ message: 'Sede não encontrada' });
       return;
     }
 
     let dataFormatada: string | null = null;
-
     if (sede.sededtinclusao) {
       const data = new Date(sede.sededtinclusao);
       const dia = String(data.getDate()).padStart(2, '0');
@@ -94,12 +89,7 @@ export async function getSedeById(req: Request, res: Response): Promise<void> {
       dataFormatada = `${dia}/${mes}/${ano}`;
     }
 
-    const sedeFormatada = {
-      ...sede,
-      sededtinclusao: dataFormatada,
-    };
-
-    res.status(200).json(sedeFormatada);
+    res.status(200).json({ ...sede, sededtinclusao: dataFormatada });
   } catch (error) {
     console.error('Erro em getSedeById:', error);
     res.status(500).json({ message: 'Erro ao buscar sede por ID', error });
@@ -108,40 +98,38 @@ export async function getSedeById(req: Request, res: Response): Promise<void> {
 
 // Atualizar sede
 export async function updateSede(req: Request, res: Response): Promise<void> {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id, 10);
   const { sedenome, sedestatus } = req.body;
 
   if (isNaN(id)) {
     res.status(400).json({ message: 'ID inválido' });
     return;
   }
-
   if (!sedenome && sedestatus === undefined) {
     res.status(400).json({ message: 'Nenhum campo fornecido para atualização' });
     return;
   }
 
   try {
-    // Verifica se a sede existe
     const existingSede = await sedeManager.findById(id);
     if (!existingSede) {
       res.status(404).json({ message: 'Sede não encontrada' });
       return;
     }
 
-    // Se sedenome for informado, valida se já existe em outra sede
     if (sedenome) {
-      const allSedes = await sedeManager.findAll();
-      const nomeDuplicado = allSedes.find(
-        (s) => s.sedenome.toLowerCase() === sedenome.toLowerCase() && s.idsede !== id
+      const allSedesDoCliente = await sedeManager.findByClienteId(existingSede.idcliente);
+      const nomeDuplicado = allSedesDoCliente.find(
+        s => s.sedenome.toLowerCase() === sedenome.toLowerCase() && s.idsede !== id
       );
+
       if (nomeDuplicado) {
-        res.status(409).json({ message: 'Já existe uma sede com esse nome' });
+        res.status(409).json({ message: 'Já existe uma sede com esse nome para este cliente' });
         return;
       }
     }
 
-    const sedeData: any = {};
+    const sedeData: { sedenome?: string; sedestatus?: number } = {};
     if (sedenome) sedeData.sedenome = sedenome;
     if (sedestatus !== undefined) sedeData.sedestatus = sedestatus;
 
@@ -155,8 +143,7 @@ export async function updateSede(req: Request, res: Response): Promise<void> {
 
 // Deletar sede
 export async function deleteSede(req: Request, res: Response): Promise<void> {
-  const id = parseInt(req.params.id);
-
+  const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
     res.status(400).json({ message: 'ID inválido' });
     return;
@@ -173,8 +160,7 @@ export async function deleteSede(req: Request, res: Response): Promise<void> {
 
 // Buscar sedes por ID do cliente
 export async function getSedesByClienteId(req: Request, res: Response): Promise<void> {
-  const idcliente = parseInt(req.params.idcliente);
-
+  const idcliente = parseInt(req.params.idcliente, 10);
   if (isNaN(idcliente)) {
     res.status(400).json({ message: 'ID do cliente inválido' });
     return;

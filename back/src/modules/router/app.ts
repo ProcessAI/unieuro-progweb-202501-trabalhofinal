@@ -1,7 +1,6 @@
 //NOTE: Não retorne RES direto, retorne void, alguma coisa com o Express 5 causa erro de typagem
 // https://stackoverflow.com/questions/79071082/typescript-error-no-overload-matches-this-call-in-express-route-handler
 import express from 'express';
-import dotenv from 'dotenv'; // Importando dotenv para configuração de variáveis ambiente
 import cors from 'cors'; // para permitir requisições do front-end
 
 // importando os nossos Routes
@@ -15,13 +14,6 @@ import routeEquipamento from '../laudo/routes/RouteEquipamento';
 import enderecoRouter from '../laudo/routes/RouteEndereco';
 import sedeRoutes from '../laudo/routes/sede-routes';
 import protegidoRoutes from '../login/routes/auth-middleware-routes';
-
-// Basicamente serve para treazer configuração de ambiente para o nosso código
-dotenv.config();
-
-//const PORT = process.env.PORT || 3000;
-const PORT = 8080;
-
 /* Materializando um objeto do nosso Servidor express */
 const app = express();
 
@@ -32,25 +24,20 @@ app.use(cors({
   credentials: true
 }));
 
-
 /* Middleware para aceitar requisições JSON e habilitar CORS */
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+
 
 /* Nossos Routes para cada Fucionalidade ou Serviço*/
-app.use('/api/laudos', laudoRoutes);
-app.use('/api/tipoeq', tipoeqRoutes);
+app.use('/api/laudos',  laudoRoutes);
+app.use('/api/tipoeq',  tipoeqRoutes);
 app.use('/api/sede', sedeRoutes);
 app.use('/api/cliente', routeCliente);
 app.use('/api/endereco', enderecoRouter);
 app.use('/api/tipo-instalacao', tipoInstalacaoRoutes);
 app.use('/api/tipo-laudo',tipoLaudoRoutes)
 app.use('/api/auth', userRoutes);
-app.use('/api/protected', protegidoRoutes);
+app.use('/api/protected',protegidoRoutes);
 app.use('/api/equipamento',routeEquipamento);
-
-/* Criando o nosso servidor express */
-app.listen(PORT, (): void => {
-    console.log(`SERVIDOR RODANDO NA PORTA: ${PORT}!`);
-});
 
 export default app;

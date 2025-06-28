@@ -1,4 +1,6 @@
+import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
+
 import {
   Equipamento,
   getEquipamentos,
@@ -20,6 +22,7 @@ interface Sede {
 }
 
 export default function Equipamentos() {
+  const navigate = useNavigate();
   const [equipamentos, setEquipamentos] = useState<Equipamento[]>([]);
   const [tiposEquipamento, setTiposEquipamento] = useState<TipoEquipamento[]>([]);
   const [sedes, setSedes] = useState<Sede[]>([]);
@@ -64,8 +67,8 @@ export default function Equipamentos() {
       try {
         const [dadosEquip, dadosTipos, dadosSedes] = await Promise.all([
           getEquipamentos(),
-          fetch("http://localhost:8080/api/tiposequipamentos").then(res => res.json()),
-          fetch("http://localhost:8080/api/sedes").then(res => res.json())
+          fetch("https://laudinho.cleversystems.net/api/tipoeq/listarTipoEquipamento").then(res => res.json()),
+          fetch("https://laudinho.cleversystems.net/api/sede").then(res => res.json())
         ]);
         setEquipamentos(dadosEquip);
         setTiposEquipamento(dadosTipos);
@@ -106,10 +109,10 @@ export default function Equipamentos() {
         dw: "",
         mac: ""
       });
-      alert("Cliente criado com sucesso!");
+      alert("Equipamento criado com sucesso!");
     } catch (error) {
       console.error("Erro ao criar equipamento:", error);
-      alert("Erro ao criar equipamento, clique f12 e va no console e veja qual é o error!");
+      alert("Preencha os dados para poder cadastrar o equipamento!");
     }
   };
 
@@ -188,24 +191,28 @@ export default function Equipamentos() {
 
   return (
     <div style={{ backgroundColor: '#f3f4f6', minHeight: '100vh', fontSize: '14px' }}>
-      
-
       <header className="header">
         <div className="header-left">
           <img src="/logo.png" alt="Logo" className="logo" />
           <nav className="nav">
-            <a href="#">HOME</a>
-            <a href="#">CLIENTES</a>
-            <a href="#" className="nav-active">EQUIPAMENTOS</a>
-            <a href="#">LAUDOS</a>
+            <a href="/clientes">HOME</a>
+            <a href="/clientes">CLIENTES</a>
+            <a href="/tipoeq">TIPO EQUIPAMENTO</a>
+            <a href="/tipoinstalacao">TIPO INSTALAÇÃO</a>
+            <a href="/tipolaudo">TIPO LAUDO</a>
+            <a href="/equipamentos" className="nav-active">EQUIPAMENTOS</a>
+            <a href="/laudo">LAUDOS</a>
           </nav>
         </div>
         <div className="header-right">
-          <span className="user-name">Rafael Marconi</span>
-          <button className="logout-btn">SAIR</button>
+          <button
+            className="logout-btn"
+            onClick={() => navigate('/login')}
+          >
+            SAIR
+          </button>
         </div>
       </header>
-
       <div className="table-container">
         <div className="table-header">
           <input
@@ -300,14 +307,22 @@ export default function Equipamentos() {
                   onChange={(e) => setNovoEquipamento({ ...novoEquipamento, ipv6: e.target.value })} 
                 />
               </div>
-              <div className="form-group">
+             <div className="form-group">
                 <label className="form-label">Tipo de Equipamento</label>
-                <input 
-                  className="input" 
-                  placeholder="Ex: Gerador Diesel" 
-                  value={novoEquipamento.tipo} 
-                  onChange={(e) => setNovoEquipamento({ ...novoEquipamento, tipo: e.target.value })} 
-                />
+                <select
+                  className="input"
+                  value={novoEquipamento.tipo}
+                  onChange={(e) =>
+                    setNovoEquipamento({ ...novoEquipamento, tipo: e.target.value })
+                  }
+                >
+                  <option value="">Selecione o tipo</option>
+                  {tiposEquipamento.map((tipo) => (
+                    <option key={tipo.idtipoeq} value={tipo.tipoeqnome}>
+                      {tipo.tipoeqnome}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="form-group">
                 <label className="form-label">AnyDesk</label>

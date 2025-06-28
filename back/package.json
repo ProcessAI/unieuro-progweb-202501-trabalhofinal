@@ -2,11 +2,11 @@
   "name": "back",
   "version": "1.0.0",
   "description": "",
-  "main": "src/modules/router/app.ts",
+  "main": "src/index.ts",
   "type": "commonjs",
   "scripts": {
-    "dev": "tsx watch src/modules/router/app.ts",
-    "dev:main": "tsx watch src/modules/router/app.ts",
+    "dev": "tsx watch src/index.ts",
+    "dev:main": "tsx watch src/index.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prisma:generate": "npx prisma generate --schema=prisma/schema.prisma",
@@ -28,8 +28,10 @@
     "pg": "^8.16.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.15.31",
     "globals": "^16.2.0",
     "prisma": "^6.9.0",

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './laudos.css';
 import Markdown from '../components/Markdown';
 import {
@@ -7,6 +8,7 @@ import {
   atualizarLaudo,
   deletarLaudo,
   Laudo,
+  LaudoWithImages
 } from '../service/laudos-api';
 
 interface TipoInstalacao {
@@ -19,26 +21,32 @@ interface TipoLaudo {
   tipolaudonome: string;
 }
 
-const laudoVazio: Omit<Laudo, 'idlaudo' | 'laudodatainclusao'> = {
+const laudoVazio: Omit<LaudoWithImages, 'idlaudo' | 'laudodatainclusao'> = {
   laudodescricao: '',
   laudohtmlmd: '',
   idtipolaudo: 0,
   idtipoinstalacao: 0,
   laudoosclickup: '',
   laudofechamento: '',
+  laudostatus: 0,
+  imagens: {}
 };
 
 const Laudos: React.FC = () => {
-  const [laudos, setLaudos] = useState<Laudo[]>([]);
+  const navigate = useNavigate();
+  const [laudos, setLaudos] = useState<LaudoWithImages[]>([]);
   const [modal, setModal] = useState<'novo' | 'editar' | 'visualizar' | 'excluir' | null>(null);
+
   const [laudoAtual, setLaudoAtual] = useState<
-    Laudo | Omit<Laudo, 'idlaudo' | 'laudodatainclusao'>
+    LaudoWithImages | Omit<LaudoWithImages, 'idlaudo' | 'laudodatainclusao'>
   >(laudoVazio);
 
   // Estado para armazenar os tipos carregados do backend
   const [tiposInstalacao, setTiposInstalacao] = useState<TipoInstalacao[]>([]);
   const [tiposLaudo, setTiposLaudo] = useState<TipoLaudo[]>([]);
-  const [errors, setErrors] = useState<{ descricao?: string; osClickup?: string }>({});
+  const [errors, setErrors] = useState<{ descricao?: string; osClickup?: string; 
+    tipoLaudo?: string; tipoInstalacao?: string; status?: string
+   }>({});
 
 
   // Função para carregar laudos, tipos de instalação e tipos de laudo
@@ -72,7 +80,7 @@ const Laudos: React.FC = () => {
     setLaudoAtual(laudoVazio);
     setModal('novo');
   };
-  const abrirEditar = (laudo: Laudo) => {
+  const abrirEditar = (laudo: LaudoWithImages) => {
     if (laudo.laudostatus === 3) {
       alert("Este laudo está finalizado e não pode mais ser editado.");
       return;
@@ -81,21 +89,55 @@ const Laudos: React.FC = () => {
     setLaudoAtual(laudo);
     setModal("editar");
   };
-  const abrirVisualizar = (laudo: Laudo) => {
+  const abrirVisualizar = (laudo: LaudoWithImages) => {
     setLaudoAtual(laudo);
     setModal('visualizar');
   };
-  const abrirExcluir = (laudo: Laudo) => {
+  const abrirExcluir = (laudo: LaudoWithImages) => {
     setLaudoAtual(laudo);
     setModal('excluir');
   };
 
+  // Referência para o componente Markdown para acessar o estado interno
+  const markdownRef = useRef<any>(null);
+
+  // Função para atualizar o markdown em tempo real
   const handleMarkdownChange = (conteudo: string) => {
-    setLaudoAtual({ ...laudoAtual, laudohtmlmd: conteudo });
+    setLaudoAtual(prev => ({ 
+      ...prev, 
+      laudohtmlmd: conteudo 
+    }));
+  };
+
+  // Função para salvar o markdown e imagens automaticamente
+  const handleMarkdownSave = (conteudo: string, imagens: Record<string, string>) => {
+    setLaudoAtual(prev => ({ 
+      ...prev, 
+      laudohtmlmd: conteudo, 
+      imagens: imagens 
+    }));
+    console.log('Markdown salvo automaticamente:', { conteudo, imagens });
+  };
+
+  // Função para forçar a sincronização do markdown antes de salvar
+  const sincronizarMarkdown = () => {
+    if (markdownRef.current) {
+      const { markdown, imagens } = markdownRef.current.getEstadoAtual();
+      setLaudoAtual(prev => ({
+        ...prev,
+        laudohtmlmd: markdown,
+        imagens: imagens
+      }));
+      return { markdown, imagens };
+    }
+    return null;
   };
 
   const criarLaudoHandler = async () => {
     try {
+      // Sincroniza o markdown antes de salvar
+      sincronizarMarkdown();
+      
       const { idtipolaudo, idtipoinstalacao, laudostatus, laudodescricao, laudoosclickup } = laudoAtual;
       const novosErros: typeof errors = {};
 
@@ -103,7 +145,7 @@ const Laudos: React.FC = () => {
         novosErros.descricao = "A descrição é obrigatória.";
       }
 
-      if (!laudoosclickup.trim()) {
+      if (!laudoosclickup?.trim()) {
         novosErros.osClickup = "O campo OS Clickup é obrigatório.";
       }
 
@@ -139,6 +181,9 @@ const Laudos: React.FC = () => {
     try {
       if (!('idlaudo' in laudoAtual)) return;
 
+      // Sincroniza o markdown antes de salvar
+      sincronizarMarkdown();
+
       const { idtipolaudo, idtipoinstalacao, laudostatus } = laudoAtual;
       const novosErros: typeof errors = {};
 
@@ -158,7 +203,7 @@ const Laudos: React.FC = () => {
         novosErros.descricao = "A descrição é obrigatória.";
       }
 
-      if (!laudoAtual.laudoosclickup.trim()) {
+      if (!laudoAtual.laudoosclickup?.trim()) {
         novosErros.osClickup = "O campo OS Clickup é obrigatório.";
       }
 
@@ -191,6 +236,28 @@ const Laudos: React.FC = () => {
   const laudoFinalizado = modal === 'editar' && laudoAtual.laudostatus === 3;
   return (
     <div>
+      <header className="header">
+        <div className="header-left">
+          <img src="/logo.png" alt="Logo" className="logo" />
+          <nav className="nav">
+            <a href="/clientes">HOME</a>
+            <a href="/clientes">CLIENTES</a>
+            <a href="/tipoeq">TIPO EQUIPAMENTO</a>
+            <a href="/tipoinstalacao">TIPO INSTALAÇÃO</a>
+            <a href="/tipolaudo">TIPO LAUDO</a>
+            <a href="/equipamentos" className="nav-active">EQUIPAMENTOS</a>
+            <a href="/laudo">LAUDOS</a>
+          </nav>
+        </div>
+        <div className="header-right">
+          <button
+            className="logout-btn"
+            onClick={() => navigate('/login')}
+          >
+            SAIR
+          </button>
+        </div>
+      </header>
       <div
         className="top-bar"
         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: 16 }}
@@ -333,7 +400,13 @@ const Laudos: React.FC = () => {
               <input
                 type="time"
                 disabled={laudoFinalizado}
-                value={laudoAtual.laudofechamento ?? ''}
+                value={
+                  typeof laudoAtual.laudofechamento === 'string'
+                    ? laudoAtual.laudofechamento
+                    : laudoAtual.laudofechamento
+                      ? laudoAtual.laudofechamento.toISOString().substring(11, 16)
+                      : ''
+                }
                 onChange={(e) =>
                   setLaudoAtual({ ...laudoAtual, laudofechamento: e.target.value })
                 }
@@ -411,7 +484,10 @@ const Laudos: React.FC = () => {
             </div>
             <div style={{ border: '1px solid #ccc', padding: '10px', marginTop: '5px' }}>
               {'laudohtmlmd' in laudoAtual && laudoAtual.laudohtmlmd ? (
-                <Markdown value={laudoAtual.laudohtmlmd} />
+                <Markdown 
+                  value={laudoAtual.laudohtmlmd} 
+                  mode="somente-leitura"
+                />
               ) : (
                 'Nenhum conteúdo'
               )}
@@ -426,13 +502,13 @@ const Laudos: React.FC = () => {
             >
               <button
                 style={{ background: '#FFD600' }}
-                onClick={() => abrirEditar(laudoAtual as Laudo)}
+                onClick={() => abrirEditar(laudoAtual as LaudoWithImages)}
               >
                 Editar
               </button>
               <button
                 style={{ background: '#F44336', color: '#fff' }}
-                onClick={() => abrirExcluir(laudoAtual as Laudo)}
+                onClick={() => abrirExcluir(laudoAtual as LaudoWithImages)}
               >
                 Excluir
               </button>
