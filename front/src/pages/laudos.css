@@ -19,6 +19,29 @@
  box-shadow: 0 2px 16px #0003;
 }
 
+.modal-content.modal-excluir {
+  width: 100%;
+  max-width: 300px;
+  padding: 24px;
+  text-align: center;
+  height: auto !important;
+  max-height: none !important;
+}
+
+.modal-content.modal-excluir h2 {
+  margin-bottom: 12px;
+}
+
+.modal-content.modal-excluir p {
+  margin-bottom: 20px;
+}
+
+.modal-content.modal-excluir button {
+  width: 100%;
+  margin-top: 8px;
+}
+
+
 input, select, textarea {
  display: block;
  width: 100%;

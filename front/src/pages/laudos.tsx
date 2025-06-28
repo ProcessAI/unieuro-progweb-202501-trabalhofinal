@@ -446,7 +446,7 @@ const Laudos: React.FC = () => {
 
       {modal === 'excluir' && (
         <div className="modal">
-          <div className="modal-content">
+          <div className="modal-content modal-excluir">
             <h2>Confirmar Exclusão</h2>
             <p>Tem certeza que deseja excluir este laudo?</p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
