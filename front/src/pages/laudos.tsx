@@ -73,8 +73,13 @@ const Laudos: React.FC = () => {
     setModal('novo');
   };
   const abrirEditar = (laudo: Laudo) => {
+    if (laudo.laudostatus === 3) {
+      alert("Este laudo está finalizado e não pode mais ser editado.");
+      return;
+    }
+
     setLaudoAtual(laudo);
-    setModal('editar');
+    setModal("editar");
   };
   const abrirVisualizar = (laudo: Laudo) => {
     setLaudoAtual(laudo);
@@ -183,6 +188,7 @@ const Laudos: React.FC = () => {
     }
   };
 
+  const laudoFinalizado = modal === 'editar' && laudoAtual.laudostatus === 3;
   return (
     <div>
       <div
@@ -227,6 +233,7 @@ const Laudos: React.FC = () => {
             <div className="input-wrapper">
               <input
                 placeholder="Descrição"
+                disabled={laudoFinalizado}
                 className={errors.descricao ? 'input-error' : ''}
                 value={'laudodescricao' in laudoAtual ? laudoAtual.laudodescricao : ''}
                 onChange={(e) => setLaudoAtual({ ...laudoAtual, laudodescricao: e.target.value } as any)}
@@ -238,6 +245,7 @@ const Laudos: React.FC = () => {
 
             <input
               placeholder="Conteúdo Markdown"
+              disabled={laudoFinalizado}
               value={'laudohtmlmd' in laudoAtual ? laudoAtual.laudohtmlmd : ''}
               onChange={(e) => setLaudoAtual({ ...laudoAtual, laudohtmlmd: e.target.value } as any)}
               style={{ display: 'none' }}
@@ -245,6 +253,7 @@ const Laudos: React.FC = () => {
 
             <div className="input-wrapper">
               <select
+                disabled={laudoFinalizado}
                 className={errors.tipoLaudo ? 'input-error' : ''}
                 value={'idtipolaudo' in laudoAtual ? laudoAtual.idtipolaudo : 0}
                 onChange={(e) =>
@@ -265,6 +274,7 @@ const Laudos: React.FC = () => {
 
             <div className="input-wrapper">
               <select
+                disabled={laudoFinalizado}
                 className={errors.tipoInstalacao ? 'input-error' : ''}
                 value={'idtipoinstalacao' in laudoAtual ? laudoAtual.idtipoinstalacao : 0}
                 onChange={(e) =>
@@ -286,6 +296,7 @@ const Laudos: React.FC = () => {
             {modal === 'editar' && (
               <div className="input-wrapper">
                 <select
+                  disabled={laudoFinalizado}
                   className={errors.status ? 'input-error' : ''}
                   value={'laudostatus' in laudoAtual ? laudoAtual.laudostatus : 2}
                   onChange={(e) =>
@@ -307,6 +318,7 @@ const Laudos: React.FC = () => {
             <div className="input-wrapper">
               <input
                 placeholder="OS Clickup"
+                disabled={laudoFinalizado}
                 className={errors.osClickup ? 'input-error' : ''}
                 value={'laudoosclickup' in laudoAtual ? laudoAtual.laudoosclickup ?? '' : ''}
                 onChange={(e) => setLaudoAtual({ ...laudoAtual, laudoosclickup: e.target.value } as any)}
@@ -320,6 +332,7 @@ const Laudos: React.FC = () => {
               <label className="form-label">Horário de Fechamento:</label>
               <input
                 type="time"
+                disabled={laudoFinalizado}
                 value={laudoAtual.laudofechamento ?? ''}
                 onChange={(e) =>
                   setLaudoAtual({ ...laudoAtual, laudofechamento: e.target.value })
@@ -327,10 +340,18 @@ const Laudos: React.FC = () => {
               />
             </div>
 
-            <Markdown
-              value={'laudohtmlmd' in laudoAtual ? laudoAtual.laudohtmlmd : ''}
-              onChange={(value) => setLaudoAtual({ ...laudoAtual, laudohtmlmd: value } as any)}
-            />
+            {laudoFinalizado ? (
+              <div style={{ border: '1px solid #ccc', padding: 10, borderRadius: 6, marginTop: 8 }}>
+                <Markdown value={'laudohtmlmd' in laudoAtual ? laudoAtual.laudohtmlmd : ''} />
+              </div>
+            ) : (
+              <Markdown
+                value={'laudohtmlmd' in laudoAtual ? laudoAtual.laudohtmlmd : ''}
+                onChange={(value) =>
+                  setLaudoAtual({ ...laudoAtual, laudohtmlmd: value } as any)
+                }
+              />
+            )}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
               {modal === 'novo' ? (
@@ -338,7 +359,11 @@ const Laudos: React.FC = () => {
                   Criar
                 </button>
               ) : (
-                <button style={{ background: '#43C463', color: '#fff' }} onClick={atualizarLaudoHandler}>
+                <button
+                  style={{ background: '#43C463', color: '#fff' }}
+                  onClick={atualizarLaudoHandler}
+                  disabled={laudoFinalizado}
+                >
                   Atualizar
                 </button>
               )}
