@@ -39,116 +39,78 @@ button {
  font-weight: bold;
 }
 
-.laudo-card {
- background: #fff;
- margin: 16px;
- padding: 16px;
- border-radius: 8px;
- box-shadow: 0 2px 8px #0001;
- cursor: pointer;
- max-width: 320px;
- min-width: 220px;
+.laudos-grid {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin-top: 20px !important;
+  gap: 4px !important;
+  box-sizing: border-box !important;
 }
 
-.laudos-list {
- display: flex;
- flex-wrap: wrap;
- gap: 16px;
+.laudo-header,
+.laudo-row {
+  display: grid !important;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr !important;
+  padding: 12px 16px !important;
+  gap: 8px !important;
+  align-items: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-.menu-superior {
- background: #FFD600;
- display: flex;
- align-items: center;
- justify-content: space-between;
- padding: 8px 16px;
- border-bottom: 1px solid #eee;
- position: relative;
- z-index: 1100;
+.laudo-header {
+  background-color: #f0f0f0 !important;
+  font-weight: bold !important;
+  border-bottom: 2px solid #ddd !important;
 }
 
-.user-area {
- display: flex;
- align-items: center;
- gap: 16px;
+.laudo-row {
+  background-color: #fff !important;
+  border: 1px solid #ddd !important;
+  border-radius: 0 !important;
+  cursor: pointer !important;
+  transition: background 0.2s !important;
 }
 
-.hamburger {
- display: none;
- flex-direction: column;
- justify-content: center;
- gap: 4px;
- width: 36px;
- height: 36px;
- background: transparent;
- border: none;
- cursor: pointer;
- margin-right: 8px;
+.laudo-row:hover {
+  background-color: #f9f9f9 !important;
 }
 
-.hamburger span {
- display: block;
- height: 4px;
- width: 28px;
- background: #222;
- border-radius: 2px;
-}
 
-.side-menu {
- display: none;
-}
-
-.menu-superior .links {
- display: flex;
- align-items: center;
- gap: 24px;
-}
-
-.menu-superior .links a {
- color: #222;
- text-decoration: none;
- font-weight: bold;
- padding: 0 8px;
-}
 
 @media (max-width: 600px) {
- .menu-superior .links {
-   display: none;
- }
- .hamburger {
-   display: flex;
- }
- .side-menu {
-   display: flex;
-   flex-direction: column;
-   position: fixed;
-   top: 0; left: -220px;
-   width: 200px;
-   height: 100vh;
-   background: #FFD600;
-   box-shadow: 2px 0 8px #0002;
-   padding-top: 24px;
-   transition: left 0.2s;
-   z-index: 2000;
- }
- .side-menu a {
-   color: #222;
-   text-decoration: none;
-   font-weight: bold;
-   padding: 12px 24px;
-   font-size: 17px;
-   border-bottom: 1px solid #fff3;
- }
- .side-menu.open {
-   left: 0;
- }
- .user-area {
-   flex-direction: row;
-   align-items: center;
-   gap: 8px;
-   margin: 0;
-   width: auto;
- }
+  .laudos-grid {
+    gap: 12px !important;
+  }
+
+  .laudo-header {
+    display: none !important; /* Esconde o cabeçalho em telas pequenas */
+  }
+
+  .laudo-row {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    background-color: #fff !important;
+    border: 1px solid #ddd !important;
+  }
+
+  .laudo-row div {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 15px;
+  }
+
+  .laudo-row div::before {
+    content: attr(data-label);
+    font-weight: bold;
+    margin-right: 8px;
+    color: #444;
+  }
+
  .top-bar {
    flex-direction: row;
    align-items: center;
@@ -167,19 +129,6 @@ button {
    padding: 8px 0;
    margin-top: 0;
    align-self: auto;
- }
- .laudos-list {
-   flex-direction: column;
-   gap: 8px;
-   align-items: center;
- }
- .laudo-card {
-   max-width: 95vw;
-   min-width: unset;
-   width: 100%;
-   margin: 8px 0;
-   padding: 12px;
-   font-size: 15px;
  }
  .modal-content {
    width: 98vw;

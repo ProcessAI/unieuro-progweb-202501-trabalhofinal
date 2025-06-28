@@ -198,24 +198,26 @@ const Laudos: React.FC = () => {
         </button>
       </div>
 
-      <div className="laudos-list">
+      <div className="laudos-grid">
+        <div className="laudo-header">
+          <div>Descrição</div>
+          <div>Tipo</div>
+          <div>Status</div>
+          <div>OS</div>
+        </div>
+
         {laudos.map((laudo) => (
-          <div key={laudo.idlaudo} className="laudo-card" onClick={() => abrirVisualizar(laudo)}>
-            <strong>{laudo.laudodescricao}</strong>
-            <div>
-              Tipo:{' '}
-              {
-                // Exibir o nome do tipo de laudo baseado no id
-                tiposLaudo.find((t) => t.idtipolaudo === laudo.idtipolaudo)?.tipolaudonome || laudo.idtipolaudo
-              }
+          <div key={laudo.idlaudo} className="laudo-row" onClick={() => abrirVisualizar(laudo)}>
+            <div data-label="Descrição">{laudo.laudodescricao}</div>
+            <div data-label="Tipo">
+              {tiposLaudo.find((t) => t.idtipolaudo === laudo.idtipolaudo)?.tipolaudonome || laudo.idtipolaudo}
             </div>
-            <div>
-              Status: {laudo.laudostatus}
-            </div>
-            <div>OS: {laudo.laudoosclickup}</div>
+            <div data-label="Status">{laudo.laudostatus}</div>
+            <div data-label="OS">{laudo.laudoosclickup}</div>
           </div>
         ))}
       </div>
+
 
       {(modal === 'novo' || modal === 'editar') && (
         <div className="modal">
