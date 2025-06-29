@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'http://localhost:8080/api/laudos';
 
 export interface Laudo {
   idlaudo: number;
@@ -17,19 +17,19 @@ export interface LaudoWithImages extends Laudo {
 }
 
 export async function listarLaudos(): Promise<LaudoWithImages[]> {
-  const response = await fetch(`${API_BASE_URL}/laudos`);
+  const response = await fetch(`${API_BASE_URL}`);
   if (!response.ok) throw new Error('Erro ao buscar laudos');
   return response.json();
 }
 
 export async function buscarLaudoPorId(idlaudo: number): Promise<LaudoWithImages> {
-  const response = await fetch(`${API_BASE_URL}/laudos/${idlaudo}`);
+  const response = await fetch(`${API_BASE_URL}/${idlaudo}`);
   if (!response.ok) throw new Error('Erro ao buscar o laudo');
   return response.json();
 }
 
 export async function criarLaudo(laudo: Omit<Laudo, 'idlaudo' | 'laudodatainclusao'>): Promise<LaudoWithImages> {
-  const response = await fetch(`${API_BASE_URL}/laudos`, {
+  const response = await fetch(`${API_BASE_URL}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(laudo),
@@ -39,7 +39,7 @@ export async function criarLaudo(laudo: Omit<Laudo, 'idlaudo' | 'laudodatainclus
 }
 
 export async function atualizarLaudo(idlaudo: number, laudo: Partial<LaudoWithImages>): Promise<LaudoWithImages> {
-  const response = await fetch(`${API_BASE_URL}/laudos/${idlaudo}`, {
+  const response = await fetch(`${API_BASE_URL}/${idlaudo}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(laudo),
@@ -49,7 +49,7 @@ export async function atualizarLaudo(idlaudo: number, laudo: Partial<LaudoWithIm
 }
 
 export async function deletarLaudo(idlaudo: number): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/laudos/${idlaudo}`, {
+  const response = await fetch(`${API_BASE_URL}/${idlaudo}`, {
     method: 'DELETE',
   });
   if (!response.ok) throw new Error('Erro ao deletar laudo');

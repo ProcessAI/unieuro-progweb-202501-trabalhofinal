@@ -207,6 +207,10 @@ const Laudos: React.FC = () => {
         novosErros.osClickup = "O campo OS Clickup é obrigatório.";
       }
 
+      if (laudoAtual.laudoosclickup && laudoAtual.laudoosclickup.length > 10) {
+        novosErros.osClickup = "O campo OS deve ter no máximo 10 caracteres.";
+      }
+
       if (Object.keys(novosErros).length > 0) {
         setErrors(novosErros);
         return;
@@ -234,6 +238,7 @@ const Laudos: React.FC = () => {
   };
 
   const laudoFinalizado = modal === 'editar' && laudoAtual.laudostatus === 3;
+  
   return (
     <div>
       <header className="header">
@@ -363,7 +368,7 @@ const Laudos: React.FC = () => {
             {modal === 'editar' && (
               <div className="input-wrapper">
                 <select
-                  disabled={laudoFinalizado}
+                  
                   className={errors.status ? 'input-error' : ''}
                   value={'laudostatus' in laudoAtual ? laudoAtual.laudostatus : 2}
                   onChange={(e) =>
@@ -435,7 +440,6 @@ const Laudos: React.FC = () => {
                 <button
                   style={{ background: '#43C463', color: '#fff' }}
                   onClick={atualizarLaudoHandler}
-                  disabled={laudoFinalizado}
                 >
                   Atualizar
                 </button>

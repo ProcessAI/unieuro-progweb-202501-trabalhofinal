@@ -1,4 +1,4 @@
-const API_URL = "https://laudinho.cleversystems.net/api/tipoeq";
+const API_URL = "http://localhost:8080/api/tipoeq";
 
 export interface Tipoeq {
   idtipoeq: number;
