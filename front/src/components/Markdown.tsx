@@ -238,21 +238,105 @@ const Markdown = forwardRef<MarkdownRef, MarkdownProps>(
           padding: "4px",
         };
         
-        return (
-          <img 
-            src={src} 
-            alt={alt || ""} 
-            style={estilo} 
-            onError={(e) => {
-              console.error("Erro ao carregar imagem. URL:", e.currentTarget.src.substring(0, 100) + "...");
-            }} 
-            onLoad={() => {
-              console.log("Imagem carregada com sucesso!");
-            }}
-          />
-        );
-      },
-    };
+      return (
+        <img 
+          src={src} 
+          alt={alt || ""} 
+          style={estilo} 
+          onError={(e) => {
+            console.error("Erro ao carregar imagem. URL:", e.currentTarget.src.substring(0, 100) + "...");
+          }} 
+          onLoad={() => {
+            console.log("Imagem carregada com sucesso!");
+          }} 
+        />
+      );
+    },
+    h1: (props: React.ComponentProps<'h1'>) => (
+      <h1
+        {...props}
+        style={{
+          fontSize: '2em',
+          fontWeight: 'bold',
+          marginBottom: '0.5em',
+          marginTop: '0.5em',
+          ...(props.style || {}),
+        }}
+      >
+        {props.children}
+      </h1>
+    ),
+    h2: (props: React.ComponentProps<'h2'>) => (
+      <h2
+        {...props}
+        style={{
+          fontSize: '1.5em',
+          fontWeight: 'bold',
+          marginBottom: '0.5em',
+          marginTop: '0.5em',
+          ...(props.style || {}),
+        }}
+      >
+        {props.children}
+      </h2>
+    ),
+    h3: (props: React.ComponentProps<'h3'>) => (
+      <h3
+        {...props}
+        style={{
+          fontSize: '1.25em',
+          fontWeight: 'bold',
+          marginBottom: '0.5em',
+          marginTop: '0.5em',
+          ...(props.style || {}),
+        }}
+      >
+        {props.children}
+      </h3>
+    ),
+    h4: (props: React.ComponentProps<'h4'>) => (
+      <h4
+        {...props}
+        style={{
+          fontSize: '1.1em',
+          fontWeight: 'bold',
+          marginBottom: '0.5em',
+          marginTop: '0.5em',
+          ...(props.style || {}),
+        }}
+      >
+        {props.children}
+      </h4>
+    ),
+    h5: (props: React.ComponentProps<'h5'>) => (
+      <h5
+        {...props}
+        style={{
+          fontSize: '1em',
+          fontWeight: 'bold',
+          marginBottom: '0.5em',
+          marginTop: '0.5em',
+          ...(props.style || {}),
+        }}
+      >
+        {props.children}
+      </h5>
+    ),
+    h6: (props: React.ComponentProps<'h6'>) => (
+      <h6
+        {...props}
+        style={{
+          fontSize: '0.9em',
+          fontWeight: 'bold',
+          marginBottom: '0.5em',
+          marginTop: '0.5em',
+          ...(props.style || {}),
+        }}
+      >
+        {props.children}
+      </h6>
+    ),
+  };
 
     if (modo === "somente-leitura") {
       return (
