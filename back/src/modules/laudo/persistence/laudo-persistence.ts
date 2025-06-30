@@ -1,5 +1,8 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 
+export type LaudoWithImages = Prisma.$laudoPayload & {
+  imagens: Record<string, string>;
+};
 export class LaudoPersistence {
   private prisma: PrismaClient;
 
