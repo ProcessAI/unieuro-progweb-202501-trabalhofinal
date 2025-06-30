@@ -16,23 +16,34 @@ interface TipoEquipamento {
   tipoeqnome: string;
 }
 
+interface Cliente {
+  clientenome: string,
+  clientestatus: number,
+  idcliente: number
+}
+
 interface Sede {
-  idsede: number;
-  sedenome: string;
+  idsede: number,
+  cliente: Cliente,
+  sedenome: string
+}
+interface EquipamentoExtended extends Equipamento {
+  cliente?: string;
 }
 
 export default function Equipamentos() {
   const navigate = useNavigate();
-  const [equipamentos, setEquipamentos] = useState<Equipamento[]>([]);
+  const [equipamentos, setEquipamentos] = useState<EquipamentoExtended[]>([]);
   const [tiposEquipamento, setTiposEquipamento] = useState<TipoEquipamento[]>([]);
   const [sedes, setSedes] = useState<Sede[]>([]);
+  const [sedesFiltradas, setSedesFiltradas] = useState<Sede[]>([]);
 
   const [busca, setBusca] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
   const [detalhesAbertos, setDetalhesAbertos] = useState(false);
   const [editarAberto, setEditarAberto] = useState(false);
 
-  const [novoEquipamento, setNovoEquipamento] = useState<Equipamento>({
+  const [novoEquipamento, setNovoEquipamento] = useState<EquipamentoExtended>({
     nome: "",
     serie: "",
     tipo: "",
@@ -43,10 +54,11 @@ export default function Equipamentos() {
     ipv6: "",
     anydesk: "",
     dw: "",
-    mac: ""
+    mac: "",
+    cliente: ""
   });
 
-  const [editarEquipamento, setEditarEquipamento] = useState<Equipamento>({
+  const [editarEquipamento, setEditarEquipamento] = useState<EquipamentoExtended>({
     nome: "",
     serie: "",
     tipo: "",
@@ -57,9 +69,12 @@ export default function Equipamentos() {
     ipv6: "",
     anydesk: "",
     dw: "",
-    mac: ""
+    mac: "",
+    cliente: ""
   });
 
+  const [clienteSelecionado, setClienteSelecionado] = useState<string>("");
+  const [clienteSelecionadoEditar, setClienteSelecionadoEditar] = useState<string>("");
   const [editarIndex, setEditarIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -70,7 +85,16 @@ export default function Equipamentos() {
           fetch("https://laudinho.cleversystems.net/api/tipoeq/listarTipoEquipamento").then(res => res.json()),
           fetch("https://laudinho.cleversystems.net/api/sede").then(res => res.json())
         ]);
-        setEquipamentos(dadosEquip);
+        
+        const equipamentosComCliente = dadosEquip.map((eq: Equipamento) => {
+          const sede = dadosSedes.find((s: Sede) => s.sedenome === eq.sede);
+          return {
+            ...eq,
+            cliente: sede ? sede.cliente.clientenome : ""
+          };
+        });
+        
+        setEquipamentos(equipamentosComCliente);
         setTiposEquipamento(dadosTipos);
         setSedes(dadosSedes);
       } catch (error) {
@@ -81,20 +105,53 @@ export default function Equipamentos() {
     carregarDados();
   }, []);
 
+  useEffect(() => {
+    if (clienteSelecionado) {
+      const sedesDoCliente = sedes.filter(sede => 
+        sede.cliente.clientenome === clienteSelecionado
+      );
+      setSedesFiltradas(sedesDoCliente);
+    } else {
+      setSedesFiltradas([]);
+    }
+  }, [clienteSelecionado, sedes]);
+
+  useEffect(() => {
+    if (clienteSelecionadoEditar) {
+      const sedesDoCliente = sedes.filter(sede => 
+        sede.cliente.clientenome === clienteSelecionadoEditar
+      );
+      setSedesFiltradas(sedesDoCliente);
+    }
+  }, [clienteSelecionadoEditar, sedes]);
+
+  const clientesUnicos = Array.from(
+    new Set(sedes.map(sede => sede.cliente.clientenome))
+  ).sort();
+
   const filtrados = busca.trim() === ""
     ? equipamentos
     : equipamentos.filter((eq) =>
         eq.nome.toLowerCase().includes(busca.toLowerCase()) ||
         eq.serie.toLowerCase().includes(busca.toLowerCase()) ||
         eq.tipo.toLowerCase().includes(busca.toLowerCase()) ||
-        eq.sede.toLowerCase().includes(busca.toLowerCase())
+        eq.sede.toLowerCase().includes(busca.toLowerCase()) ||
+        (eq.cliente && eq.cliente.toLowerCase().includes(busca.toLowerCase()))
       );
 
   const criarEquipamento = async () => {
     try {
       await addEquipamento(novoEquipamento);
       const atualizados = await getEquipamentos();
-      setEquipamentos(atualizados);
+      const equipamentosComCliente = atualizados.map((eq: Equipamento) => {
+        const sede = sedes.find((s: Sede) => s.sedenome === eq.sede);
+        return {
+          ...eq,
+          cliente: sede ? sede.cliente.clientenome : ""
+        };
+      });
+      
+      setEquipamentos(equipamentosComCliente);
       setModalAberto(false);
       setNovoEquipamento({
         nome: "",
@@ -107,8 +164,10 @@ export default function Equipamentos() {
         ipv6: "",
         anydesk: "",
         dw: "",
-        mac: ""
+        mac: "",
+        cliente: ""
       });
+      setClienteSelecionado("");
       alert("Equipamento criado com sucesso!");
     } catch (error) {
       console.error("Erro ao criar equipamento:", error);
@@ -123,7 +182,15 @@ export default function Equipamentos() {
     try {
       await deleteEquipamento(id);
       const atualizados = await getEquipamentos();
-      setEquipamentos(atualizados);
+      const equipamentosComCliente = atualizados.map((eq: Equipamento) => {
+        const sede = sedes.find((s: Sede) => s.sedenome === eq.sede);
+        return {
+          ...eq,
+          cliente: sede ? sede.cliente.clientenome : ""
+        };
+      });
+      
+      setEquipamentos(equipamentosComCliente);
       alert("Equipamento Excluido com Sucesso");
     } catch (error) {
       console.error("Erro ao excluir equipamento:", error);
@@ -131,7 +198,7 @@ export default function Equipamentos() {
     }
   };
 
- const abrirEditar = (index: number) => {
+  const abrirEditar = (index: number) => {
     setEditarIndex(index);
     const eq = equipamentos[index];
     setEditarEquipamento({
@@ -145,8 +212,10 @@ export default function Equipamentos() {
       ipv6: eq.ipv6,
       anydesk: eq.anydesk,
       dw: eq.dw,
-      mac: eq.mac
+      mac: eq.mac,
+      cliente: eq.cliente || ""
     });
+    setClienteSelecionadoEditar(eq.cliente || "");
     setEditarAberto(true);
     setModalAberto(false);
     setDetalhesAbertos(false);
@@ -163,6 +232,8 @@ export default function Equipamentos() {
     setModalAberto(true);
     setDetalhesAbertos(false);
     setEditarAberto(false);
+    setClienteSelecionado("");
+    setSedesFiltradas([]);
   };
 
   const salvarEditar = async () => {
@@ -173,9 +244,20 @@ export default function Equipamentos() {
     try {
       await updateEquipamento(id, editarEquipamento);
       const atualizados = await getEquipamentos();
-      setEquipamentos(atualizados);
+      
+      // Enhance with cliente info
+      const equipamentosComCliente = atualizados.map((eq: Equipamento) => {
+        const sede = sedes.find((s: Sede) => s.sedenome === eq.sede);
+        return {
+          ...eq,
+          cliente: sede ? sede.cliente.clientenome : ""
+        };
+      });
+      
+      setEquipamentos(equipamentosComCliente);
       setEditarAberto(false);
       setEditarIndex(null);
+      setClienteSelecionadoEditar("");
       alert("Equipamento atualizado com sucesso!");
     } catch (error) {
       console.error("Erro ao editar equipamento:", error);
@@ -187,6 +269,19 @@ export default function Equipamentos() {
     setModalAberto(false);
     setDetalhesAbertos(false);
     setEditarAberto(false);
+    setClienteSelecionado("");
+    setClienteSelecionadoEditar("");
+    setSedesFiltradas([]);
+  };
+
+  const handleClienteChange = (clienteNome: string) => {
+    setClienteSelecionado(clienteNome);
+    setNovoEquipamento({ ...novoEquipamento, sede: "", cliente: clienteNome });
+  };
+
+  const handleClienteEditarChange = (clienteNome: string) => {
+    setClienteSelecionadoEditar(clienteNome);
+    setEditarEquipamento({ ...editarEquipamento, sede: "", cliente: clienteNome });
   };
 
   return (
@@ -237,6 +332,7 @@ export default function Equipamentos() {
               <th className="table-header-cell">Série</th>
               <th className="table-header-cell">Tipo</th>
               <th className="table-header-cell">Alugado</th>
+              <th className="table-header-cell">Cliente</th>
               <th className="table-header-cell">Sede</th>
               <th className="table-header-cell">Ações</th>
             </tr>
@@ -248,6 +344,7 @@ export default function Equipamentos() {
                 <td className="table-cell">{eq.serie}</td>
                 <td className="table-cell">{eq.tipo}</td>
                 <td className="table-cell">{eq.alugado}</td>
+                <td className="table-cell">{eq.cliente}</td>
                 <td className="table-cell">{eq.sede}</td>
                 <td className="table-cell">
                   <div className="table-actions">
@@ -307,7 +404,7 @@ export default function Equipamentos() {
                   onChange={(e) => setNovoEquipamento({ ...novoEquipamento, ipv6: e.target.value })} 
                 />
               </div>
-             <div className="form-group">
+              <div className="form-group">
                 <label className="form-label">Tipo de Equipamento</label>
                 <select
                   className="input"
@@ -361,6 +458,21 @@ export default function Equipamentos() {
                 />
               </div>
               <div className="form-group">
+                <label className="form-label">Cliente</label>
+                <select
+                  className="input"
+                  value={clienteSelecionado}
+                  onChange={(e) => handleClienteChange(e.target.value)}
+                >
+                  <option value="">Selecione o cliente</option>
+                  {clientesUnicos.map((clienteNome) => (
+                    <option key={clienteNome} value={clienteNome}>
+                      {clienteNome}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
                 <label className="form-label">Sede</label>
                 <select
                   className="input"
@@ -368,9 +480,12 @@ export default function Equipamentos() {
                   onChange={(e) =>
                     setNovoEquipamento({ ...novoEquipamento, sede: e.target.value })
                   }
+                  disabled={!clienteSelecionado}
                 >
-                  <option value="">Selecione a sede</option>
-                  {sedes.map((sede) => (
+                  <option value="">
+                    {!clienteSelecionado ? "Primeiro selecione um cliente" : "Selecione a sede"}
+                  </option>
+                  {sedesFiltradas.map((sede) => (
                     <option key={sede.idsede} value={sede.sedenome}>
                       {sede.sedenome}
                     </option>
@@ -382,7 +497,7 @@ export default function Equipamentos() {
                   type="checkbox" 
                   id="alugado" 
                   className="checkbox"
-                 checked={novoEquipamento.alugado === "Sim"}
+                  checked={novoEquipamento.alugado === "Sim"}
                   onChange={(e) =>
                     setNovoEquipamento({
                       ...novoEquipamento,
@@ -411,6 +526,7 @@ export default function Equipamentos() {
             <table className="details-table">
               <thead>
                 <tr>
+                  <th>Cliente</th>
                   <th>Modelo</th>
                   <th>MAC</th>
                   <th>IPv4</th>
@@ -421,6 +537,7 @@ export default function Equipamentos() {
               </thead>
               <tbody>
                 <tr>
+                  <td>{equipamentos[editarIndex].cliente}</td>
                   <td>{equipamentos[editarIndex].modelo}</td>
                   <td>{equipamentos[editarIndex].mac}</td>
                   <td>{equipamentos[editarIndex].ipv4}</td>
@@ -483,9 +600,9 @@ export default function Equipamentos() {
                 <label className="form-label">Tipo de Equipamento</label>
                 <select
                   className="input"
-                  value={novoEquipamento.tipo}
+                  value={editarEquipamento.tipo}
                   onChange={(e) =>
-                    setNovoEquipamento({ ...novoEquipamento, tipo: e.target.value })
+                    setEditarEquipamento({ ...editarEquipamento, tipo: e.target.value })
                   }
                 >
                   <option value="">Selecione o tipo</option>
@@ -533,13 +650,39 @@ export default function Equipamentos() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Sede</label>
-                <input
+                <label className="form-label">Cliente</label>
+                <select
                   className="input"
-                  placeholder="Local da sede"
+                  value={clienteSelecionadoEditar}
+                  onChange={(e) => handleClienteEditarChange(e.target.value)}
+                >
+                  <option value="">Selecione o cliente</option>
+                  {clientesUnicos.map((clienteNome) => (
+                    <option key={clienteNome} value={clienteNome}>
+                      {clienteNome}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Sede</label>
+                <select
+                  className="input"
                   value={editarEquipamento.sede}
-                  onChange={(e) => setEditarEquipamento({ ...editarEquipamento, sede: e.target.value })}
-                />
+                  onChange={(e) =>
+                    setEditarEquipamento({ ...editarEquipamento, sede: e.target.value })
+                  }
+                  disabled={!clienteSelecionadoEditar}
+                >
+                  <option value="">
+                    {!clienteSelecionadoEditar ? "Primeiro selecione um cliente" : "Selecione a sede"}
+                  </option>
+                  {sedesFiltradas.map((sede) => (
+                    <option key={sede.idsede} value={sede.sedenome}>
+                      {sede.sedenome}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="checkbox-container">
                 <input
