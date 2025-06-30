@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api/tipo-instalacao';
+const API_URL = 'https://laudinho.cleversystems.net/api/tipo-instalacao';
 
 interface TipoInstalacaoPayload {
   tipoinstalacaonome: string;
