@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './tipo-laudo.css';
+import Markdown from '../components/Markdown'; // Import the Markdown component
 
 import {getTiposLaudo,createTipoLaudo,updateTipoLaudo,deleteTipoLaudo} from '../service/tipolaudo-api'
+import Navbar from '@/components/Navbar';
 
 interface TipoLaudo {
   idtipolaudo: number;
@@ -20,6 +22,7 @@ export default function TipoLaudo() {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [laudoToDelete, setLaudoToDelete] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
 
   const emptyForm: Omit<TipoLaudo, "idtipolaudo"> = {
     tipolaudonome: "",
@@ -27,6 +30,9 @@ export default function TipoLaudo() {
   };
 
   const [form, setForm] = useState<Omit<TipoLaudo, "idtipolaudo">>(emptyForm);
+
+  // Referência para o componente Markdown para acessar o estado interno
+  const markdownRef = useRef<any>(null);
 
   // Load laudos on component mount
   useEffect(() => {
@@ -45,7 +51,10 @@ export default function TipoLaudo() {
     }
   };
 
-  const resetForm = () => setForm(emptyForm);
+  const resetForm = () => {
+    setForm(emptyForm);
+    setErrors({});
+  };
 
   const openNovoLaudo = () => {
     setEditingLaudo(null);
@@ -57,6 +66,7 @@ export default function TipoLaudo() {
     setEditingLaudo(laudo);
     const { idtipolaudo, ...rest } = laudo;
     setForm(rest);
+    setErrors({});
     setModalOpen(true);
   };
 
@@ -69,15 +79,80 @@ export default function TipoLaudo() {
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  // Função para atualizar o markdown em tempo real
+  const handleMarkdownChange = (conteudo: string) => {
+    setForm(prev => ({ 
+      ...prev, 
+      tipolaudotemplate: conteudo 
+    }));
+    
+    // Clear template error when user starts typing
+    if (errors.tipolaudotemplate) {
+      setErrors(prev => ({ ...prev, tipolaudotemplate: '' }));
+    }
+  };
+
+  // Função para forçar a sincronização do markdown antes de salvar
+  const sincronizarMarkdown = () => {
+    if (markdownRef.current) {
+      const { markdown } = markdownRef.current.getEstadoAtual();
+      setForm(prev => ({
+        ...prev,
+        tipolaudotemplate: markdown
+      }));
+      return markdown;
+    }
+    return null;
+  };
+
+  // Validation function
+  const validateForm = (formData: Omit<TipoLaudo, "idtipolaudo">) => {
+    const newErrors: {[key: string]: string} = {};
+
+    if (!formData.tipolaudonome.trim()) {
+      newErrors.tipolaudonome = 'Nome é obrigatório';
+    }
+
+    if (!formData.tipolaudotemplate?.trim()) {
+      newErrors.tipolaudotemplate = 'Template é obrigatório';
+    }
+
+    return newErrors;
   };
 
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const payload = {
-        tipolaudonome: form.tipolaudonome,
-        tipolaudotemplate: form.tipolaudotemplate || undefined
+      
+      // Sincroniza o markdown antes de validar
+      const syncedMarkdown = sincronizarMarkdown();
+      
+      // Use the synced markdown for validation
+      const formToValidate = {
+        ...form,
+        tipolaudotemplate: syncedMarkdown || form.tipolaudotemplate
       };
+      
+      // Validate form
+      const validationErrors = validateForm(formToValidate);
+      
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
+      }
+      
+      const payload = {
+        tipolaudonome: formToValidate.tipolaudonome,
+        tipolaudotemplate: formToValidate.tipolaudotemplate || undefined
+      };
+      
       if (editingLaudo) {
         await updateTipoLaudo(editingLaudo.idtipolaudo, payload);
       } else {
@@ -86,6 +161,7 @@ export default function TipoLaudo() {
       await loadLaudos(); // Reload data after create/update
       setModalOpen(false);
       setEditingLaudo(null);
+      resetForm();
     } catch (error) {
       console.error('Error saving laudo:', error);
     } finally {
@@ -123,29 +199,7 @@ export default function TipoLaudo() {
 
   return (
     <>
-      {/* NAVBAR */}
-      <header className="header">
-        <div className="header-left">
-          <img src="/logo.png" alt="Logo" className="logo" />
-          <nav className="nav">
-            <a href="/clientes">HOME</a>
-            <a href="/clientes">CLIENTES</a>
-            <a href="/tipoeq">TIPO EQUIPAMENTO</a>
-            <a href="/tipoinstalacao">TIPO INSTALAÇÃO</a>
-            <a href="/tipolaudo">TIPO LAUDO</a>
-            <a href="/equipamentos" className="nav-active">EQUIPAMENTOS</a>
-            <a href="/laudo">LAUDOS</a>
-          </nav>
-        </div>
-        <div className="header-right">
-            <button
-              className="logout-btn"
-              onClick={() => navigate('/login')}
-            >
-              SAIR
-            </button>
-        </div>
-      </header>
+      <Navbar/>
       {/* LISTA DE LAUDOS */}
       <div className="app-container">
         <div className="laudos-header">
@@ -178,7 +232,7 @@ export default function TipoLaudo() {
               >
                 <div className="laudo-icon">📄</div>
                 <h3>{laudo.tipolaudonome}</h3>
-                <p>Template: {laudo.tipolaudotemplate}</p>
+                <p>Template: {laudo.tipolaudotemplate ? 'Configurado' : 'Não configurado'}</p>
               </button>
             ))}
           </div>
@@ -197,7 +251,20 @@ export default function TipoLaudo() {
             </div>
 
             <p><strong>Descrição / Nome:</strong> {viewLaudo?.tipolaudonome}</p>
-            <p><strong>Template:</strong> {viewLaudo?.tipolaudotemplate}</p>
+            
+            <div>
+              <strong>Template:</strong>
+              <div style={{ border: '1px solid #ccc', padding: '10px', marginTop: '5px', borderRadius: '4px' }}>
+                {viewLaudo?.tipolaudotemplate ? (
+                  <Markdown 
+                    value={viewLaudo.tipolaudotemplate} 
+                    mode="somente-leitura"
+                  />
+                ) : (
+                  <em>Nenhum template configurado</em>
+                )}
+              </div>
+            </div>
 
             <div style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
               <button className="btn-yellow" onClick={() => {
@@ -224,7 +291,7 @@ export default function TipoLaudo() {
       {/* MODAL NOVO / EDITAR */}
       {modalOpen && (
         <div className="modal-overlay-tipolaudo">
-          <div className="modal-tipolaudo">
+          <div className="modal-tipolaudo" style={{ maxWidth: '800px', width: '90%' }}>
             <div className="modal-header-tipolaudo">
               <h2>{editingLaudo ? "Editar Tipo de Laudo Técnico" : "Novo Tipo de Laudo Técnico"}</h2>
               <button className="modal-close-tipolaudo" onClick={() => setModalOpen(false)}>
@@ -232,21 +299,53 @@ export default function TipoLaudo() {
               </button>
             </div>
 
-            <input
-              type="text"
-              name="tipolaudonome"
-              placeholder="Descrição / Nome"
-              value={form.tipolaudonome}
-              onChange={handleChange}
-            />
+            <div style={{ marginBottom: '10px' }}>
+              <input
+                type="text"
+                name="tipolaudonome"
+                placeholder="Descrição / Nome"
+                value={form.tipolaudonome}
+                onChange={handleChange}
+                style={{ 
+                  marginBottom: '5px',
+                  borderColor: errors.tipolaudonome ? '#dc3545' : undefined
+                }}
+              />
+              {errors.tipolaudonome && (
+                <div style={{ 
+                  color: '#dc3545', 
+                  fontSize: '0.875rem', 
+                  marginTop: '2px' 
+                }}>
+                  {errors.tipolaudonome}
+                </div>
+              )}
+            </div>
 
-            <input
-              type="text"
-              name="tipolaudotemplate"
-              placeholder="Template"
-              value={form.tipolaudotemplate}
-              onChange={handleChange}
-            />
+            <div style={{ marginBottom: '10px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                Template (Markdown):
+              </label>
+              <div style={{ 
+                border: errors.tipolaudotemplate ? '1px solid #dc3545' : undefined,
+                borderRadius: '4px'
+              }}>
+                <Markdown
+                  ref={markdownRef}
+                  value={form.tipolaudotemplate || ''}
+                  onChange={handleMarkdownChange}
+                />
+              </div>
+              {errors.tipolaudotemplate && (
+                <div style={{ 
+                  color: '#dc3545', 
+                  fontSize: '0.875rem', 
+                  marginTop: '2px' 
+                }}>
+                  {errors.tipolaudotemplate}
+                </div>
+              )}
+            </div>
 
             <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
               <button className="btn-yellow" onClick={handleSubmit} disabled={loading}>
