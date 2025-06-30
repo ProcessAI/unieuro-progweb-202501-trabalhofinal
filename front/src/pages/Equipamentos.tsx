@@ -44,7 +44,6 @@ export default function Equipamentos() {
   const [editarAberto, setEditarAberto] = useState(false);
 
   const [novoEquipamento, setNovoEquipamento] = useState<EquipamentoExtended>({
-    nome: "",
     serie: "",
     tipo: "",
     alugado: "Não",
@@ -59,7 +58,6 @@ export default function Equipamentos() {
   });
 
   const [editarEquipamento, setEditarEquipamento] = useState<EquipamentoExtended>({
-    nome: "",
     serie: "",
     tipo: "",
     alugado: "Não",
@@ -82,8 +80,8 @@ export default function Equipamentos() {
       try {
         const [dadosEquip, dadosTipos, dadosSedes] = await Promise.all([
           getEquipamentos(),
-          fetch("https://laudinho.cleversystems.net/api/tipoeq/listarTipoEquipamento").then(res => res.json()),
-          fetch("https://laudinho.cleversystems.net/api/sede").then(res => res.json())
+          fetch("http://localhost:8080/api/tipoeq/listarTipoEquipamento").then(res => res.json()),
+          fetch("http://localhost:8080/api/sede").then(res => res.json())
         ]);
         
         const equipamentosComCliente = dadosEquip.map((eq: Equipamento) => {
@@ -132,14 +130,29 @@ export default function Equipamentos() {
   const filtrados = busca.trim() === ""
     ? equipamentos
     : equipamentos.filter((eq) =>
-        eq.nome.toLowerCase().includes(busca.toLowerCase()) ||
-        eq.serie.toLowerCase().includes(busca.toLowerCase()) ||
-        eq.tipo.toLowerCase().includes(busca.toLowerCase()) ||
-        eq.sede.toLowerCase().includes(busca.toLowerCase()) ||
-        (eq.cliente && eq.cliente.toLowerCase().includes(busca.toLowerCase()))
-      );
+      eq.modelo.toLowerCase().includes(busca.toLowerCase()) ||  // <- aqui adiciona
+      eq.serie.toLowerCase().includes(busca.toLowerCase()) ||
+      eq.tipo.toLowerCase().includes(busca.toLowerCase()) ||
+      eq.sede.toLowerCase().includes(busca.toLowerCase()) ||
+      (eq.cliente && eq.cliente.toLowerCase().includes(busca.toLowerCase()))
+  );
 
   const criarEquipamento = async () => {
+    const camposObrigatorios = [
+      { campo: novoEquipamento.modelo, nome: "Modelo" },
+      { campo: novoEquipamento.dw, nome: "DW" },
+      { campo: novoEquipamento.anydesk, nome: "AnyDesk" },
+      { campo: clienteSelecionado, nome: "Cliente" },
+      { campo: novoEquipamento.sede, nome: "Sede" },
+    ];
+
+    for (const { campo, nome } of camposObrigatorios) {
+      if (!campo || campo.trim() === "") {
+        alert(`O campo "${nome}" é obrigatório.`);
+        return;
+      }
+    }
+
     try {
       await addEquipamento(novoEquipamento);
       const atualizados = await getEquipamentos();
@@ -150,11 +163,10 @@ export default function Equipamentos() {
           cliente: sede ? sede.cliente.clientenome : ""
         };
       });
-      
+
       setEquipamentos(equipamentosComCliente);
       setModalAberto(false);
       setNovoEquipamento({
-        nome: "",
         serie: "",
         tipo: "",
         alugado: "Não",
@@ -171,17 +183,15 @@ export default function Equipamentos() {
       alert("Equipamento criado com sucesso!");
     } catch (error) {
       console.error("Erro ao criar equipamento:", error);
-      alert("Preencha os dados para poder cadastrar o equipamento!");
+      alert("Erro ao cadastrar o equipamento. Verifique os campos e tente novamente.");
     }
   };
 
-  const excluirEquipamento = async (index: number) => {
-    const id = equipamentos[index].id;
-    if (!id) return;
-
+  const excluirEquipamento = async (id: number) => {
     try {
       await deleteEquipamento(id);
       const atualizados = await getEquipamentos();
+
       const equipamentosComCliente = atualizados.map((eq: Equipamento) => {
         const sede = sedes.find((s: Sede) => s.sedenome === eq.sede);
         return {
@@ -189,20 +199,22 @@ export default function Equipamentos() {
           cliente: sede ? sede.cliente.clientenome : ""
         };
       });
-      
+
       setEquipamentos(equipamentosComCliente);
-      alert("Equipamento Excluido com Sucesso");
+      alert("Equipamento excluído com sucesso!");
     } catch (error) {
       console.error("Erro ao excluir equipamento:", error);
-      alert("Erro ao excluir equipamento, clique f12 e va no console e veja qual é o error!");
+      alert("Erro ao excluir equipamento, veja o console para detalhes.");
     }
   };
 
-  const abrirEditar = (index: number) => {
+  const abrirEditar = (id: number) => {
+    const index = equipamentos.findIndex(e => e.id === id);
+    if (index === -1) return;
+
     setEditarIndex(index);
     const eq = equipamentos[index];
     setEditarEquipamento({
-      nome: eq.nome,
       serie: eq.serie,
       tipo: eq.tipo,
       alugado: eq.alugado,
@@ -221,7 +233,10 @@ export default function Equipamentos() {
     setDetalhesAbertos(false);
   };
 
-  const abrirDetalhes = (index: number) => {
+  const abrirDetalhes = (id: number) => {
+    const index = equipamentos.findIndex(e => e.id === id);
+    if (index === -1) return;
+
     setEditarIndex(index);
     setDetalhesAbertos(true);
     setModalAberto(false);
@@ -328,7 +343,7 @@ export default function Equipamentos() {
         <table className="equipment-table">
           <thead>
             <tr className="table-header-row">
-              <th className="table-header-cell">Nome</th>
+              <th className="table-header-cell">Modelo equipamento</th>
               <th className="table-header-cell">Série</th>
               <th className="table-header-cell">Tipo</th>
               <th className="table-header-cell">Alugado</th>
@@ -338,9 +353,9 @@ export default function Equipamentos() {
             </tr>
           </thead>
           <tbody>
-            {filtrados.map((eq, idx) => (
-              <tr key={idx} className="table-row">
-                <td className="table-cell">{eq.nome}</td>
+            {filtrados.map((eq) => (
+              <tr key={eq.id} className="table-row">
+                <td className="table-cell">{eq.modelo}</td>
                 <td className="table-cell">{eq.serie}</td>
                 <td className="table-cell">{eq.tipo}</td>
                 <td className="table-cell">{eq.alugado}</td>
@@ -348,9 +363,9 @@ export default function Equipamentos() {
                 <td className="table-cell">{eq.sede}</td>
                 <td className="table-cell">
                   <div className="table-actions">
-                    <button className="details-btn" onClick={() => abrirDetalhes(idx)}>DETALHES</button>
-                    <button className="edit-btn" onClick={() => abrirEditar(idx)}>EDITAR</button>
-                    <button className="delete-btn" onClick={() => excluirEquipamento(idx)}>EXCLUIR</button>
+                    <button className="details-btn" onClick={() => abrirDetalhes(eq.id!)}>DETALHES</button>
+                    <button className="edit-btn" onClick={() => abrirEditar(eq.id!)}>EDITAR</button>
+                    <button className="delete-btn" onClick={() => excluirEquipamento(eq.id!)}>EXCLUIR</button>
                   </div>
                 </td>
               </tr>
@@ -368,13 +383,14 @@ export default function Equipamentos() {
               <button className="close-btn" onClick={fecharModais}>×</button>
             </div>
             <div className="modal-form">
-              <div className="form-group">
-                <label className="form-label">Nome</label>
+               <div className="form-group">
+                <label className="form-label">Nome Modelo do Equipamento</label>
                 <input 
                   className="input" 
-                  placeholder="Nome do equipamento" 
-                  value={novoEquipamento.nome} 
-                  onChange={(e) => setNovoEquipamento({ ...novoEquipamento, nome: e.target.value })} 
+                  placeholder="Modelo do equipamento" 
+                  value={novoEquipamento.modelo} 
+                  onChange={(e) => setNovoEquipamento({ ...novoEquipamento, modelo: e.target.value })} 
+                  required
                 />
               </div>
               <div className="form-group">
@@ -428,24 +444,18 @@ export default function Equipamentos() {
                   placeholder="123 456 789" 
                   value={novoEquipamento.anydesk} 
                   onChange={(e) => setNovoEquipamento({ ...novoEquipamento, anydesk: e.target.value })} 
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Modelo</label>
-                <input 
-                  className="input" 
-                  placeholder="Modelo do equipamento" 
-                  value={novoEquipamento.modelo} 
-                  onChange={(e) => setNovoEquipamento({ ...novoEquipamento, modelo: e.target.value })} 
+                  required
                 />
               </div>
               <div className="form-group">
                 <label className="form-label">DW</label>
                 <input 
                   className="input" 
-                  placeholder="01/01/2023" 
+                  placeholder="BENECAP" 
                   value={novoEquipamento.dw} 
+                  maxLength={10}   // <-- limite de caracteres
                   onChange={(e) => setNovoEquipamento({ ...novoEquipamento, dw: e.target.value })} 
+                  required
                 />
               </div>
               <div className="form-group">
@@ -517,33 +527,53 @@ export default function Equipamentos() {
 
       {/* Modal Detalhes */}
       {detalhesAbertos && editarIndex !== null && (
-        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && fecharModais()}>
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && fecharModais()}>
           <div className="modal-content modal-large">
             <div className="modal-header">
               <h2 className="modal-title">Detalhes do Equipamento</h2>
               <button className="close-btn" onClick={fecharModais}>×</button>
             </div>
             <table className="details-table">
-              <thead>
-                <tr>
-                  <th>Cliente</th>
-                  <th>Modelo</th>
-                  <th>MAC</th>
-                  <th>IPv4</th>
-                  <th>IPv6</th>
-                  <th>AnyDesk</th>
-                  <th>DW</th>
-                </tr>
-              </thead>
               <tbody>
                 <tr>
-                  <td>{equipamentos[editarIndex].cliente}</td>
+                  <th>Modelo Equipamento</th>
                   <td>{equipamentos[editarIndex].modelo}</td>
+                </tr>
+                <tr>
+                  <th>Cliente</th>
+                  <td>{equipamentos[editarIndex].cliente}</td>
+                </tr>
+                <tr>
+                  <th>Sede</th>
+                  <td>{equipamentos[editarIndex].sede}</td>
+                </tr>
+                <tr>
+                  <th>Tipo de Equipamento</th>
+                  <td>{equipamentos[editarIndex].tipo}</td>
+                </tr>
+                <tr>
+                  <th>MAC</th>
                   <td>{equipamentos[editarIndex].mac}</td>
+                </tr>
+                <tr>
+                  <th>IPv4</th>
                   <td>{equipamentos[editarIndex].ipv4}</td>
+                </tr>
+                <tr>
+                  <th>IPv6</th>
                   <td>{equipamentos[editarIndex].ipv6}</td>
+                </tr>
+                <tr>
+                  <th>AnyDesk</th>
                   <td>{equipamentos[editarIndex].anydesk}</td>
+                </tr>
+                <tr>
+                  <th>DW</th>
                   <td>{equipamentos[editarIndex].dw}</td>
+                </tr>
+                <tr>
+                  <th>Alugado</th>
+                  <td>{equipamentos[editarIndex].alugado === "Sim" ? "Sim" : "Não"}</td>
                 </tr>
               </tbody>
             </table>
@@ -561,12 +591,12 @@ export default function Equipamentos() {
             </div>
             <div className="modal-form">
               <div className="form-group">
-                <label className="form-label">Nome</label>
+                <label className="form-label">Modelo Equipamento</label>
                 <input
                   className="input"
-                  placeholder="Nome do equipamento"
-                  value={editarEquipamento.nome}
-                  onChange={(e) => setEditarEquipamento({ ...editarEquipamento, nome: e.target.value })}
+                  placeholder="Nome do modelo do equipamento"
+                  value={editarEquipamento.modelo}
+                  onChange={(e) => setEditarEquipamento({ ...editarEquipamento, modelo: e.target.value })}
                 />
               </div>
               <div className="form-group">
@@ -623,19 +653,10 @@ export default function Equipamentos() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Modelo</label>
-                <input
-                  className="input"
-                  placeholder="Modelo do equipamento"
-                  value={editarEquipamento.modelo}
-                  onChange={(e) => setEditarEquipamento({ ...editarEquipamento, modelo: e.target.value })}
-                />
-              </div>
-              <div className="form-group">
                 <label className="form-label">DW</label>
                 <input
                   className="input"
-                  placeholder="01/01/2023"
+                  placeholder="BENECAP"
                   value={editarEquipamento.dw}
                   onChange={(e) => setEditarEquipamento({ ...editarEquipamento, dw: e.target.value })}
                 />
