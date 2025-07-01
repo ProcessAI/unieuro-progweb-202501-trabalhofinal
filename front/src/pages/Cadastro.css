@@ -1,293 +1,106 @@
-/* Definições globais - Descomente se quiser aplicá-las */
-/*
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
+body {
+  background-color: #f5f6f7;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* HEADER - classes removidas:
+.cadastro-header,
+.cadastro-logo,
+.cadastro-logo img,
+.cadastro-title-header {
+  // ❌ Foram eliminadas porque agora usamos Tailwind no JSX
 }
 */
 
-body {
-    background-color: #fff;
-    font-family: Arial, sans-serif; /* Adicionado para consistência */
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    max-width: 100%;
-    min-height: 100vh; /* Garante que o body ocupe a altura total da viewport */
-    display: flex; /* Permite que o main ocupe o espaço restante */
-    flex-direction: column; /* Organiza header e main em coluna */
+.cadastro-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 20px;
+  min-height: calc(100vh - 100px);
 }
 
-/* --- Cabeçalho (Header) --- */
-.cadastro-header {
-    background-color: #ffc800;
-    height: 80px; /* Altura padrão para o cabeçalho */
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Centraliza o texto "Cadastro" */
-    padding: 0 20px;
-    position: relative; /* Necessário para posicionar o logo absolutamente */
-    flex-shrink: 0; /* Impede que o cabeçalho encolha */
-    font-size: 24px;
-    font-weight: bold;
+.cadastro-box {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px 25px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 525px;
+  min-height: 420px;
+  position: relative;
 }
 
-.cadastro-logo {
-    height: 40px; /* Altura padrão para a logo em telas grandes */
-    position: absolute;
-    left: 20px;
+.cadastro-box-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
 }
 
-.cadastro-menu-label { /* Renomeado de .cadastro-title-header para consistência com seu HTML de Cadastro */
-    font-size: 24px; /* Tamanho da fonte do título no cabeçalho */
-    font-weight: bold;
-    color: black; /* Adicionado para consistência */
-    text-align: center; /* Adicionado para consistência */
+.cadastro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-
-/* --- Container Principal (Main) --- */
-.cadastro-container {
-    flex-grow: 1; /* Faz o container ocupar o espaço restante */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px; /* Padding geral para telas menores também */
-    /* height: calc(100vh - 80px); - Substituído por flex-grow para melhor responsividade */
+.cadastro-form input[type="email"],
+.cadastro-form input[type="password"],
+.cadastro-form input[type="text"] {
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
 }
 
-.cadastro-form-box {
-    background-color: #fff;
-    padding: 30px; /* Ajustado para ser mais flexível e parecido com o Login */
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15); /* Sombra mais consistente com o Login */
-    width: 100%; /* Ocupa 100% da largura disponível */
-    max-width: 450px; /* Largura máxima para telas maiores, consistente com o Login */
-    min-height: 400px; /* Altura mínima para a caixa do formulário, consistente com o Login */
-    position: relative;
-    display: flex; /* Para centralizar o conteúdo dentro da box */
-    flex-direction: column; /* Conteúdo em coluna */
-    justify-content: center; /* Centraliza verticalmente o conteúdo */
-    align-items: center; /* Centraliza horizontalmente o conteúdo */
-    text-align: center;
+.cadastro-senha-container {
+  position: relative;
 }
 
-.cadastro-title {
-    font-size: 28px; /* Maior para destaque, consistente com o Login */
-    font-weight: bold;
-    margin-bottom: 30px; /* Mais espaço abaixo do título, consistente com o Login */
-    color: #333; /* Adicionado para consistência */
+.cadastro-senha-container input {
+  width: 100%;
 }
 
-.cadastro-form-box form { /* Alvo a tag form diretamente para controlar seus filhos */
-    display: flex;
-    flex-direction: column;
-    gap: 18px; /* Espaçamento entre os elementos do formulário, consistente com o Login */
-    width: 100%; /* Garante que o formulário ocupe a largura da box */
-    max-width: 350px; /* Limita a largura do formulário dentro da box, consistente com o Login */
+.cadastro-toggle-senha {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
 }
 
-.cadastro-form-box input {
-    width: 100%;
-    padding: 14px 15px; /* Ajustado para ser consistente com o Login */
-    margin-bottom: 0; /* Removido margin-bottom aqui para usar 'gap' no form */
-    border: 1px solid #ddd; /* Borda mais suave, consistente com o Login */
-    border-radius: 8px; /* Arredondamento consistente com o Login */
-    font-size: 16px;
-    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura */
-}
-
-.cadastro-form-box input::placeholder { /* Adicionado para consistência */
-    color: #888;
-}
-
-/* Campo de senha com botão de olho */
-.password-container {
-    position: relative;
-    width: 100%;
-}
-
-.password-container input {
-    width: 100%;
-    padding-right: 45px; /* Ajustado para deixar espaço para o ícone, consistente com o Login */
-    padding-top: 14px; /* Ajustado para ser consistente com o Login */
-    padding-bottom: 14px; /* Ajustado para ser consistente com o Login */
-    margin-bottom: 0; /* Removido margin-bottom aqui para usar 'gap' no form */
-    border: 1px solid #ddd; /* Borda mais suave, consistente com o Login */
-    border-radius: 8px; /* Arredondamento consistente com o Login */
-    font-size: 16px;
-    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura */
-}
-
-.toggle-password-btn {
-    position: absolute;
-    right: 15px; /* Ajustado para ser consistente e responsivo como no Login */
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: transparent; /* Alterado para transparente, como no Login, para evitar artefatos */
-    padding: 0; /* Alterado para 0, como no Login, para evitar artefatos */
-    border-radius: 0; /* Alterado para 0, como no Login, para evitar artefatos */
-    box-sizing: content-box; /* Adicionado para consistência */
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2; /* Adicionado para consistência */
-    opacity: 0.8; /* Adicionado para efeito de hover */
-    transition: opacity 0.2s ease, transform 0.2s ease; /* Adicionado para efeito de hover */
-}
-
-.toggle-password-btn:hover {
-    opacity: 1; /* Adicionado para efeito de hover */
-    transform: translateY(-50%) scale(1.1); /* Adicionado para efeito de hover */
-}
-
-/* --- Botão Cadastrar --- */
 .cadastro-btn {
-    width: 100%;
-    background-color: #ffc800;
-    color: black;
-    padding: 14px; /* Ajustado para ser consistente com o Login */
-    border: none;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 8px; /* Arredondamento consistente com o Login */
-    transition: background-color 0.3s ease, transform 0.1s ease; /* Adicionado para efeito de hover */
+  background-color: #ffc800;
+  color: black;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
 .cadastro-btn:hover {
-    background-color: #e6b800;
-    transform: translateY(-2px); /* Adicionado para efeito de hover */
+  background-color: #e6b800;
 }
 
-/* --- Link para Login --- */
-.cadastro-login-link {
-    margin-top: 20px; /* Ajustado para ser consistente com o Login */
-    font-size: 14px;
-    text-align: center; /* Adicionado para consistência */
-    width: 100%; /* Adicionado para consistência */
+.cadastro-links {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 10px;
 }
 
-.cadastro-account-text {
-    color: black;
-}
-
-.cadastro-login-action {
-    color: #ffc800;
-    cursor: pointer;
-    text-decoration: none; /* Removido underline padrão */
-    font-weight: bold;
-    transition: color 0.2s ease, text-decoration 0.2s ease; /* Adicionado para efeito de hover */
-}
-
-.cadastro-login-action:hover {
-    color: #e6b800; /* Adicionado para efeito de hover */
-    text-decoration: underline; /* Adicionado para efeito de hover */
-}
-
-/* --- Responsividade (Media Queries) --- */
-
-/* Para telas menores que 768px (tablets e celulares) */
-@media (max-width: 768px) {
-    .cadastro-header {
-        height: 70px; /* Mantém o cabeçalho um pouco mais alto */
-        padding: 0 15px;
-    }
-
-    .cadastro-logo {
-        height: 35px; /* Logo com 35px de altura em tablets */
-        left: 15px;
-    }
-
-    .cadastro-menu-label {
-        font-size: 22px; /* Título do cabeçalho levemente menor */
-    }
-
-    .cadastro-container {
-        padding: 15px;
-    }
-
-    .cadastro-form-box {
-        padding: 25px;
-        min-height: 350px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .cadastro-title {
-        font-size: 24px;
-        margin-bottom: 25px;
-    }
-
-    .cadastro-form-box form {
-        gap: 15px;
-        max-width: 100%;
-    }
-
-    .cadastro-form-box input {
-        padding: 12px;
-        font-size: 15px;
-    }
-
-    .password-container input {
-        padding-right: 40px;
-    }
-
-    .toggle-password-btn {
-        right: 10px; /* Ajusta a posição do botão de olho para telas menores */
-    }
-
-    .cadastro-btn {
-        padding: 12px;
-        font-size: 15px;
-    }
-
-    .cadastro-login-link {
-        font-size: 13px;
-    }
-}
-
-/* Para telas muito pequenas (celulares) */
-@media (max-width: 480px) {
-    .cadastro-header {
-        height: 60px;
-    }
-
-    .cadastro-logo {
-        height: 30px; /* Logo com 30px de altura em celulares pequenos */
-        left: 10px;
-    }
-
-    .cadastro-menu-label {
-        font-size: 20px;
-    }
-
-    .cadastro-form-box {
-        padding: 20px;
-        min-height: 300px;
-    }
-
-    .cadastro-title {
-        font-size: 22px;
-        margin-bottom: 20px;
-    }
-
-    .cadastro-form-box input {
-        font-size: 14px;
-    }
-
-    .password-container input {
-        padding-right: 35px;
-    }
-
-    .toggle-password-btn {
-        right: 8px;
-    }
-
-    .cadastro-btn {
-        font-size: 14px;
-    }
+.cadastro-links a {
+  color: #ffc800;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
 }
