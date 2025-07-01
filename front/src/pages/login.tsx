@@ -1,7 +1,7 @@
 // src/pages/Login.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css';
+import './login.css';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -35,19 +35,21 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <header className="login-header">
-        <div className="login-logo">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCM_0OvsIpEJaDrUEu1SQWkj4wIoPw1xMevQ&s"
-            alt="Clever Systems"
-          />
-        </div>
-        <div className="login-title-header">Seja Bem-vindo!</div>
-      </header>
+      <header className="bg-yellow-400 px-6 py-4 flex items-center justify-start relative shadow-md sticky top-0 z-50">
+  <img
+    src="https://cleversystems.com.br/wp-content/uploads/2021/01/site_logo.png"
+    alt="Clever Systems"
+    className="h-8"
+  />
+  <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg font-bold text-black leading-none">
+  Seja Bem-Vindo
+</h1>
+</header>
+
+
 
       <main className="login-main">
         <div className="login-box">
-          {/* Novo título dentro da box */}
           <h2 className="login-box-title">Login</h2>
 
           <form className="login-form" onSubmit={handleSubmit}>
@@ -73,7 +75,7 @@ const Login: React.FC = () => {
                 onClick={() => setMostrarSenha(!mostrarSenha)}
                 title="Mostrar ou ocultar senha"
               >
-                {mostrarSenha ? '👁️' : '👁️'}
+                👁️
               </button>
             </div>
 

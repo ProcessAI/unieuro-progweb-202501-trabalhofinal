@@ -1,30 +1,26 @@
+// src/pages/Cadastro.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Cadastro.css';
+import './cadastro.css';
 
-export default function CadastroPage() {
+const Cadastro: React.FC = () => {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/register', {
+      const response = await fetch('http://localhost:8080/api/auth/cadastro', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          usuarioemail: email,
-          usuariosenha: senha,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuarioemail: email, usuariosenha: senha }),
       });
 
       if (response.ok) {
+        await response.json();
         alert('Cadastro realizado com sucesso!');
         navigate('/login');
       } else {
@@ -39,15 +35,25 @@ export default function CadastroPage() {
 
   return (
     <>
-      <header className="cadastro-header">
-        <img className="cadastro-logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCM_0OvsIpEJaDrUEu1SQWkj4wIoPw1xMevQ&s" alt="Clever Systems" />
-        <span className="cadastro-menu-label">Cadastro</span>
-      </header>
+      <header className="bg-yellow-400 px-6 py-4 flex items-center justify-start relative shadow-md sticky top-0 z-50">
+  <img
+    src="https://cleversystems.com.br/wp-content/uploads/2021/01/site_logo.png"
+    alt="Clever Systems"
+    className="h-8"
+  />
+  <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg font-bold text-black leading-none">
+  Crie sua conta!
+</h1>
+</header>
 
-      <div className="cadastro-container">
-        <div className="cadastro-form-box">
-          <h2 className="cadastro-title">Crie sua conta</h2>
-          <form onSubmit={handleSubmit}>
+
+
+
+      <main className="cadastro-main">
+        <div className="cadastro-box">
+          <h2 className="cadastro-box-title">Crie sua conta</h2>
+
+          <form className="cadastro-form" onSubmit={handleSubmit}>
             <input
               type="email"
               placeholder="E-mail"
@@ -55,9 +61,10 @@ export default function CadastroPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <div className="password-container">
+
+            <div className="cadastro-senha-container">
               <input
-                type={showPassword ? "text" : "password"}
+                type={mostrarSenha ? 'text' : 'password'}
                 placeholder="Senha"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
@@ -65,22 +72,24 @@ export default function CadastroPage() {
               />
               <button
                 type="button"
-                className="toggle-password-btn"
-                onClick={() => setShowPassword(!showPassword)}
+                className="cadastro-toggle-senha"
+                onClick={() => setMostrarSenha(!mostrarSenha)}
+                title="Mostrar ou ocultar senha"
               >
-                {showPassword ? "👁️" : "👁️"}
+                👁️
               </button>
             </div>
-            <button type="submit" className="cadastro-btn">
-              Cadastrar
-            </button>
+
+            <button className="cadastro-btn" type="submit">Cadastrar</button>
+
+            <div className="cadastro-links">
+              Já tem uma conta? <a onClick={() => navigate('/login')}>Faça login</a>
+            </div>
           </form>
-          <p className="cadastro-login-link">
-            <span className="cadastro-account-text">Já tem uma conta? </span>
-            <span className="cadastro-login-action" onClick={() => navigate('/login')}>Faça login</span>
-          </p>
         </div>
-      </div>
+      </main>
     </>
   );
-}
+};
+
+export default Cadastro;
