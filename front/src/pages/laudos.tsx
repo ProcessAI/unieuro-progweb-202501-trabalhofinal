@@ -37,7 +37,7 @@ const Laudos: React.FC = () => {
   const navigate = useNavigate();
   const [laudos, setLaudos] = useState<LaudoWithImages[]>([]);
   const [modal, setModal] = useState<'novo' | 'editar' | 'visualizar' | 'excluir' | null>(null);
-
+  const [pagina, setPagina] = useState(1);
   const [laudoAtual, setLaudoAtual] = useState<
     LaudoWithImages | Omit<LaudoWithImages, 'idlaudo' | 'laudodatainclusao'>
   >(laudoVazio);
@@ -79,6 +79,7 @@ const Laudos: React.FC = () => {
 
   const abrirNovo = () => {
     setLaudoAtual(laudoVazio);
+    setPagina(1)
     setModal('novo');
   };
   const abrirEditar = (laudo: LaudoWithImages) => {
