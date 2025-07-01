@@ -282,223 +282,175 @@ const Laudos: React.FC = () => {
         <div className="modal">
           <div className="modal-content">
             <h2>{modal === 'novo' ? 'Novo Laudo Técnico' : 'Editar Laudo'}</h2>
-            <div className="input-wrapper">
-              <input
-                placeholder="Descrição"
-                disabled={laudoFinalizado}
-                className={errors.descricao ? 'input-error' : ''}
-                value={'laudodescricao' in laudoAtual ? laudoAtual.laudodescricao : ''}
-                onChange={(e) => setLaudoAtual({ ...laudoAtual, laudodescricao: e.target.value } as any)}
-              />
-              {errors.descricao && (
-                <span className="input-error-message">{errors.descricao}</span>
-              )}
-            </div>
 
-            <input
-              placeholder="Conteúdo Markdown"
-              disabled={laudoFinalizado}
-              value={'laudohtmlmd' in laudoAtual ? laudoAtual.laudohtmlmd : ''}
-              onChange={(e) => setLaudoAtual({ ...laudoAtual, laudohtmlmd: e.target.value } as any)}
-              style={{ display: 'none' }}
-            />
+            {/* Página 1 - Dados Iniciais */}
+            {pagina === 1 && (
+              <>
+                <div className="input-wrapper">
+                  <input
+                    placeholder="Descrição"
+                    disabled={laudoFinalizado}
+                    className={errors.descricao ? 'input-error' : ''}
+                    value={laudoAtual.laudodescricao || ''}
+                    onChange={(e) =>
+                      setLaudoAtual({ ...laudoAtual, laudodescricao: e.target.value } as any)
+                    }
+                  />
+                  {errors.descricao && <span className="input-error-message">{errors.descricao}</span>}
+                </div>
 
-            <div className="input-wrapper">
-              <select
-                disabled={laudoFinalizado}
-                className={errors.tipoLaudo ? 'input-error' : ''}
-                value={'idtipolaudo' in laudoAtual ? laudoAtual.idtipolaudo : 0}
-                onChange={(e) =>
-                  setLaudoAtual({ ...laudoAtual, idtipolaudo: Number(e.target.value) } as any)
-                }
-              >
-                <option value={0}>Tipo de Laudo</option>
-                {tiposLaudo.map((tipo) => (
-                  <option key={tipo.idtipolaudo} value={tipo.idtipolaudo}>
-                    {tipo.tipolaudonome}
-                  </option>
-                ))}
-              </select>
-              {errors.tipoLaudo && (
-                <span className="input-error-message">{errors.tipoLaudo}</span>
-              )}
-            </div>
+                <div className="input-wrapper">
+                  <select
+                    disabled={laudoFinalizado}
+                    className={errors.tipoLaudo ? 'input-error' : ''}
+                    value={laudoAtual.idtipolaudo || 0}
+                    onChange={(e) =>
+                      setLaudoAtual({ ...laudoAtual, idtipolaudo: Number(e.target.value) } as any)
+                    }
+                  >
+                    <option value={0}>Tipo de Laudo</option>
+                    {tiposLaudo.map((tipo) => (
+                      <option key={tipo.idtipolaudo} value={tipo.idtipolaudo}>
+                        {tipo.tipolaudonome}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.tipoLaudo && <span className="input-error-message">{errors.tipoLaudo}</span>}
+                </div>
 
-            <div className="input-wrapper">
-              <select
-                disabled={laudoFinalizado}
-                className={errors.tipoInstalacao ? 'input-error' : ''}
-                value={'idtipoinstalacao' in laudoAtual ? laudoAtual.idtipoinstalacao : 0}
-                onChange={(e) =>
-                  setLaudoAtual({ ...laudoAtual, idtipoinstalacao: Number(e.target.value) } as any)
-                }
-              >
-                <option value={0}>Tipo de Instalação</option>
-                {tiposInstalacao.map((tipo) => (
-                  <option key={tipo.idtipoinstalacao} value={tipo.idtipoinstalacao}>
-                    {tipo.tipoinstalacaonome}
-                  </option>
-                ))}
-              </select>
-              {errors.tipoInstalacao && (
-                <span className="input-error-message">{errors.tipoInstalacao}</span>
-              )}
-            </div>
+                <div className="input-wrapper">
+                  <select
+                    disabled={laudoFinalizado}
+                    className={errors.tipoInstalacao ? 'input-error' : ''}
+                    value={laudoAtual.idtipoinstalacao || 0}
+                    onChange={(e) =>
+                      setLaudoAtual({ ...laudoAtual, idtipoinstalacao: Number(e.target.value) } as any)
+                    }
+                  >
+                    <option value={0}>Tipo de Instalação</option>
+                    {tiposInstalacao.map((tipo) => (
+                      <option key={tipo.idtipoinstalacao} value={tipo.idtipoinstalacao}>
+                        {tipo.tipoinstalacaonome}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.tipoInstalacao && (
+                    <span className="input-error-message">{errors.tipoInstalacao}</span>
+                  )}
+                </div>
 
-            {modal === 'editar' && (
-              <div className="input-wrapper">
-                <select
-                  
-                  className={errors.status ? 'input-error' : ''}
-                  value={'laudostatus' in laudoAtual ? laudoAtual.laudostatus : 2}
+                {modal === 'editar' && (
+                  <div className="input-wrapper">
+                    <select
+                      className={errors.status ? 'input-error' : ''}
+                      value={laudoAtual.laudostatus || 2}
+                      onChange={(e) =>
+                        setLaudoAtual({ ...laudoAtual, laudostatus: Number(e.target.value) } as any)
+                      }
+                    >
+                      <option value={0}>Status</option>
+                      <option value={1}>Pendente</option>
+                      <option value={2}>Em andamento</option>
+                      <option value={3}>Finalizado</option>
+                    </select>
+                    {errors.status && <span className="input-error-message">{errors.status}</span>}
+                  </div>
+                )}
+
+                <div className="input-wrapper">
+                  <input
+                    placeholder="OS Clickup"
+                    disabled={laudoFinalizado}
+                    maxLength={10}
+                    className={errors.osClickup ? 'input-error' : ''}
+                    value={laudoAtual.laudoosclickup || ''}
+                    onChange={(e) =>
+                      setLaudoAtual({ ...laudoAtual, laudoosclickup: e.target.value } as any)
+                    }
+                  />
+                  {errors.osClickup && (
+                    <span className="input-error-message">{errors.osClickup}</span>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Horário de Fechamento:</label>
+                  <input
+                    type="time"
+                    disabled={laudoFinalizado}
+                    value={
+                      typeof laudoAtual.laudofechamento === 'string'
+                        ? laudoAtual.laudofechamento
+                        : laudoAtual.laudofechamento
+                        ? laudoAtual.laudofechamento.toISOString().substring(11, 16)
+                        : ''
+                    }
+                    onChange={(e) =>
+                      setLaudoAtual({ ...laudoAtual, laudofechamento: e.target.value })
+                    }
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Página 2 - Markdown */}
+            {pagina === 2 && (
+              <>
+                <input
+                  style={{ display: 'none' }}
+                  value={laudoAtual.laudohtmlmd || ''}
                   onChange={(e) =>
-                    setLaudoAtual({ ...laudoAtual, laudostatus: Number(e.target.value) } as any)
+                    setLaudoAtual({ ...laudoAtual, laudohtmlmd: e.target.value } as any)
                   }
-                >
-                  <option value={0}>Status</option>
-                  <option value={1}>Pendente</option>
-                  <option value={2}>Em andamento</option>
-                  <option value={3}>Finalizado</option>
-                </select>
-                {errors.status && (
-                  <span className="input-error-message">{errors.status}</span>
+                />
+                {laudoFinalizado ? (
+                  <div style={{ border: '1px solid #ccc', padding: 10, borderRadius: 6, marginTop: 8 }}>
+                    <Markdown value={laudoAtual.laudohtmlmd || ''} />
+                  </div>
+                ) : (
+                  <Markdown
+                    value={laudoAtual.laudohtmlmd || ''}
+                    onChange={(value) =>
+                      setLaudoAtual({ ...laudoAtual, laudohtmlmd: value } as any)
+                    }
+                  />
+                )}
+              </>
+            )}
+
+            {/* Botões de navegação e ação */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
+              <div>
+                {pagina > 1 && (
+                  <button style={{ marginRight: 8 }} onClick={() => setPagina(pagina - 1)}>
+                    Voltar
+                  </button>
+                )}
+                {pagina < 2 && (
+                  <button onClick={() => setPagina(pagina + 1)}>
+                    Próximo
+                  </button>
                 )}
               </div>
-            )}
 
-
-            <div className="input-wrapper">
-              <input
-                placeholder="OS Clickup"
-                disabled={laudoFinalizado}
-                className={errors.osClickup ? 'input-error' : ''}
-                value={'laudoosclickup' in laudoAtual ? laudoAtual.laudoosclickup ?? '' : ''}
-                onChange={(e) => setLaudoAtual({ ...laudoAtual, laudoosclickup: e.target.value } as any)}
-              />
-              {errors.osClickup && (
-                <span className="input-error-message">{errors.osClickup}</span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Horário de Fechamento:</label>
-              <input
-                type="time"
-                disabled={laudoFinalizado}
-                value={
-                  typeof laudoAtual.laudofechamento === 'string'
-                    ? laudoAtual.laudofechamento
-                    : laudoAtual.laudofechamento
-                      ? laudoAtual.laudofechamento.toISOString().substring(11, 16)
-                      : ''
-                }
-                onChange={(e) =>
-                  setLaudoAtual({ ...laudoAtual, laudofechamento: e.target.value })
-                }
-              />
-            </div>
-
-            {laudoFinalizado ? (
-              <div style={{ border: '1px solid #ccc', padding: 10, borderRadius: 6, marginTop: 8 }}>
-                <Markdown value={'laudohtmlmd' in laudoAtual ? laudoAtual.laudohtmlmd : ''} />
+              <div style={{ display: 'flex', gap: 8 }}>
+                {pagina === 2 && (
+                  <>
+                    {modal === 'novo' ? (
+                      <button style={{ background: '#43C463', color: '#fff' }} onClick={criarLaudoHandler}>
+                        Criar
+                      </button>
+                    ) : (
+                      <button style={{ background: '#43C463', color: '#fff' }} onClick={atualizarLaudoHandler}>
+                        Atualizar
+                      </button>
+                    )}
+                    <button style={{ background: '#aaa', color: '#fff' }} onClick={() => setModal(null)}>
+                      Cancelar
+                    </button>
+                  </>
+                )}
               </div>
-            ) : (
-              <Markdown
-                value={'laudohtmlmd' in laudoAtual ? laudoAtual.laudohtmlmd : ''}
-                onChange={(value) =>
-                  setLaudoAtual({ ...laudoAtual, laudohtmlmd: value } as any)
-                }
-              />
-            )}
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
-              {modal === 'novo' ? (
-                <button style={{ background: '#43C463', color: '#fff' }} onClick={criarLaudoHandler}>
-                  Criar
-                </button>
-              ) : (
-                <button
-                  style={{ background: '#43C463', color: '#fff' }}
-                  onClick={atualizarLaudoHandler}
-                >
-                  Atualizar
-                </button>
-              )}
-              <button style={{ background: '#aaa', color: '#fff' }} onClick={() => setModal(null)}>
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {modal === 'visualizar' && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Visualizar Laudo</h2>
-            <div>
-              <b>Descrição:</b> {'laudodescricao' in laudoAtual ? laudoAtual.laudodescricao : ''}
-            </div>
-            <div>
-              <b>Tipo de Laudo:</b>{' '}
-              {tiposLaudo.find((t) => t.idtipolaudo === laudoAtual.idtipolaudo)?.tipolaudonome ||
-                laudoAtual.idtipolaudo}
-            </div>
-            <div>
-              <b>Tipo de Instalação:</b>{' '}
-              {tiposInstalacao.find((t) => t.idtipoinstalacao === laudoAtual.idtipoinstalacao)
-                ?.tipoinstalacaonome || laudoAtual.idtipoinstalacao}
-            </div>
-            <div>
-              <b>Status:</b> {laudoAtual.laudostatus}
-            </div>
-            <div>
-              <b>OS Clickup:</b> {laudoAtual.laudoosclickup}
-            </div>
-
-            <div>
-              <b>Horário de Fechamento:</b>{' '}
-              {laudoAtual.laudofechamento
-                ? new Date(laudoAtual.laudofechamento).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                : 'Sem horário definido'}
-            </div>
-            
-            <div>
-              <b>Conteúdo:</b>
-            </div>
-            <div style={{ border: '1px solid #ccc', padding: '10px', marginTop: '5px' }}>
-              {'laudohtmlmd' in laudoAtual && laudoAtual.laudohtmlmd ? (
-                <Markdown 
-                  value={laudoAtual.laudohtmlmd} 
-                  mode="somente-leitura"
-                />
-              ) : (
-                'Nenhum conteúdo'
-              )}
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                gap: 8,
-                marginTop: 16,
-              }}
-            >
-              <button
-                style={{ background: '#FFD600' }}
-                onClick={() => abrirEditar(laudoAtual as LaudoWithImages)}
-              >
-                Editar
-              </button>
-              <button
-                style={{ background: '#F44336', color: '#fff' }}
-                onClick={() => abrirExcluir(laudoAtual as LaudoWithImages)}
-              >
-                Excluir
-              </button>
-              <button style={{ background: '#aaa', color: '#fff' }} onClick={() => setModal(null)}>
-                Fechar
-              </button>
             </div>
           </div>
         </div>
