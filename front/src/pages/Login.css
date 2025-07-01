@@ -1,120 +1,262 @@
 body {
-  background-color: #fff;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  max-width: 100%;
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    max-width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
+/* --- Header --- */
 .login-header {
-  background-color: #ffc800;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  position: relative;
+    background-color: #ffc800;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    position: relative;
+    flex-shrink: 0;
 }
 
 .login-logo img {
-  height: 40px;
+    height: 40px;
+    position: absolute;
+    left: 20px;
 }
 
 .login-title-header {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-  color: black;
-  left: -20px; /* Mantendo o ajuste de centralização visual */
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
 }
 
+/* --- Main Content --- */
 .login-main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 80px 20px;
-  min-height: calc(100vh - 80px);
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
 .login-box {
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 30px 25px; /* Um pouco mais compacto */
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
-  width: 100%;
-  max-width: 525px; /* Reduzido */
-  min-height: 420px;
-  position: relative;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 450px;
+    min-height: 400px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Novo título dentro da box */
 .login-box-title {
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #333;
 }
 
 .login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    max-width: 350px;
 }
 
 .login-form input[type="email"],
 .login-form input[type="password"],
 .login-form input[type="text"] {
-  padding: 14px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
+    padding: 14px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.login-form input::placeholder {
+    color: #888;
 }
 
 .login-senha-container {
-  position: relative;
+    position: relative;
+    width: 100%;
 }
 
 .login-senha-container input {
-  width: 100%;
+    /* Padding à direita para acomodar o ícone */
+    padding-right: 45px;
 }
 
+/* --- Correções para o Botão do Olho --- */
 .login-toggle-senha {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
+    all: unset; /* remove todos os estilos padrões */
+    position: absolute;
+    right: 15px; /* Posição inicial fixa */
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent; /* GARANTE TRANSPARÊNCIA */
+    border: none; /* GARANTE SEM BORDA */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* GARANTE SEM PADDING INTERNO */
+    z-index: 2; /* Garante que fique acima do input */
+    opacity: 0.8;
+    transition: opacity 0.2s ease, transform 0.2s ease; /* Adiciona transform na transição */
+}
+
+.login-toggle-senha:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1); /* Um pequeno zoom mais visível no hover */
 }
 
 .login-links {
-  text-align: center;
-  font-size: 12px;
+    text-align: center;
+    font-size: 14px;
+    margin-top: 20px;
 }
 
 .login-links a {
-  color: #ffc800; /* Cor amarela igual ao header */
-  text-decoration: none;
-  font-weight: bold;
+    color: #ffc800;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.login-links a:hover {
+    color: #e6b800;
+    text-decoration: underline;
 }
 
 .login-btn {
-  background-color: #ffc800;
-  color: black;
-  padding: 14px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+    background-color: #ffc800;
+    color: black;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    width: 100%;
 }
 
 .login-btn:hover {
-  background-color: #e6b800;
+    background-color: #e6b800;
+    transform: translateY(-2px);
+}
+
+/* --- Responsividade --- */
+
+/* Para telas menores que 768px (tablets e celulares) */
+@media (max-width: 768px) {
+    .login-header {
+        height: 60px;
+        padding: 0 10px;
+    }
+
+    .login-logo img {
+        height: 30px;
+        left: 10px;
+    }
+
+    .login-title-header {
+        font-size: 20px;
+    }
+
+    .login-main {
+        padding: 15px;
+    }
+
+    .login-box {
+        padding: 25px;
+        min-height: 350px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-box-title {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+
+    .login-form {
+        gap: 15px;
+        max-width: 100%; /* Isso faz o formulário ocupar toda a largura da caixa em telas pequenas */
+    }
+
+    .login-form input {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .login-senha-container input {
+        padding-right: 40px; /* Ajusta o padding do input da senha */
+    }
+
+    .login-toggle-senha {
+        right: 10px; /* Ajusta a posição do botão de olho para telas menores */
+    }
+
+    .login-btn {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .login-links {
+        font-size: 13px;
+    }
+}
+
+/* Para telas muito pequenas (celulares) */
+@media (max-width: 480px) {
+    .login-header {
+        height: 50px;
+    }
+
+    .login-logo img {
+        height: 25px;
+    }
+
+    .login-title-header {
+        font-size: 18px;
+    }
+
+    .login-box {
+        padding: 20px;
+        min-height: 300px;
+    }
+
+    .login-box-title {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .login-form input {
+        font-size: 14px;
+    }
+
+    .login-senha-container input {
+        padding-right: 35px; /* Mais ajuste para o ícone em telas muito pequenas */
+    }
+
+    .login-toggle-senha {
+        right: 8px; /* Ajuste final de posição para telas muito pequenas */
+    }
+
+    .login-btn {
+        font-size: 14px;
+    }
 }

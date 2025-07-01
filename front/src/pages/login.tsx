@@ -3,6 +3,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
+// IMPORTAR OS NOVOS COMPONENTES SVG AQUI
+import EyeOpenIcon from '../components/EyeOpenIcon'; // Ajuste o caminho se a pasta 'icons' estiver em outro lugar
+import EyeClosedIcon from '../components/EyeClosedIcon'; // Ajuste o caminho
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -47,7 +51,6 @@ const Login: React.FC = () => {
 
       <main className="login-main">
         <div className="login-box">
-          {/* Novo título dentro da box */}
           <h2 className="login-box-title">Login</h2>
 
           <form className="login-form" onSubmit={handleSubmit}>
@@ -67,14 +70,6 @@ const Login: React.FC = () => {
                 onChange={(e) => setSenha(e.target.value)}
                 required
               />
-              <button
-                type="button"
-                className="login-toggle-senha"
-                onClick={() => setMostrarSenha(!mostrarSenha)}
-                title="Mostrar ou ocultar senha"
-              >
-                {mostrarSenha ? '👁️' : '👁️'}
-              </button>
             </div>
 
             <button className="login-btn" type="submit">Entrar</button>

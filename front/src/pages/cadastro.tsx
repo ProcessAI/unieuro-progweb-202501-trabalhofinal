@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Cadastro.css';
 
+// IMPORTAR OS NOVOS COMPONENTES SVG AQUI
+import EyeOpenIcon from '../components/EyeOpenIcon'; // Verifique o caminho se for diferente
+import EyeClosedIcon from '../components/EyeClosedIcon'; // Verifique o caminho se for diferente
+
 export default function CadastroPage() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // Renomeei para 'showPassword' para ser consistente com o seu código
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -63,13 +67,6 @@ export default function CadastroPage() {
                 onChange={(e) => setSenha(e.target.value)}
                 required
               />
-              <button
-                type="button"
-                className="toggle-password-btn"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? "👁️" : "👁️"}
-              </button>
             </div>
             <button type="submit" className="cadastro-btn">
               Cadastrar
