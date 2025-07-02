@@ -20,6 +20,7 @@ interface TipoInstalacao {
 interface TipoLaudo {
   idtipolaudo: number;
   tipolaudonome: string;
+  tipolaudotemplate?: string;
 }
 
 const laudoVazio: Omit<LaudoWithImages, 'idlaudo' | 'laudodatainclusao'> = {
@@ -36,6 +37,7 @@ const laudoVazio: Omit<LaudoWithImages, 'idlaudo' | 'laudodatainclusao'> = {
 const Laudos: React.FC = () => {
   const navigate = useNavigate();
   const [laudos, setLaudos] = useState<LaudoWithImages[]>([]);
+  const [busca, setBusca] = useState('');
   const [modal, setModal] = useState<'novo' | 'editar' | 'visualizar' | 'excluir' | null>(null);
   const [pagina, setPagina] = useState(1);
   const [laudoAtual, setLaudoAtual] = useState<
@@ -45,9 +47,10 @@ const Laudos: React.FC = () => {
   // Estado para armazenar os tipos carregados do backend
   const [tiposInstalacao, setTiposInstalacao] = useState<TipoInstalacao[]>([]);
   const [tiposLaudo, setTiposLaudo] = useState<TipoLaudo[]>([]);
-  const [errors, setErrors] = useState<{ descricao?: string; osClickup?: string; 
+  const [errors, setErrors] = useState<{
+    descricao?: string; osClickup?: string;
     tipoLaudo?: string; tipoInstalacao?: string; status?: string
-   }>({});
+  }>({});
 
 
   // Função para carregar laudos, tipos de instalação e tipos de laudo
@@ -89,6 +92,7 @@ const Laudos: React.FC = () => {
     }
 
     setLaudoAtual(laudo);
+    setPagina(1);
     setModal("editar");
   };
   const abrirVisualizar = (laudo: LaudoWithImages) => {
@@ -105,18 +109,18 @@ const Laudos: React.FC = () => {
 
   // Função para atualizar o markdown em tempo real
   const handleMarkdownChange = (conteudo: string) => {
-    setLaudoAtual(prev => ({ 
-      ...prev, 
-      laudohtmlmd: conteudo 
+    setLaudoAtual(prev => ({
+      ...prev,
+      laudohtmlmd: conteudo
     }));
   };
 
   // Função para salvar o markdown e imagens automaticamente
   const handleMarkdownSave = (conteudo: string, imagens: Record<string, string>) => {
-    setLaudoAtual(prev => ({ 
-      ...prev, 
-      laudohtmlmd: conteudo, 
-      imagens: imagens 
+    setLaudoAtual(prev => ({
+      ...prev,
+      laudohtmlmd: conteudo,
+      imagens: imagens
     }));
     console.log('Markdown salvo automaticamente:', { conteudo, imagens });
   };
@@ -139,7 +143,7 @@ const Laudos: React.FC = () => {
     try {
       // Sincroniza o markdown antes de salvar
       sincronizarMarkdown();
-      
+
       const { idtipolaudo, idtipoinstalacao, laudostatus, laudodescricao, laudoosclickup } = laudoAtual;
       const novosErros: typeof errors = {};
 
@@ -171,7 +175,7 @@ const Laudos: React.FC = () => {
         laudostatus: 2, // Em andamento
       });
 
-      
+
       setLaudos([...laudos, novo]);
       setModal(null);
     } catch (err) {
@@ -240,15 +244,23 @@ const Laudos: React.FC = () => {
   };
 
   const laudoFinalizado = modal === 'editar' && laudoAtual.laudostatus === 3;
-  
+  const laudosFiltrados = laudos.filter((laudo) =>
+    laudo.laudodescricao?.toLowerCase().includes(busca.toLowerCase())
+  );
+
   return (
     <div>
-     <Navbar />
+      <Navbar />
       <div
         className="top-bar"
         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: 16 }}
       >
-        <input placeholder="BUSCAR" style={{ width: 200, padding: 8 }} />
+        <input
+          placeholder="BUSCAR"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          style={{ width: 200, padding: 8 }}
+        />
         <button
           className="novo-laudo-btn"
           style={{ background: '#FFD600', padding: '8px 16px', borderRadius: 6, fontWeight: 'bold' }}
@@ -266,7 +278,7 @@ const Laudos: React.FC = () => {
           <div>OS</div>
         </div>
 
-        {laudos.map((laudo) => (
+        {laudosFiltrados.map((laudo) => (
           <div key={laudo.idlaudo} className="laudo-row" onClick={() => abrirVisualizar(laudo)}>
             <div data-label="Descrição">{laudo.laudodescricao}</div>
             <div data-label="Tipo">
@@ -305,9 +317,20 @@ const Laudos: React.FC = () => {
                     disabled={laudoFinalizado}
                     className={errors.tipoLaudo ? 'input-error' : ''}
                     value={laudoAtual.idtipolaudo || 0}
-                    onChange={(e) =>
-                      setLaudoAtual({ ...laudoAtual, idtipolaudo: Number(e.target.value) } as any)
-                    }
+                    onChange={(e) => {
+                      const idSelecionado = Number(e.target.value);
+                      const tipoSelecionado = tiposLaudo.find((t) => t.idtipolaudo === idSelecionado);
+
+                      setLaudoAtual((prev) => ({
+                        ...prev,
+                        idtipolaudo: idSelecionado,
+                        // Preenche o markdown SÓ se for novo
+                        laudohtmlmd:
+                          modal === 'novo' && tipoSelecionado?.tipolaudotemplate
+                            ? tipoSelecionado.tipolaudotemplate
+                            : prev.laudohtmlmd,
+                      }));
+                    }}
                   >
                     <option value={0}>Tipo de Laudo</option>
                     {tiposLaudo.map((tipo) => (
@@ -374,23 +397,7 @@ const Laudos: React.FC = () => {
                   )}
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Horário de Fechamento:</label>
-                  <input
-                    type="time"
-                    disabled={laudoFinalizado}
-                    value={
-                      typeof laudoAtual.laudofechamento === 'string'
-                        ? laudoAtual.laudofechamento
-                        : laudoAtual.laudofechamento
-                        ? laudoAtual.laudofechamento.toISOString().substring(11, 16)
-                        : ''
-                    }
-                    onChange={(e) =>
-                      setLaudoAtual({ ...laudoAtual, laudofechamento: e.target.value })
-                    }
-                  />
-                </div>
+
               </>
             )}
 
@@ -423,13 +430,18 @@ const Laudos: React.FC = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
               <div>
                 {pagina > 1 && (
-                  <button style={{ marginRight: 8 }} onClick={() => setPagina(pagina - 1)}>
+                  <button style={{ marginRight: 8, backgroundColor: '#FFD600' }} onClick={() => setPagina(pagina - 1)}>
                     Voltar
                   </button>
                 )}
                 {pagina < 2 && (
-                  <button onClick={() => setPagina(pagina + 1)}>
+                  <button style={{ backgroundColor: '#FFD600' }} onClick={() => setPagina(pagina + 1)}>
                     Próximo
+                  </button>
+                )}
+                {pagina < 2 && (
+                  <button style={{ background: '#aaa', color: '#fff', marginLeft: '10px' }} onClick={() => setModal(null)}>
+                    Cancelar
                   </button>
                 )}
               </div>
@@ -456,6 +468,80 @@ const Laudos: React.FC = () => {
           </div>
         </div>
       )}
+
+
+      {modal === 'visualizar' && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Visualizar Laudo</h2>
+            <div>
+              <b>Descrição:</b> {'laudodescricao' in laudoAtual ? laudoAtual.laudodescricao : ''}
+            </div>
+            <div>
+              <b>Tipo de Laudo:</b>{' '}
+              {tiposLaudo.find((t) => t.idtipolaudo === laudoAtual.idtipolaudo)?.tipolaudonome ||
+                laudoAtual.idtipolaudo}
+            </div>
+            <div>
+              <b>Tipo de Instalação:</b>{' '}
+              {tiposInstalacao.find((t) => t.idtipoinstalacao === laudoAtual.idtipoinstalacao)
+                ?.tipoinstalacaonome || laudoAtual.idtipoinstalacao}
+            </div>
+            <div>
+              <b>Status:</b> {laudoAtual.laudostatus}
+            </div>
+            <div>
+              <b>OS Clickup:</b> {laudoAtual.laudoosclickup}
+            </div>
+
+            <div>
+              <b>Horário de Fechamento:</b>{' '}
+              {laudoAtual.laudofechamento
+                ? new Date(laudoAtual.laudofechamento).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : 'Sem horário definido'}
+            </div>
+
+            <div>
+              <b>Conteúdo:</b>
+            </div>
+            <div style={{ border: '1px solid #ccc', padding: '10px', marginTop: '5px' }}>
+              {'laudohtmlmd' in laudoAtual && laudoAtual.laudohtmlmd ? (
+                <Markdown
+                  value={laudoAtual.laudohtmlmd}
+                  mode="somente-leitura"
+                />
+              ) : (
+                'Nenhum conteúdo'
+              )}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 8,
+                marginTop: 16,
+              }}
+            >
+              <button
+                style={{ background: '#FFD600' }}
+                onClick={() => abrirEditar(laudoAtual as LaudoWithImages)}
+              >
+                Editar
+              </button>
+              <button
+                style={{ background: '#F44336', color: '#fff' }}
+                onClick={() => abrirExcluir(laudoAtual as LaudoWithImages)}
+              >
+                Excluir
+              </button>
+              <button style={{ background: '#aaa', color: '#fff' }} onClick={() => setModal(null)}>
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {modal === 'excluir' && (
         <div className="modal">
