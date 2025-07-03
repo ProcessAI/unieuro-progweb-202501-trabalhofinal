@@ -1,11 +1,10 @@
 export interface Equipamento {
   id?: number;           // novo campo opcional para guardar o id real
-  nome: string;
+  modelo: string;
   serie: string;
   tipo: string;     // texto, ex: "Desktop"
   alugado: string;  // "Sim" ou "Não"
   sede: string;     // texto, ex: "Matriz São Paulo"
-  modelo: string;
   ipv4: string;
   ipv6: string;
   anydesk: string;
@@ -76,8 +75,8 @@ export async function addEquipamento(e: Equipamento): Promise<void> {
   if (!tipo) throw new Error(`Tipo "${e.tipo}" não encontrado`);
 
   const payload = {
-    equipserie: e.serie,
     equipmodel: e.modelo,
+    equipserie: e.serie,
     equipmac: e.mac.replace(/:/g, "").toUpperCase(),
     equipipv4: e.ipv4,
     equipipv6: e.ipv6,

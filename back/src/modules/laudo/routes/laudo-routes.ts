@@ -4,10 +4,9 @@ import {
   findById,
   create,
   update,
-  deleteLaudo
+  deleteLaudo,
+
 } from '../service/laudo-service';
-import { PrismaClient } from '@prisma/client'; // Adicionado
-const prisma = new PrismaClient(); // Adicionado
 
 const router = Router();
 
@@ -15,6 +14,7 @@ const router = Router();
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const laudos = await findAll();
+    console.log("Laudos encontrados:", laudos);
     res.json(laudos);
   } catch (error) {
     res.status(500).json({ error: 'Erro ao buscar laudos' });
@@ -45,10 +45,11 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     idtipoinstalacao,
     laudoosclickup,
     laudostatus,
+    laudofechamento,
+    imagens,
   } = req.body;
 
   console.log("Requisição recebida:", req.body);
-
   try {
     const novoLaudo = await create({
       laudodescricao,
@@ -57,6 +58,8 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       idtipoinstalacao,
       laudoosclickup,
       laudostatus,
+      laudofechamento,
+      imagens: imagens || {}, // Imagens podem ser um objeto vazio se não forem fornecidas
     });
     res.status(201).json(novoLaudo);
   } catch (error) {
@@ -85,7 +88,6 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
       idtipolaudo,
       idtipoinstalacao,
       laudoosclickup,
-      laudofechamento,
       laudostatus 
     });
 
@@ -108,28 +110,6 @@ router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
     res.json({ message: 'Laudo deletado com sucesso' });
   } catch (error) {
     res.status(500).json({ error: 'Erro ao deletar laudo' });
-  }
-});
-
-// Nova rota: Listar todos os tipos de instalação
-router.get('/tipos-instalacao', async (req: Request, res: Response) => {
-  try {
-    const tipos = await prisma.tipoinstalacao.findMany();
-    res.json(tipos);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erro ao buscar tipos de instalação' });
-  }
-});
-
-// Nova rota: Listar todos os tipos de laudo
-router.get('/tipos-laudo', async (req: Request, res: Response) => {
-  try {
-    const tipos = await prisma.tipolaudo.findMany();
-    res.json(tipos);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erro ao buscar tipos de laudo' });
   }
 });
 

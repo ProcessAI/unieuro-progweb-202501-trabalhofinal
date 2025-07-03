@@ -24,13 +24,13 @@ app.use(cors({
   credentials: true
 }));
 
-
 /* Middleware para aceitar requisições JSON e habilitar CORS */
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+
 
 /* Nossos Routes para cada Fucionalidade ou Serviço*/
-app.use('/api/laudos',  laudoRoutes);
-app.use('/api/tipoeq',  tipoeqRoutes);
+app.use('/api/laudos', laudoRoutes);
+app.use('/api/tipoeq', tipoeqRoutes);
 app.use('/api/sede', sedeRoutes);
 app.use('/api/cliente', routeCliente);
 app.use('/api/endereco', enderecoRouter);

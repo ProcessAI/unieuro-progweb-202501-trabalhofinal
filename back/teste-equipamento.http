@@ -1,5 +1,5 @@
 ### ✅ Criar novo equipamento
-POST http://localhost:8080/api/equipamento/criarEquipamento
+POST https://laudinho.cleversystems.net/api/equipamento/criarEquipamento
 Content-Type: application/json
 
 {
@@ -18,19 +18,19 @@ Content-Type: application/json
 ###
 
 ### 📋 Listar todos os equipamentos
-GET http://localhost:8080/api/equipamento/
+GET https://laudinho.cleversystems.net/api/equipamento/
 Accept: application/json
 
 ###
 
 ### 🔍 Consultar equipamento por ID
-GET http://localhost:8080/api/equipamento/1
+GET https://laudinho.cleversystems.net/api/equipamento/1
 Accept: application/json
 
 ###
 
 ### ♻️ Atualizar equipamento
-PUT http://localhost:8080/api/equipamento/1
+PUT https://laudinho.cleversystems.net/api/equipamento/1
 Content-Type: application/json
 
 {
@@ -49,5 +49,5 @@ Content-Type: application/json
 ###
 
 ### ❌ Deletar equipamento
-DELETE http://localhost:8080/api/equipamento/1
+DELETE https://laudinho.cleversystems.net/api/equipamento/1
 Accept: application/json

@@ -9,13 +9,10 @@ import {
   updateTipoeq,
   deleteTipoeq,
   Tipoeq
-} from '../service/tipoeq-api'; // novo nome
+} from '../service/tipoeq-api';
 import './TipoeqCrud.css';
 import toast from 'react-hot-toast';
-
-type TipoEqForm = {
-  tipoeqnome: string;
-};
+import Navbar from '@/components/Navbar';
 
 const TipoeqCrud: React.FC = () => {
   const navigate = useNavigate();
@@ -23,12 +20,12 @@ const TipoeqCrud: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<TipoEqForm>({
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(tipoEquipamentoSchema),
   });
 
-  // Carregar dados do banco ao iniciar
   useEffect(() => {
     async function loadData() {
       const data = await fetchTipoeqs();
@@ -37,7 +34,7 @@ const TipoeqCrud: React.FC = () => {
     loadData();
   }, []);
 
-  const onSubmit = async (data: TipoEqForm) => {
+  const onSubmit = async (data: { tipoeqnome: string }) => {
     if (isEditing && editId !== null) {
       const updated = await updateTipoeq(editId, data.tipoeqnome);
       if (updated) {
@@ -46,8 +43,6 @@ const TipoeqCrud: React.FC = () => {
       } else {
         toast.error('Erro ao atualizar equipamento.');
       }
-      setIsEditing(false);
-      setEditId(null);
     } else {
       const created = await createTipoeq(data.tipoeqnome);
       if (created) {
@@ -57,14 +52,17 @@ const TipoeqCrud: React.FC = () => {
         toast.error('Erro ao inserir equipamento.');
       }
     }
+    setIsEditing(false);
+    setEditId(null);
     reset();
+    setShowModal(false);
   };
 
   const handleEdit = (t: Tipoeq) => {
     setIsEditing(true);
     setEditId(t.idtipoeq);
     setValue('tipoeqnome', t.tipoeqnome);
-    toast('Modo edição ativado', { icon: '✏️' });
+    setShowModal(true);
   };
 
   const handleDelete = async (id: number) => {
@@ -82,36 +80,18 @@ const TipoeqCrud: React.FC = () => {
   );
 
   return (
-    <div className="container">
-      <header className="header">
-        <div className="header-left">
-          <img src="/logo.png" alt="Logo" className="logo" />
-          <nav className="nav">
-            <a href="/clientes">HOME</a>
-            <a href="/clientes">CLIENTES</a>
-            <a href="/tipoeq">TIPO EQUIPAMENTO</a>
-            <a href="/tipoinstalacao">TIPO INSTALAÇÃO</a>
-            <a href="/tipolaudo">TIPO LAUDO</a>
-            <a href="/equipamentos" className="nav-active">EQUIPAMENTOS</a>
-            <a href="/laudo">LAUDOS</a>
-          </nav>
-        </div>
-        <div className="header-right">
-          <button
-            className="logout-btn"
-            onClick={() => navigate('/login')}
-          >
-            SAIR
-          </button>
-        </div>
-      </header>
-      <input
-        type="text"
-        className="search"
-        placeholder="BUSCAR"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+    <><Navbar /><div className="container">
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+        <input
+          type="text"
+          className="search"
+          placeholder="BUSCAR"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)} />
+        <button className="btn-novo" onClick={() => { reset(); setIsEditing(false); setShowModal(true); }}>
+          Novo Tipo de Equipamento
+        </button>
+      </div>
 
       <table>
         <thead>
@@ -135,27 +115,31 @@ const TipoeqCrud: React.FC = () => {
         </tbody>
       </table>
 
-      <form
-        className="form"
-        onSubmit={handleSubmit(onSubmit, () => {
-          toast.error('Por favor, corrija os erros antes de enviar.');
-        })}
-      >
-        <div className="input-wrapper">
-          <input
-            type="text"
-            placeholder="Tipo de Equipamento"
-            {...register('tipoeqnome')}
-            className={errors.tipoeqnome ? 'input-error' : ''}
-          />
-          {errors.tipoeqnome && (
-            <span className="input-error-message">Somente letras e números</span>
-          )}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>{isEditing ? 'Editar Tipo de Equipamento' : 'Novo Tipo de Equipamento'}</h2>
+            <form
+              className="modal-form"
+              onSubmit={handleSubmit(onSubmit, () => toast.error('Corrija os erros antes de enviar.'))}
+            >
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  placeholder="Tipo de Equipamento"
+                  {...register('tipoeqnome')}
+                  className={errors.tipoeqnome ? 'input-error' : ''} />
+                {errors.tipoeqnome && (
+                  <span className="input-error-message">Somente letras e números</span>
+                )}
+              </div>
+              <button type="submit">{isEditing ? 'ATUALIZAR' : 'INSERIR'}</button>
+              <button type="button" onClick={() => setShowModal(false)} style={{ background: '#ccc' }}>Cancelar</button>
+            </form>
+          </div>
         </div>
-
-        <button type="submit">{isEditing ? 'ATUALIZAR' : 'INSERIR'}</button>
-      </form>
-    </div>
+      )}
+    </div></>
   );
 };
 

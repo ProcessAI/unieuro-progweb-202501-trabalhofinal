@@ -1,6 +1,6 @@
 <h3>Cadastro de sede:</h3>
 POST 
-http://localhost:8080/api/sede
+https://laudinho.cleversystems.net/api/sede
 {
   "sedenome": "Nome",
   "sedestatus": 1 (Opcional),
@@ -14,15 +14,15 @@ Processamento:
 
 <h3>Buscar todas as sedes:</h3>
 GET
-http://localhost:8080/api/sede
+https://laudinho.cleversystems.net/api/sede
 
 <h3>Buscar sede por ID:</h3>
 GET
-http://localhost:8080/api/sede/{idsede}
+https://laudinho.cleversystems.net/api/sede/{idsede}
 
 <h3>Atualizar sede:</h3>
 PUT
-http://localhost:8080/api/sede/{idsede}
+https://laudinho.cleversystems.net/api/sede/{idsede}
 {
   "sedenome": "Nome" (Opcional),
   "sedestatus": 1 (Opcional)
@@ -33,8 +33,8 @@ Processamento:
 
 <h3>Apagar sede:</h3>
 DELETE
-http://localhost:8080/api/sede/{idsede}
+https://laudinho.cleversystems.net/api/sede/{idsede}
 
 <h3>Buscar todas as sedes por ID do cliente:</h3>
 GET
-http://localhost:8080/api/sede/cliente/{idcliente}
+https://laudinho.cleversystems.net/api/sede/cliente/{idcliente}
