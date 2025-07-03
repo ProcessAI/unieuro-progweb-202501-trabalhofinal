@@ -1,6 +1,6 @@
 <h3>Token de Autenticação</h3>
 GET
-http://localhost:8080/api/protegida
+https://laudinho.cleversystems.net/api/protegida
 
 no Headers: 
 Key: Authorization

@@ -88,7 +88,6 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
       idtipolaudo,
       idtipoinstalacao,
       laudoosclickup,
-      laudofechamento,
       laudostatus 
     });
 

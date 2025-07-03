@@ -81,8 +81,8 @@ export default function Equipamentos() {
       try {
         const [dadosEquip, dadosTipos, dadosSedes] = await Promise.all([
           getEquipamentos(),
-          fetch("http://localhost:8080/api/tipoeq/listarTipoEquipamento").then(res => res.json()),
-          fetch("http://localhost:8080/api/sede").then(res => res.json())
+          fetch("https://laudinho.cleversystems.net/api/tipoeq/listarTipoEquipamento").then(res => res.json()),
+          fetch("https://laudinho.cleversystems.net/api/sede").then(res => res.json())
         ]);
         
         const equipamentosComCliente = dadosEquip.map((eq: Equipamento) => {

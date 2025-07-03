@@ -1,2 +1,2 @@
 ### Listar clientes
-GET http://localhost:8080/api/cliente/listarCliente
+GET https://laudinho.cleversystems.net/api/cliente/listarCliente

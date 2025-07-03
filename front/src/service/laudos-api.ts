@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080/api/laudos';
+const API_BASE_URL = 'https://laudinho.cleversystems.net/api/laudos';
 
 export interface Laudo {
   idlaudo: number;

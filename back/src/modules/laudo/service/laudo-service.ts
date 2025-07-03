@@ -107,8 +107,8 @@ export const update = async (id: number, data: {
   return await persistence.update(id, {
     laudodescricao: data.laudodescricao,
     laudohtmlmd: data.laudohtmlmd,
-    idtipolaudo: data.idtipolaudo,
-    idtipoinstalacao: data.idtipoinstalacao,
+    tipolaudo: { connect: { idtipolaudo: data.idtipolaudo } },
+    tipoinstalacao: { connect: { idtipoinstalacao: data.idtipoinstalacao } },
     laudoosclickup: data.laudoosclickup ?? null,
     laudostatus: data.laudostatus,
     laudofechamento: horarioConvertido,
