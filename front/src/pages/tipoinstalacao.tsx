@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './tipoinstalacao.css';
 
 import { getTiposInstalacao, createTipoInstalacao, updateTipoInstalacao, deleteTipoInstalacao } from '../service/tipoinstalacao-api';
+import Navbar from '@/components/Navbar';
 
 interface TipoInstalacao {
   idtipoinstalacao: number;
@@ -65,6 +66,10 @@ export default function TipoInstalacao() {
     try {
       setLoading(true);
       const payload = { tipoinstalacaonome: form.tipoinstalacaonome };
+      if (payload.tipoinstalacaonome.trim() === "") {
+        alert("O nome da instalação não pode estar vazio.");
+        return;
+      }
       if (editingInstalacao) {
         await updateTipoInstalacao(editingInstalacao.idtipoinstalacao, payload);
       } else {
@@ -108,29 +113,7 @@ export default function TipoInstalacao() {
 
   return (
     <>
-      {/* NAVBAR */}
-      <header className="header">
-        <div className="header-left">
-          <img src="/logo.png" alt="Logo" className="logo" />
-          <nav className="nav">
-            <a href="/clientes">HOME</a>
-            <a href="/clientes">CLIENTES</a>
-            <a href="/tipoeq">TIPO EQUIPAMENTO</a>
-            <a href="/tipoinstalacao">TIPO INSTALAÇÃO</a>
-            <a href="/tipolaudo">TIPO LAUDO</a>
-            <a href="/equipamentos" className="nav-active">EQUIPAMENTOS</a>
-            <a href="/laudo">LAUDOS</a>
-          </nav>
-        </div>
-          <div className="header-right">
-            <button
-              className="logout-btn"
-              onClick={() => navigate('/login')}
-            >
-              SAIR
-            </button>
-        </div>
-      </header>
+    <Navbar/>
       {/* LISTAGEM */}
       <div className="app-container">
         <div className="instalacoes-header">
