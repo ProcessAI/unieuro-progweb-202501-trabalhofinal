@@ -1,167 +1,390 @@
 .modal {
- position: fixed;
- top: 0; left: 0; width: 100vw; height: 100vh;
- background: #0008;
- display: flex; align-items: center; justify-content: center;
- z-index: 1000;
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #0008;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
 }
 
 .modal-content {
- background: #fff;
- border-radius: 12px;
- padding: 32px;
- width: 95vw;
- height: 90vh;
- max-width: 1400px;
- max-height: 900px;
- overflow-y: auto;
- overflow-x: hidden;
- box-shadow: 0 2px 16px #0003;
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px 28px 24px 28px;
+  width: 95vw;
+  max-width: 430px;
+  box-shadow: 0 2px 16px #0003;
+  font-size: 18px;
+  position: relative;
 }
 
-.modal-content.modal-excluir {
-  width: 100%;
-  max-width: 300px;
-  padding: 24px;
+.modal-content h2 {
   text-align: center;
-  height: auto !important;
-  max-height: none !important;
+  margin-bottom: 18px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
-.modal-content.modal-excluir h2 {
-  margin-bottom: 12px;
+.modal-content b {
+  font-weight: bold;
+  color: #222;
 }
 
-.modal-content.modal-excluir p {
-  margin-bottom: 20px;
+.modal-content div {
+  margin-bottom: 8px;
 }
 
-.modal-content.modal-excluir button {
+.modal-content textarea,
+.modal-content .markdown-view {
   width: 100%;
-  margin-top: 8px;
+  min-height: 60px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 16px;
+  margin-top: 4px;
+  background: #fafafa;
+  resize: vertical;
 }
 
+.modal-content .markdown-view {
+  min-height: 40px;
+}
+
+.modal-content .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.modal-content button {
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+
+.modal-content button[style*="#FFD600"] {
+  background: #FFD600;
+  color: #222;
+}
+
+.modal-content button[style*="#F44336"] {
+  background: #F44336;
+  color: #fff;
+}
+
+.modal-content button[style*="#aaa"] {
+  background: #aaa;
+  color: #fff;
+}
+
+.modal-content span[style*="float: right"] {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #444;
+  cursor: pointer;
+}
+
+/* --- Seu CSS existente abaixo (não altere) --- */
 
 input, select, textarea {
- display: block;
- width: 100%;
- margin: 8px 0;
- padding: 8px;
- border-radius: 6px;
- border: 1px solid #ccc;
- box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 textarea { min-height: 60px; }
 
 button {
- border: none;
- padding: 8px 16px;
- border-radius: 6px;
- cursor: pointer;
- font-weight: bold;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.laudos-grid {
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  margin-top: 20px !important;
-  gap: 4px !important;
-  box-sizing: border-box !important;
+.laudo-card {
+  background: #fff;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px #0002;
+  cursor: pointer;
+  max-width: 320px;
+  min-width: 220px;
+  color: #222;
 }
 
-.laudo-header,
-.laudo-row {
-  display: grid !important;
-  grid-template-columns: 2fr 1.5fr 1fr 1fr !important;
-  padding: 12px 16px !important;
-  gap: 8px !important;
-  align-items: center !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
+.laudos-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-start;
 }
 
-.laudo-header {
-  background-color: #f0f0f0 !important;
-  font-weight: bold !important;
-  border-bottom: 2px solid #ddd !important;
+.modal {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #0008;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
 }
 
-.laudo-row {
-  background-color: #fff !important;
-  border: 1px solid #ddd !important;
-  border-radius: 0 !important;
-  cursor: pointer !important;
-  transition: background 0.2s !important;
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px 28px 24px 28px;
+  width: 95vw;
+  max-width: 430px;
+  box-shadow: 0 2px 16px #0003;
+  font-size: 18px;
+  position: relative;
 }
 
-.laudo-row:hover {
-  background-color: #f9f9f9 !important;
+/* ...demais regras de modal, markdown, etc. podem ser mantidas... */
+
+.menu-superior {
+  background: #FFD600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+  z-index: 1100;
 }
 
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.hamburger span {
+  display: block;
+  height: 4px;
+  width: 28px;
+  background: #222;
+  border-radius: 2px;
+}
+
+.side-menu {
+  display: none;
+}
+
+.menu-superior .links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.menu-superior .links a {
+  color: #222;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0 8px;
+}
 
 @media (max-width: 600px) {
-  .laudos-grid {
-    gap: 12px !important;
+  .menu-superior .links {
+    display: none;
   }
-
-  .laudo-header {
-    display: none !important; /* Esconde o cabeçalho em telas pequenas */
-  }
-
-  .laudo-row {
-    display: flex !important;
-    flex-direction: column !important;
-    padding: 12px !important;
-    border-radius: 8px !important;
-    background-color: #fff !important;
-    border: 1px solid #ddd !important;
-  }
-
-  .laudo-row div {
+  .hamburger {
     display: flex;
-    justify-content: space-between;
-    padding: 4px 0;
+  }
+  .side-menu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: -220px;
+    width: 200px;
+    height: 100vh;
+    background: #FFD600;
+    box-shadow: 2px 0 8px #0002;
+    padding-top: 24px;
+    transition: left 0.2s;
+    z-index: 2000;
+  }
+  .side-menu a {
+    color: #222;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 12px 24px;
+    font-size: 17px;
+    border-bottom: 1px solid #fff3;
+  }
+  .side-menu.open {
+    left: 0;
+  }
+  .user-area {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    width: auto;
+  }
+  .top-bar {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+    justify-content: center;
+  }
+  .top-bar input {
+    width: 100px !important;
+    font-size: 14px;
+    padding: 6px;
+  }
+  .novo-laudo-btn {
+    width: 90px;
+    font-size: 14px;
+    padding: 8px 0;
+    margin-top: 0;
+    align-self: auto;
+  }
+  .laudos-list {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+  .laudo-card {
+    max-width: 95vw;
+    min-width: unset;
+    width: 100%;
+    margin: 8px 0;
+    padding: 12px;
     font-size: 15px;
   }
-
-  .laudo-row div::before {
-    content: attr(data-label);
-    font-weight: bold;
-    margin-right: 8px;
-    color: #444;
+  .modal-content {
+    width: 98vw;
+    height: 95vh;
+    padding: 16px;
   }
+  input, select, textarea {
+    font-size: 16px;
+  }
+  button {
+    font-size: 16px;
+  }
+}
 
- .top-bar {
-   flex-direction: row;
-   align-items: center;
-   gap: 8px;
-   margin: 8px 0;
-   justify-content: center;
- }
- .top-bar input {
-   width: 100px !important;
-   font-size: 14px;
-   padding: 6px;
- }
- .novo-laudo-btn {
-   width: 90px;
-   font-size: 14px;
-   padding: 8px 0;
-   margin-top: 0;
-   align-self: auto;
- }
- .modal-content {
-   width: 98vw;
-   height: 95vh;
-   padding: 16px;
- }
- input, select, textarea {
-   font-size: 16px;
- }
- button {
-   font-size: 16px;
- }
+/* Modal de exclusão customizado */
+.modal-content.modal-excluir {
+  max-width: 420px;
+  min-width: 320px;
+  padding: 32px 32px 28px 32px;
+}
+
+.modal-content.modal-excluir h2 {
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.modal-content.modal-excluir .modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.btn-excluir {
+  background: #D32F2F;
+  color: #fff;
+  font-size: 18px;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-weight: bold;
+  border: none;
+  transition: background 0.2s;
+}
+
+.btn-excluir:hover {
+  background: #b71c1c;
+}
+
+.btn-cancelar {
+  background: #B0B4B9;
+  color: #fff;
+  font-size: 18px;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-weight: bold;
+  border: none;
+  transition: background 0.2s;
+}
+
+.btn-cancelar:hover {
+  background: #888c91;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.modal-content .markdown-view {
+  min-height: 40px;
+  margin-bottom: 16px;
+  background: #fafafa;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.modal-content b {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.modal-content input[type="datetime-local"] {
+  font-size: 16px;
+  padding: 8px;
+}
+
+.modal-content button[style*="#FFD600"] {
+  background: #FFD600;
+  color: #222;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px 28px;
+  border-radius: 6px;
+}
+
+.modal-content button[style*="#B0B4B9"] {
+  background: #B0B4B9;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px 28px;
+  border-radius: 6px;
 }
