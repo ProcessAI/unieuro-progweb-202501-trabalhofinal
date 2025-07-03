@@ -9,6 +9,7 @@ import {
   deleteEquipamento
 } from "../service/equipamentoService";
 import './Equipamentos.css';
+import Navbar from '@/components/Navbar';
 
 // Novos tipos
 interface TipoEquipamento {
@@ -80,8 +81,8 @@ export default function Equipamentos() {
       try {
         const [dadosEquip, dadosTipos, dadosSedes] = await Promise.all([
           getEquipamentos(),
-          fetch("https://laudinho.cleversystems.net/api/tipoeq/listarTipoEquipamento").then(res => res.json()),
-          fetch("https://laudinho.cleversystems.net/api/sede").then(res => res.json())
+          fetch("http://localhost:8080/api/tipoeq/listarTipoEquipamento").then(res => res.json()),
+          fetch("http://localhost:8080/api/sede").then(res => res.json())
         ]);
         
         const equipamentosComCliente = dadosEquip.map((eq: Equipamento) => {
@@ -301,28 +302,7 @@ export default function Equipamentos() {
 
   return (
     <div style={{ backgroundColor: '#f3f4f6', minHeight: '100vh', fontSize: '14px' }}>
-      <header className="header">
-        <div className="header-left">
-          <img src="/logo.png" alt="Logo" className="logo" />
-          <nav className="nav">
-            <a href="/clientes">HOME</a>
-            <a href="/clientes">CLIENTES</a>
-            <a href="/tipoeq">TIPO EQUIPAMENTO</a>
-            <a href="/tipoinstalacao">TIPO INSTALAÇÃO</a>
-            <a href="/tipolaudo">TIPO LAUDO</a>
-            <a href="/equipamentos" className="nav-active">EQUIPAMENTOS</a>
-            <a href="/laudo">LAUDOS</a>
-          </nav>
-        </div>
-        <div className="header-right">
-          <button
-            className="logout-btn"
-            onClick={() => navigate('/login')}
-          >
-            SAIR
-          </button>
-        </div>
-      </header>
+     <Navbar/>
       <div className="table-container">
         <div className="table-header">
           <input

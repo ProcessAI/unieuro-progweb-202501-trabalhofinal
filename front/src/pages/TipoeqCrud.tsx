@@ -12,6 +12,7 @@ import {
 } from '../service/tipoeq-api';
 import './TipoeqCrud.css';
 import toast from 'react-hot-toast';
+import Navbar from '@/components/Navbar';
 
 const TipoeqCrud: React.FC = () => {
   const navigate = useNavigate();
@@ -79,15 +80,14 @@ const TipoeqCrud: React.FC = () => {
   );
 
   return (
-    <div className="container">
+    <><Navbar /><div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
         <input
           type="text"
           className="search"
           placeholder="BUSCAR"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+          onChange={(e) => setSearchTerm(e.target.value)} />
         <button className="btn-novo" onClick={() => { reset(); setIsEditing(false); setShowModal(true); }}>
           Novo Tipo de Equipamento
         </button>
@@ -128,8 +128,7 @@ const TipoeqCrud: React.FC = () => {
                   type="text"
                   placeholder="Tipo de Equipamento"
                   {...register('tipoeqnome')}
-                  className={errors.tipoeqnome ? 'input-error' : ''}
-                />
+                  className={errors.tipoeqnome ? 'input-error' : ''} />
                 {errors.tipoeqnome && (
                   <span className="input-error-message">Somente letras e números</span>
                 )}
@@ -140,7 +139,7 @@ const TipoeqCrud: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </div></>
   );
 };
 

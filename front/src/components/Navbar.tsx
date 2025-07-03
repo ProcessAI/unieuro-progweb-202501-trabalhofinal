@@ -21,9 +21,6 @@ const Navbar: React.FC = () => {
           {/* Desktop Navigation */}
           <div className="hidden lg:block">
             <div className="flex items-center space-x-6 xl:space-x-8">
-              <a href="" className="text-black font-semibold hover:text-gray-700 transition-colors duration-200 text-sm xl:text-base whitespace-nowrap">
-                HOME
-              </a>
               <a href="/clientes" className="text-black font-semibold hover:text-gray-700 transition-colors duration-200 text-sm xl:text-base whitespace-nowrap">
                 CLIENTES
               </a>
