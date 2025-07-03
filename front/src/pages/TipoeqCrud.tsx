@@ -98,6 +98,7 @@ const TipoeqCrud: React.FC = () => {
           <tr>
             <th>ID</th>
             <th>Nome</th>
+            <th>Status</th> {/* nova coluna */}
             <th>Ações</th>
           </tr>
         </thead>
@@ -107,6 +108,27 @@ const TipoeqCrud: React.FC = () => {
               <td>{t.idtipoeq}</td>
               <td>{t.tipoeqnome}</td>
               <td>
+                <select
+                  value={t.status}
+                  onChange={async (e) => {
+                    const novoStatus = e.target.value as "ativo" | "inativo";
+                    const atualizado = await updateTipoeq(t.idtipoeq, t.tipoeqnome, novoStatus);
+                    if (atualizado) {
+                      setTipos(tipos.map(tipo =>
+                        tipo.idtipoeq === t.idtipoeq ? { ...tipo, status: novoStatus } : tipo
+                      ));
+                      toast.success('Status atualizado!');
+                    } else {
+                      toast.error('Erro ao atualizar status.');
+                    }
+                  }}
+                >
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                </select>
+              </td>
+              <td>
+                <button onClick={() => alert(`ID: ${t.idtipoeq}\nNome: ${t.tipoeqnome}`)}>VISUALIZAR</button>
                 <button onClick={() => handleEdit(t)}>EDITAR</button>
                 <button onClick={() => handleDelete(t.idtipoeq)}>DELETAR</button>
               </td>

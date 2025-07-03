@@ -3,6 +3,7 @@ const API_URL = "https://laudinho.cleversystems.net/api/tipoeq";
 export interface Tipoeq {
   idtipoeq: number;
   tipoeqnome: string;
+  status: "ativo" | "inativo"; // Adicione esta linha
 }
 
 export async function fetchTipoeqs(): Promise<Tipoeq[]> {
@@ -31,12 +32,12 @@ export async function createTipoeq(tipoeqnome: string): Promise<Tipoeq | null> {
   }
 }
 
-export async function updateTipoeq(idtipoeq: number, tipoeqnome: string): Promise<Tipoeq | null> {
+export async function updateTipoeq(idtipoeq: number, tipoeqnome: string, status: "ativo" | "inativo"): Promise<Tipoeq | null> {
   try {
     const res = await fetch(`${API_URL}/atualizarTipoEquipamento/${idtipoeq}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tipoeqnome }),
+      body: JSON.stringify({ tipoeqnome, status }),
     });
     if (!res.ok) throw new Error('Erro ao atualizar tipo de equipamento');
     return await res.json();
