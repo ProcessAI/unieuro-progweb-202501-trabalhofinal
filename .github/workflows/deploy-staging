@@ -2,7 +2,7 @@ name: Deploy para Servidor SSH
 
 on:
   push:
-    branches: [ main ]
+    branches: [ homolog ]
   workflow_dispatch:
 
 jobs:
