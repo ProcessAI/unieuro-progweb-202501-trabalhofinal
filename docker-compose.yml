@@ -1,0 +1,23 @@
+services:
+  back:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    container_name: laudinho-back
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key}
+    ports:
+      - "8080:8080"
+
+  front:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: laudinho-front
+    restart: unless-stopped
+    depends_on:
+      - back
+    ports:
+      - "3000:80"
