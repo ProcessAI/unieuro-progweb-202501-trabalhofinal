@@ -1,105 +1,335 @@
-name: Deploy para Servidor SSH
+name: Deploy para Servidor SSH (Produção com Releases)
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      rollback:
+        description: 'Rollback? Deixe vazio para deploy normal, ou informe a release (ex: release_20260518_120000)'
+        required: false
+        default: ''
+      force_deploy:
+        description: 'Forçar deploy mesmo com health check falhando? (true/false)'
+        required: false
+        default: 'false'
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Fazer checkout do código
+      uses: actions/checkout@v4
         
-        steps:
-        - name: Fazer checkout do código
-          uses: actions/checkout@v4
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
             
-        - name: Configurar Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: '22'
-                
-        - name: Instalar e buildar frontend
-          run: |
-            cd front
-            npm i
-            npm run build
-                
-        - name: Instalar e buildar backend
-          run: |
-            cd back
-            npm i
-            npm run build
-            # Generate Prisma client for production
-            npx prisma generate
-        
-        - name: Limpar e preparar diretórios no servidor
-          uses: appleboy/ssh-action@v1.0.0
-          with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USER }}
-            password: ${{ secrets.SSH_PASSWORD }}
-            port: 22
-            script: |
-              echo "Parando aplicação com pm2 (se estiver rodando)..."
+    - name: Instalar e buildar frontend
+      run: |
+        cd front
+        npm i
+        npm run build
+            
+    - name: Instalar e buildar backend
+      run: |
+        cd back
+        npm i
+        npm run build
+        npx prisma generate
+    
+    - name: Preparar release no servidor (produção)
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
+          # Configurações produção
+          APP_DIR="/dados/laudinho"
+          RELEASES_DIR="$APP_DIR/releases"
+          CURRENT_LINK="$APP_DIR/current"
+          TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+          RELEASE_NAME="release_$TIMESTAMP"
+          
+          # Criar estrutura de releases
+          mkdir -p "$RELEASES_DIR"
+          mkdir -p "$APP_DIR/storage/logs"
+          mkdir -p "$APP_DIR/backups"
+          mkdir -p "$APP_DIR/uploads"  # para arquivos persistentes
+          
+          # Se for rollback via input
+          if [ -n "${{ github.event.inputs.rollback }}" ]; then
+            TARGET_RELEASE="${{ github.event.inputs.rollback }}"
+            if [ -d "$RELEASES_DIR/$TARGET_RELEASE" ]; then
+              echo "⏪ FAZENDO ROLLBACK EM PRODUÇÃO para $TARGET_RELEASE"
+              
+              # Backup da release atual antes do rollback
+              if [ -L "$CURRENT_LINK" ] && [ -d "$CURRENT_LINK" ]; then
+                CURRENT_RELEASE=$(basename $(readlink -f "$CURRENT_LINK"))
+                echo "📦 Backup da release atual: $CURRENT_RELEASE"
+                tar -czf "$APP_DIR/backups/pre_rollback_${CURRENT_RELEASE}.tar.gz" -C "$RELEASES_DIR" "$CURRENT_RELEASE" 2>/dev/null || true
+              fi
+              
+              # Trocar symlink
+              ln -sfn "$RELEASES_DIR/$TARGET_RELEASE" "$CURRENT_LINK"
+              
+              # Reiniciar aplicação
               pm2 delete laudinho-backend || true
+              cd "$CURRENT_LINK/backend"
+              pm2 start dist/index.js --name "laudinho-backend"
+              pm2 save
               
-              echo "Removendo diretórios antigos..."
-              rm -rf /dados/laudinho/frontend/*
-              rm -rf /dados/laudinho/backend/*
+              # Registrar rollback
+              echo "$(date): Rollback para $TARGET_RELEASE" >> "$APP_DIR/deploy_history.log"
               
-              echo "Criando diretórios se não existirem..."
-              mkdir -p /dados/laudinho/frontend
-              mkdir -p /dados/laudinho/backend
-              
-              echo "Diretórios limpos e preparados!"
-                
-        - name: Copiar frontend para servidor
-          uses: appleboy/scp-action@v0.1.4
-          with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USER }}
-            password: ${{ secrets.SSH_PASSWORD }}
-            port: 22
-            source: "front/dist/"
-            target: "/dados/laudinho/frontend/"
-            strip_components: 2
+              echo "✅ ROLLBACK concluído em produção!"
+              exit 0
+            else
+              echo "❌ Release $TARGET_RELEASE não encontrada em produção"
+              exit 1
+            fi
+          fi
+          
+          # Deploy normal - criar nova release
+          echo "🚀 Criando nova release em produção: $RELEASE_NAME"
+          mkdir -p "$RELEASES_DIR/$RELEASE_NAME"
+          mkdir -p "$RELEASES_DIR/$RELEASE_NAME/frontend"
+          mkdir -p "$RELEASES_DIR/$RELEASE_NAME/backend"
+          
+          # Linkar diretórios persistentes (uploads, logs)
+          ln -sfn "$APP_DIR/storage" "$RELEASES_DIR/$RELEASE_NAME/storage"
+          ln -sfn "$APP_DIR/uploads" "$RELEASES_DIR/$RELEASE_NAME/uploads"
+          
+          # Salvar metadata da release
+          echo "$RELEASE_NAME" > "$APP_DIR/latest_release.txt"
+          echo "$(date): Criada release $RELEASE_NAME" >> "$APP_DIR/deploy_history.log"
+          echo "GITHUB_SHA=${{ github.sha }}" > "$RELEASES_DIR/$RELEASE_NAME/metadata.txt"
+          echo "DEPLOY_TIME=$(date)" >> "$RELEASES_DIR/$RELEASE_NAME/metadata.txt"
+          echo "DEPLOYER=${{ github.actor }}" >> "$RELEASES_DIR/$RELEASE_NAME/metadata.txt"
+          
+          # Manter últimas 10 releases em produção (mais que staging)
+          cd "$RELEASES_DIR"
+          ls -t | grep release_ | tail -n +11 | xargs -r rm -rf
+          
+          echo "✅ Estrutura de produção preparada"
+          echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
+      
+    - name: Copiar frontend para release (produção)
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        source: "front/dist/"
+        target: "/dados/laudinho/releases/${{ env.RELEASE_NAME }}/frontend/"
+        strip_components: 2
+        
+    - name: Copiar backend para release (produção)
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        source: "back/dist/,back/package.json,back/package-lock.json,back/prisma/"
+        target: "/dados/laudinho/releases/${{ env.RELEASE_NAME }}/backend/"
+        strip_components: 1
+        
+    - name: Instalar dependências e testar release (produção)
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        timeout: 300s
+        command_timeout: 300s
+        script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
+          APP_DIR="/dados/laudinho"
+          RELEASE_NAME="${{ env.RELEASE_NAME }}"
+          RELEASE_PATH="$APP_DIR/releases/$RELEASE_NAME"
+          
+          echo "📦 Instalando dependências em produção..."
+          cd "$RELEASE_PATH/backend"
+          npm ci --only=production
+          
+          echo "🔧 Gerando cliente Prisma..."
+          npx prisma generate
+          
+          echo "🔍 Rodando migrations do banco (seguro)..."
+          npx prisma migrate deploy || echo "⚠️ Migrations podem já estar aplicadas"
+          
+          echo "🧪 TESTANDO aplicação em produção (porta 3002)..."
+          cd "$RELEASE_PATH/backend"
+          
+          # Iniciar app em porta diferente para testar
+          PORT=3002 node dist/index.js &
+          APP_PID=$!
+          
+          # Aguardar inicialização
+          sleep 10
+          
+          # Testar health check
+          MAX_RETRIES=5
+          RETRY=0
+          HEALTH_OK=false
+          
+          while [ $RETRY -lt $MAX_RETRIES ]; do
+            if curl -f -s http://localhost:3002/health; then
+              HEALTH_OK=true
+              break
+            fi
+            echo "Aguardando health check... (tentativa $((RETRY+1))/$MAX_RETRIES)"
+            sleep 5
+            RETRY=$((RETRY+1))
+          done
+          
+          kill $APP_PID
+          
+          if [ "$HEALTH_OK" = true ]; then
+            echo "✅ Health check passou em produção!"
+          else
+            echo "❌ Health check FALHOU em produção!"
+            if [ "${{ github.event.inputs.force_deploy }}" = "true" ]; then
+              echo "⚠️ FORCE_DEPLOY ativado - continuando mesmo com falha"
+            else
+              echo "❌ Removendo release com falha..."
+              rm -rf "$RELEASE_PATH"
+              exit 1
+            fi
+          fi
+          
+          # Testar conectividade com banco (opcional)
+          echo "🔍 Testando conexão com banco de dados..."
+          cd "$RELEASE_PATH/backend"
+          node -e "const {PrismaClient} = require('@prisma/client'); new PrismaClient().\$connect().then(() => process.exit(0)).catch((e) => {console.error(e); process.exit(1);})" || {
+            echo "❌ Falha na conexão com banco de dados!"
+            exit 1
+          }
+          
+          echo "✅ Release pronta para deploy em produção"
+      
+    - name: Trocar symlink atomicamente (DEPLOY ATIVADO EM PRODUÇÃO)
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
+          APP_DIR="/dados/laudinho"
+          CURRENT_LINK="$APP_DIR/current"
+          RELEASE_NAME="${{ env.RELEASE_NAME }}"
+          NEW_RELEASE_PATH="$APP_DIR/releases/$RELEASE_NAME"
+          
+          echo "🔄 ATIVANDO nova versão em PRODUÇÃO..."
+          
+          # Backup da release atual antes de trocar
+          if [ -L "$CURRENT_LINK" ] && [ -d "$CURRENT_LINK" ]; then
+            CURRENT_RELEASE=$(basename $(readlink -f "$CURRENT_LINK") 2>/dev/null || echo "none")
+            if [ "$CURRENT_RELEASE" != "none" ]; then
+              echo "📦 Backup da release atual: $CURRENT_RELEASE"
+              echo "$CURRENT_RELEASE" > "$APP_DIR/previous_release.txt"
+            fi
+          fi
+          
+          # Troca atômica com symlink temporário
+          ln -sfn "$NEW_RELEASE_PATH" "$CURRENT_LINK.tmp"
+          mv -Tf "$CURRENT_LINK.tmp" "$CURRENT_LINK"
+          
+          # Graceful shutdown da aplicação antiga
+          echo "🛑 Parando aplicação antiga (graceful)..."
+          pm2 stop laudinho-backend || true
+          sleep 3
+          
+          echo "🚀 Iniciando nova versão em produção..."
+          cd "$CURRENT_LINK/backend"
+          
+          # Iniciar com PM2 e configuração de produção
+          pm2 start dist/index.js \
+            --name "laudinho-backend" \
+            --node-args="--max-old-space-size=512" \
+            --max-memory-restart 1G
+          
+          pm2 save
+          
+          # Aguardar aplicação iniciar
+          sleep 5
+          
+          # Verificar se aplicação está rodando
+          if pm2 show laudinho-backend | grep -q "online"; then
+            echo "✅ APLICAÇÃO EM PRODUÇÃO RODANDO!"
+            echo "$RELEASE_NAME" > "$APP_DIR/current_release.txt"
+            echo "$(date): Deploy ativado $RELEASE_NAME" >> "$APP_DIR/deploy_history.log"
+          else
+            echo "❌ ERRO: Aplicação não iniciou corretamente!"
+            exit 1
+          fi
+          
+          # Limpar cache do PM2
+          pm2 save --force
+          
+          echo "🎉 DEPLOY EM PRODUÇÃO CONCLUÍDO! Release: $RELEASE_NAME"
+      
+    - name: Enviar notificação de sucesso (webhook opcional)
+      if: success()
+      run: |
+        echo "✅ DEPLOY EM PRODUÇÃO BEM SUCEDIDO!"
+        echo "Release: ${{ env.RELEASE_NAME }}"
+        echo "SHA: ${{ github.sha }}"
+        echo "Horário: $(date)"
+        # Opcional: enviar para Slack/Discord/Teams
+        # curl -X POST -H 'Content-type: application/json' --data '{"text":"Deploy produção: ${{ env.RELEASE_NAME }}"}' ${{ secrets.WEBHOOK_URL }}
+        
+    - name: Rollback automático em caso de falha (PRODUÇÃO)
+      if: failure() && github.event.inputs.rollback == ''
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
+          APP_DIR="/dados/laudinho"
+          CURRENT_LINK="$APP_DIR/current"
+          PREVIOUS_RELEASE=$(cat "$APP_DIR/previous_release.txt" 2>/dev/null || echo "")
+          
+          echo "⚠️⚠️⚠️ DEPLOY EM PRODUÇÃO FALHOU! ⚠️⚠️⚠️"
+          echo "Iniciando rollback automático..."
+          
+          if [ -n "$PREVIOUS_RELEASE" ] && [ -d "$APP_DIR/releases/$PREVIOUS_RELEASE" ]; then
+            echo "⏪ Rollback para $PREVIOUS_RELEASE"
             
-        - name: Copiar backend para servidor
-          uses: appleboy/scp-action@v0.1.4
-          with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USER }}
-            password: ${{ secrets.SSH_PASSWORD }}
-            port: 22
-            source: "back/dist/,back/package.json,back/package-lock.json,back/prisma/"
-            target: "/dados/laudinho/backend/"
-            strip_components: 1
+            # Trocar symlink para release anterior
+            ln -sfn "$APP_DIR/releases/$PREVIOUS_RELEASE" "$CURRENT_LINK"
             
-        - name: Instalar dependências e reiniciar aplicação
-          uses: appleboy/ssh-action@v1.0.0
-          with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USER }}
-            password: ${{ secrets.SSH_PASSWORD }}
-            port: 22
-            timeout: 300s
-            command_timeout: 300s
-            script: |
-                  export NVM_DIR="$HOME/.nvm"
-                  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-                  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
-                  echo "Instalando dependências..."
-                  cd /dados/laudinho/backend
-                  npm ci --only=production
-
-                  echo "Gerando cliente Prisma..."
-                  npx prisma generate
-
-                  echo "Iniciando aplicação com pm2..."
-                  pm2 start dist/index.js --name "laudinho-backend"
-
-                  echo "Salvando configuração do pm2..."
-                  pm2 save
-
-                  echo "Aplicação implantada com sucesso!"
+            # Reiniciar aplicação
+            pm2 delete laudinho-backend || true
+            cd "$CURRENT_LINK/backend"
+            pm2 start dist/index.js --name "laudinho-backend"
+            pm2 save
+            
+            echo "$(date): ROLLBACK AUTOMÁTICO para $PREVIOUS_RELEASE" >> "$APP_DIR/deploy_history.log"
+            echo "✅ Rollback automático concluído em produção!"
+          else
+            echo "❌ Não foi possível fazer rollback - nenhuma release anterior encontrada"
+            echo "⚠️ Intervenção manual necessária!"
+            exit 1
+          fi

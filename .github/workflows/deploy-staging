@@ -1,0 +1,243 @@
+name: Deploy para Servidor SSH (Com Releases)
+
+on:
+  push:
+    branches: [ homolog ]
+  workflow_dispatch:
+    inputs:
+      rollback:
+        description: 'Fazer rollback? (deixe vazio para deploy normal, ou coloque o timestamp da release)'
+        required: false
+        default: ''
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Fazer checkout do código
+      uses: actions/checkout@v4
+        
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+            
+    - name: Instalar e buildar frontend
+      run: |
+        cd front
+        npm i
+        npm run build
+            
+    - name: Instalar e buildar backend
+      run: |
+        cd back
+        npm i
+        npm run build
+        npx prisma generate
+    
+    - name: Preparar release no servidor
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
+          # Configurações
+          APP_DIR="/dados/laudinho-staging"
+          RELEASES_DIR="$APP_DIR/releases"
+          CURRENT_LINK="$APP_DIR/current"
+          TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+          RELEASE_NAME="release_$TIMESTAMP"
+          
+          # Criar estrutura de releases
+          mkdir -p "$RELEASES_DIR"
+          mkdir -p "$APP_DIR/storage/logs"
+          mkdir -p "$APP_DIR/backups"
+          
+          # Se for rollback via input
+          if [ -n "${{ github.event.inputs.rollback }}" ]; then
+            TARGET_RELEASE="${{ github.event.inputs.rollback }}"
+            if [ -d "$RELEASES_DIR/$TARGET_RELEASE" ]; then
+              echo "⏪ Fazendo rollback para $TARGET_RELEASE"
+              ln -sfn "$RELEASES_DIR/$TARGET_RELEASE" "$CURRENT_LINK"
+              
+              # Reiniciar aplicação com PM2
+              pm2 delete laudinho-backend-staging || true
+              cd "$CURRENT_LINK/backend"
+              pm2 start dist/index.js --name "laudinho-backend-staging"
+              pm2 save
+              
+              echo "✅ Rollback concluído!"
+              exit 0
+            else
+              echo "❌ Release $TARGET_RELEASE não encontrada"
+              exit 1
+            fi
+          fi
+          
+          # Deploy normal - criar nova release
+          echo "🚀 Criando nova release: $RELEASE_NAME"
+          mkdir -p "$RELEASES_DIR/$RELEASE_NAME"
+          mkdir -p "$RELEASES_DIR/$RELEASE_NAME/frontend"
+          mkdir -p "$RELEASES_DIR/$RELEASE_NAME/backend"
+          
+          # Linkar storage compartilhado (persistente)
+          ln -sfn "$APP_DIR/storage" "$RELEASES_DIR/$RELEASE_NAME/storage"
+          
+          echo "$RELEASE_NAME" > "$APP_DIR/latest_release.txt"
+          
+          # Manter últimas 5 releases para rollback
+          cd "$RELEASES_DIR"
+          ls -t | grep release_ | tail -n +6 | xargs -r rm -rf
+          
+          # Backup da release atual (se existir)
+          if [ -L "$CURRENT_LINK" ] && [ -d "$CURRENT_LINK" ]; then
+            CURRENT_RELEASE=$(basename $(readlink -f "$CURRENT_LINK"))
+            echo "📦 Backup da release atual: $CURRENT_RELEASE"
+            tar -czf "$APP_DIR/backups/$CURRENT_RELEASE.tar.gz" -C "$RELEASES_DIR" "$CURRENT_RELEASE" 2>/dev/null || true
+          fi
+          
+          echo "✅ Estrutura preparada"
+          echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
+      
+    - name: Copiar frontend para release
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        source: "front/dist/"
+        target: "/dados/laudinho-staging/releases/${{ env.RELEASE_NAME }}/frontend/"
+        strip_components: 2
+        
+    - name: Copiar backend para release
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        source: "back/dist/,back/package.json,back/package-lock.json,back/prisma/"
+        target: "/dados/laudinho-staging/releases/${{ env.RELEASE_NAME }}/backend/"
+        strip_components: 1
+        
+    - name: Instalar dependências e testar release
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        timeout: 300s
+        command_timeout: 300s
+        script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
+          APP_DIR="/dados/laudinho-staging"
+          RELEASE_NAME="${{ env.RELEASE_NAME }}"
+          RELEASE_PATH="$APP_DIR/releases/$RELEASE_NAME"
+          
+          echo "📦 Instalando dependências na release..."
+          cd "$RELEASE_PATH/backend"
+          npm ci --only=production
+          
+          echo "🔧 Gerando cliente Prisma..."
+          npx prisma generate
+          
+          echo "🧪 Testando aplicação antes do deploy (health check)..."
+          cd "$RELEASE_PATH/backend"
+          
+          # Tentar iniciar a aplicação em background para testar
+          PORT=3001 node dist/index.js &
+          APP_PID=$!
+          
+          # Aguardar inicialização
+          sleep 10
+          
+          # Testar health endpoint
+          if curl -f http://localhost:3001/health; then
+            echo "✅ Health check passou!"
+            kill $APP_PID
+          else
+            echo "❌ Health check falhou! Abortando deploy..."
+            kill $APP_PID
+            rm -rf "$RELEASE_PATH"
+            exit 1
+          fi
+          
+          echo "✅ Release preparada com sucesso"
+      
+    - name: Trocar symlink atomicamente (DEPLOY ATIVADO)
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
+          APP_DIR="/dados/laudinho-staging"
+          CURRENT_LINK="$APP_DIR/current"
+          RELEASE_NAME="${{ env.RELEASE_NAME }}"
+          NEW_RELEASE_PATH="$APP_DIR/releases/$RELEASE_NAME"
+          
+          echo "🔄 Trocando symlink atomicamente..."
+          
+          # Criar symlink temporário e depois mover (operação atômica)
+          ln -sfn "$NEW_RELEASE_PATH" "$CURRENT_LINK.tmp"
+          mv -Tf "$CURRENT_LINK.tmp" "$CURRENT_LINK"
+          
+          echo "🛑 Parando aplicação antiga..."
+          pm2 delete laudinho-backend-staging || true
+          
+          echo "🚀 Iniciando nova aplicação..."
+          cd "$CURRENT_LINK/backend"
+          pm2 start dist/index.js --name "laudinho-backend-staging"
+          pm2 save
+          
+          echo "✅ Deploy concluído! Release: $RELEASE_NAME"
+          
+          # Registrar release atual
+          echo "$RELEASE_NAME" > "$APP_DIR/current_release.txt"
+          
+    - name: Notificar sucesso
+      if: success()
+      run: |
+        echo "🎉 Deploy realizado com sucesso!"
+        echo "Release: ${{ env.RELEASE_NAME }}"
+        
+    - name: Notificar falha (rollback automático)
+      if: failure()
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        script: |
+          APP_DIR="/dados/laudinho-staging"
+          CURRENT_LINK="$APP_DIR/current"
+          LATEST_GOOD_RELEASE=$(cat "$APP_DIR/current_release.txt" 2>/dev/null || echo "")
+          
+          if [ -n "$LATEST_GOOD_RELEASE" ] && [ -d "$APP_DIR/releases/$LATEST_GOOD_RELEASE" ]; then
+            echo "⚠️ Deploy falhou! Fazendo rollback automático para $LATEST_GOOD_RELEASE"
+            ln -sfn "$APP_DIR/releases/$LATEST_GOOD_RELEASE" "$CURRENT_LINK"
+            
+            pm2 delete laudinho-backend-staging || true
+            cd "$CURRENT_LINK/backend"
+            pm2 start dist/index.js --name "laudinho-backend-staging"
+            pm2 save
+            
+            echo "✅ Rollback automático concluído"
+          else
+            echo "❌ Falha no deploy e sem release anterior para rollback"
+          fi
