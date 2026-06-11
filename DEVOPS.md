@@ -65,6 +65,47 @@ Com os contêineres rodando e o banco atualizado, você pode acessar:
 
 ---
 
+## Segurança e Confiabilidade
+
+Para garantir a segurança dos dados e a robustez da infraestrutura do Laudinho, implementamos três entregáveis essenciais de confiabilidade e segurança.
+
+### 1. Backup Automático (PostgreSQL)
+* **Como funciona:** O contêiner de `backup` roda em segundo plano e realiza um backup completo comprimido (`pg_dump` + `gzip`) a cada 24 horas. Os backups são salvos no volume persistente `laudinho_backups` com retenção configurável (padrão de 7 dias).
+* **Backup Imediato Manual:**
+  ```bash
+  docker compose exec backup backup.sh
+  ```
+* **Restauração de Backup:**
+  Para restaurar um backup, liste os arquivos em `/backups` e passe o arquivo desejado para o script de restauração:
+  ```bash
+  # Listar backups
+  docker compose exec backup restore.sh
+  
+  # Restaurar backup específico (ATENÇÃO: os dados atuais do banco serão sobrescritos!)
+  docker compose exec backup restore.sh /backups/laudinho_backup_AAAA-MM-DD_HH-MM-SS.sql.gz
+  ```
+
+### 2. Scan de Vulnerabilidades (Segurança de Dependências e Imagens)
+* **Como funciona:** O script local `scripts/security-scan.sh` realiza a auditoria das dependências do backend (`npm audit`) e frontend (`pnpm audit`), e analisa as imagens Docker em busca de CVEs conhecidas utilizando `docker scout`.
+* **CI/CD Automatizado:** Criamos um workflow no GitHub Actions (`.github/workflows/security-scan.yml`) que executa a varredura a cada push nas branches principais (`main`, `develop`), pull requests e de forma recorrente todas as segundas-feiras às 08:00 UTC.
+* **Executar Localmente:**
+  ```bash
+  ./scripts/security-scan.sh
+  ```
+  O relatório detalhado será salvo em `reports/security-report-YYYY-MM-DD.txt`.
+
+### 3. Auditoria de Logs (Audit Trail)
+* **Como funciona:** Implementamos um middleware de auditoria que intercepta todas as requisições de mutação de dados (`POST`, `PUT`, `DELETE`, `PATCH`). Estes registros de segurança são armazenados de forma estruturada (JSON) e isolados no arquivo dedicado `logs/audit.log` (mapeado no volume persistente `laudinho_logs`).
+* **O que é auditado:**
+  - **Mutação de dados:** Método, rota, ID do usuário autenticado (ou `anonymous` / `invalid-token`), IP de origem, código de resposta HTTP (ex. 201, 400), duração da requisição e User-Agent.
+  - **Eventos de Autenticação:** Cadastro com sucesso, erros de duplicidade, login com sucesso, tentativas com e-mail inexistente e senha incorreta.
+* **Acompanhar logs de auditoria em tempo real:**
+  ```bash
+  docker compose exec back tail -f /app/logs/audit.log
+  ```
+
+---
+
 ### Comandos Úteis do Dia a Dia
 
 **Visualizar Logs:**

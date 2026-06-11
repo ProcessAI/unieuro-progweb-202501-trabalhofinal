@@ -31,6 +31,8 @@ services:
         condition: service_healthy
     ports:
       - "8080:8080"
+    volumes:
+      - laudinho_logs:/app/logs
 
   front:
     build:
@@ -45,5 +47,40 @@ services:
     ports:
       - "3000:80"
 
+  # ---------------------------------------------------------------
+  # Serviço de backup automático — executa pg_dump a cada 24 horas
+  # ---------------------------------------------------------------
+  backup:
+    image: postgres:16-alpine
+    container_name: laudinho-backup
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-laudinho_db}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGHOST: db
+      PGPORT: "5432"
+      BACKUP_RETENTION_DAYS: "7"
+    volumes:
+      - laudinho_backups:/backups
+      - ./scripts/backup.sh:/usr/local/bin/backup.sh:ro
+      - ./scripts/restore.sh:/usr/local/bin/restore.sh:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "[$(date -Iseconds)] Serviço de backup iniciado (intervalo: 24h)"
+        # Executa um backup imediato ao iniciar
+        sh /usr/local/bin/backup.sh
+        # Loop: aguarda 24 horas e repete
+        while true; do
+          sleep 86400
+          sh /usr/local/bin/backup.sh
+        done
+
 volumes:
   laudinho_pgdata:
+  laudinho_backups:
+  laudinho_logs:

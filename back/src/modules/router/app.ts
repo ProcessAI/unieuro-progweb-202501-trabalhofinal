@@ -7,6 +7,7 @@ import pinoHttp from 'pino-http';
 import healthRoutes from './health.routes';
 
 import logger from '../../logger';
+import { auditMiddleware } from './audit';
 
 // importando os nossos Routes
 import laudoRoutes from '../laudo/routes/laudo-routes';
@@ -41,6 +42,9 @@ app.use(
     logger,
   })
 );
+
+/* Middleware de auditoria — registra ações sensíveis (POST, PUT, DELETE) */
+app.use(auditMiddleware);
 
 /* Nossos Routes para cada Funcionalidade ou Serviço */
 app.use('/api/laudos', laudoRoutes);

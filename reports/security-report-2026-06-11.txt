@@ -1,0 +1,1096 @@
+=============================================
+ Relatório de Segurança — Laudinho
+ Data: 2026-06-11
+=============================================
+
+>>> [1/4] Auditoria de Dependências — Backend
+---------------------------------------------
+Detectado npm no backend. Executando npm audit...
+# npm audit report
+
+@eslint/plugin-kit  <0.3.4
+@eslint/plugin-kit is vulnerable to Regular Expression Denial of Service attacks through ConfigCommentParser - https://github.com/advisories/GHSA-xffm-g5w8-qvg7
+fix available via `npm audit fix`
+node_modules/@eslint/plugin-kit
+
+ajv  <6.14.0
+Severity: moderate
+ajv has ReDoS when using `$data` option - https://github.com/advisories/GHSA-2g4f-4pwh-qvx6
+fix available via `npm audit fix`
+node_modules/ajv
+
+body-parser  2.2.0
+Severity: moderate
+body-parser is vulnerable to denial of service when url encoding is used - https://github.com/advisories/GHSA-wqch-xfxh-vrr4
+fix available via `npm audit fix`
+node_modules/body-parser
+
+brace-expansion  <1.1.13 || >=2.0.0 <2.0.3
+Severity: moderate
+brace-expansion: Zero-step sequence causes process hang and memory exhaustion - https://github.com/advisories/GHSA-f886-m6hf-6m8v
+brace-expansion: Zero-step sequence causes process hang and memory exhaustion - https://github.com/advisories/GHSA-f886-m6hf-6m8v
+fix available via `npm audit fix`
+node_modules/@typescript-eslint/typescript-estree/node_modules/brace-expansion
+node_modules/brace-expansion
+
+diff  4.0.0 - 4.0.3
+jsdiff has a Denial of Service vulnerability in parsePatch and applyPatch - https://github.com/advisories/GHSA-73rr-hh4g-fpgx
+fix available via `npm audit fix`
+node_modules/diff
+
+flatted  <=3.4.1
+Severity: high
+flatted vulnerable to unbounded recursion DoS in parse() revive phase - https://github.com/advisories/GHSA-25h7-pfq9-p65f
+Prototype Pollution via parse() in NodeJS flatted - https://github.com/advisories/GHSA-rf6f-7fwh-wjgh
+fix available via `npm audit fix`
+node_modules/flatted
+
+js-yaml  4.0.0 - 4.1.0
+Severity: moderate
+js-yaml has prototype pollution in merge (<<) - https://github.com/advisories/GHSA-mh29-5h37-fv8m
+fix available via `npm audit fix`
+node_modules/js-yaml
+
+jws  <3.2.3
+Severity: high
+auth0/node-jws Improperly Verifies HMAC Signature - https://github.com/advisories/GHSA-869p-cjfg-cm3x
+fix available via `npm audit fix`
+node_modules/jws
+
+minimatch  <=3.1.3 || 9.0.0 - 9.0.6
+Severity: high
+minimatch has a ReDoS via repeated wildcards with non-matching literal in pattern - https://github.com/advisories/GHSA-3ppc-4f35-3m26
+minimatch has a ReDoS via repeated wildcards with non-matching literal in pattern - https://github.com/advisories/GHSA-3ppc-4f35-3m26
+minimatch has ReDoS: matchOne() combinatorial backtracking via multiple non-adjacent GLOBSTAR segments - https://github.com/advisories/GHSA-7r86-cg39-jmmj
+minimatch has ReDoS: matchOne() combinatorial backtracking via multiple non-adjacent GLOBSTAR segments - https://github.com/advisories/GHSA-7r86-cg39-jmmj
+minimatch ReDoS: nested *() extglobs generate catastrophically backtracking regular expressions - https://github.com/advisories/GHSA-23c5-xmqv-rm74
+minimatch ReDoS: nested *() extglobs generate catastrophically backtracking regular expressions - https://github.com/advisories/GHSA-23c5-xmqv-rm74
+fix available via `npm audit fix`
+node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch
+node_modules/minimatch
+
+path-to-regexp  8.0.0 - 8.3.0
+Severity: high
+path-to-regexp vulnerable to Denial of Service via sequential optional groups - https://github.com/advisories/GHSA-j3q9-mxjg-w52f
+path-to-regexp vulnerable to Regular Expression Denial of Service via multiple wildcards - https://github.com/advisories/GHSA-27v5-c462-wpq7
+fix available via `npm audit fix`
+node_modules/path-to-regexp
+
+picomatch  <=2.3.1
+Severity: high
+Picomatch: Method Injection in POSIX Character Classes causes incorrect Glob Matching - https://github.com/advisories/GHSA-3v7f-55p6-f55p
+Picomatch has a ReDoS vulnerability via extglob quantifiers - https://github.com/advisories/GHSA-c2c7-rcm5-vvqj
+fix available via `npm audit fix`
+node_modules/picomatch
+
+qs  <=6.15.1
+Severity: moderate
+qs's arrayLimit bypass in comma parsing allows denial of service - https://github.com/advisories/GHSA-w7fw-mjwx-w883
+qs's arrayLimit bypass in its bracket notation allows DoS via memory exhaustion - https://github.com/advisories/GHSA-6rw7-vpxm-498p
+qs has a remotely triggerable DoS: qs.stringify crashes with TypeError on null/undefined entries in comma-format arrays when encodeValuesOnly is set - https://github.com/advisories/GHSA-q8mj-m7cp-5q26
+fix available via `npm audit fix`
+node_modules/qs
+
+12 vulnerabilities (2 low, 5 moderate, 5 high)
+
+To address all issues, run:
+  npm audit fix
+
+>>> [2/4] Auditoria de Dependências — Frontend
+---------------------------------------------
+Detectado pnpm no frontend. Executando pnpm audit...
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ critical            │ form-data uses unsafe random function in form-data for │
+│                     │ choosing boundary                                      │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ form-data                                              │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <2.5.4                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=2.5.4                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ . > dependencies@0.0.1 > request@2.88.2 >              │
+│                     │ form-data@2.3.3                                        │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-fjxv-7rqg-78g4      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ Server-Side Request Forgery in Request                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ request                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <=2.88.2                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ <0.0.0                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ . > dependencies@0.0.1 > request@2.88.2                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-p8p7-x288-28g6      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ tough-cookie Prototype Pollution vulnerability         │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ tough-cookie                                           │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <4.1.3                                                 │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=4.1.3                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ . > dependencies@0.0.1 > request@2.88.2 >              │
+│                     │ tough-cookie@2.5.0                                     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-72xf-g2v4-qvf3      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ qs's arrayLimit bypass in its bracket notation allows  │
+│                     │ DoS via memory exhaustion                              │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ qs                                                     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <6.14.1                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=6.14.1                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ . > dependencies@0.0.1 > request@2.88.2 > qs@6.5.5     │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-6rw7-vpxm-498p      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+┌─────────────────────┬────────────────────────────────────────────────────────┐
+│ moderate            │ uuid: Missing buffer bounds check in v3/v5/v6 when buf │
+│                     │ is provided                                            │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Package             │ uuid                                                   │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Vulnerable versions │ <11.1.1                                                │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Patched versions    │ >=11.1.1                                               │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ Paths               │ . > dependencies@0.0.1 > request@2.88.2 > uuid@3.4.0   │
+├─────────────────────┼────────────────────────────────────────────────────────┤
+│ More info           │ https://github.com/advisories/GHSA-w5hq-g745-h8pq      │
+└─────────────────────┴────────────────────────────────────────────────────────┘
+5 vulnerabilities found
+Severity: 4 moderate | 1 critical
+⚠️  1 vulnerabilidade(s) CRÍTICA(S) encontrada(s) no frontend!
+
+>>> [3/4] Docker Scout — Imagem do Backend
+---------------------------------------------
+Analisando imagem: unieuro-progweb-202501-trabalhofinal-laudinho-060-back:latest...
+    i New version 1.21.0 available (installed version is 1.20.3) at https://github.com/docker/scout-cli
+    ...Storing image for indexing
+    ✓ Image stored for indexing
+    ...Indexing
+    ✓ Indexed 453 packages
+    ✓ Provenance obtained from attestation
+    ✗ Detected 20 vulnerable packages with a total of 44 vulnerabilities
+
+
+## Overview
+
+                   │                            Analyzed Image                             
+───────────────────┼───────────────────────────────────────────────────────────────────────
+ Target            │  unieuro-progweb-202501-trabalhofinal-laudinho-060-back:latest        
+   digest          │  53b72e9bce28                                                         
+   platform        │ linux/arm64                                                           
+   provenance      │ https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal.git 
+                   │  https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal/blob/2065bf75d7755ca9c957ae676c25fe9d37556985                             
+   vulnerabilities │    0C     5H    10M    29L                                            
+   size            │ 134 MB                                                                
+   packages        │ 453                                                                   
+
+
+## Packages and Vulnerabilities
+
+   0C     2H     2M     3L  perl 5.36.0-7+deb12u3
+pkg:deb/debian/perl@5.36.0-7%2Bdeb12u3?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ HIGH CVE-2026-48959
+      https://scout.docker.com/v/CVE-2026-48959?s=debian&n=perl&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ HIGH CVE-2026-48962
+      https://scout.docker.com/v/CVE-2026-48962?s=debian&n=perl&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ MEDIUM CVE-2026-7010
+      https://scout.docker.com/v/CVE-2026-7010?s=debian&n=perl&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ MEDIUM CVE-2025-15649
+      https://scout.docker.com/v/CVE-2025-15649?s=debian&n=perl&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2026-48961
+      https://scout.docker.com/v/CVE-2026-48961?s=debian&n=perl&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2023-31486
+      https://scout.docker.com/v/CVE-2023-31486?s=debian&n=perl&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2011-4116
+      https://scout.docker.com/v/CVE-2011-4116?s=debian&n=perl&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     1H     1M     0L  path-to-regexp 8.2.0
+pkg:npm/path-to-regexp@8.2.0
+
+    ✗ HIGH CVE-2026-4926 [Inefficient Regular Expression Complexity]
+      https://scout.docker.com/v/CVE-2026-4926?s=github&n=path-to-regexp&t=npm&vr=%3E%3D8.0.0%2C%3C8.4.0
+      Affected range : >=8.0.0                                      
+                     : <8.4.0                                       
+      Fixed version  : 8.4.0                                        
+      CVSS Score     : 7.5                                          
+      CVSS Vector    : CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H 
+    
+    ✗ MEDIUM CVE-2026-4923 [Inefficient Regular Expression Complexity]
+      https://scout.docker.com/v/CVE-2026-4923?s=github&n=path-to-regexp&t=npm&vr=%3E%3D8.0.0%2C%3C8.4.0
+      Affected range : >=8.0.0                                      
+                     : <8.4.0                                       
+      Fixed version  : 8.4.0                                        
+      CVSS Score     : 5.9                                          
+      CVSS Vector    : CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H 
+    
+
+   0C     1H     1M     0L  picomatch 4.0.3
+pkg:npm/picomatch@4.0.3
+
+    ✗ HIGH CVE-2026-33671 [Inefficient Regular Expression Complexity]
+      https://scout.docker.com/v/CVE-2026-33671?s=github&n=picomatch&t=npm&vr=%3E%3D4.0.0%2C%3C4.0.4
+      Affected range : >=4.0.0                                      
+                     : <4.0.4                                       
+      Fixed version  : 4.0.4                                        
+      CVSS Score     : 7.5                                          
+      CVSS Vector    : CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H 
+    
+    ✗ MEDIUM CVE-2026-33672 [Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')]
+      https://scout.docker.com/v/CVE-2026-33672?s=github&n=picomatch&t=npm&vr=%3E%3D4.0.0%2C%3C4.0.4
+      Affected range : >=4.0.0                                      
+                     : <4.0.4                                       
+      Fixed version  : 4.0.4                                        
+      CVSS Score     : 5.3                                          
+      CVSS Vector    : CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N 
+    
+
+   0C     1H     0M     0L  jws 3.2.2
+pkg:npm/jws@3.2.2
+
+    ✗ HIGH CVE-2025-65945 [Improper Verification of Cryptographic Signature]
+      https://scout.docker.com/v/CVE-2025-65945?s=github&n=jws&t=npm&vr=%3C3.2.3
+      Affected range : <3.2.3                                       
+      Fixed version  : 3.2.3                                        
+      CVSS Score     : 7.5                                          
+      CVSS Vector    : CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N 
+    
+
+   0C     0H     2M     1L  qs 6.14.0
+pkg:npm/qs@6.14.0
+
+    ✗ MEDIUM CVE-2026-8723 [NULL Pointer Dereference]
+      https://scout.docker.com/v/CVE-2026-8723?s=github&n=qs&t=npm&vr=%3E%3D6.11.1%2C%3C%3D6.15.1
+      Affected range : >=6.11.1                                                        
+                     : <=6.15.1                                                        
+      Fixed version  : 6.15.2                                                          
+      CVSS Score     : 6.3                                                             
+      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N 
+    
+    ✗ MEDIUM CVE-2025-15284 [Improper Input Validation]
+      https://scout.docker.com/v/CVE-2025-15284?s=github&n=qs&t=npm&vr=%3C6.14.1
+      Affected range : <6.14.1                                                         
+      Fixed version  : 6.14.1                                                          
+      CVSS Score     : 6.3                                                             
+      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:L 
+    
+    ✗ LOW CVE-2026-2391 [Improper Input Validation]
+      https://scout.docker.com/v/CVE-2026-2391?s=github&n=qs&t=npm&vr=%3E%3D6.7.0%2C%3C%3D6.14.1
+      Affected range : >=6.7.0                                      
+                     : <=6.14.1                                     
+      Fixed version  : 6.14.2                                       
+      CVSS Score     : 3.7                                          
+      CVSS Vector    : CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L 
+    
+
+   0C     0H     1M     1L  tar 1.34+dfsg-1.2+deb12u1
+pkg:deb/debian/tar@1.34%2Bdfsg-1.2%2Bdeb12u1?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ MEDIUM CVE-2025-45582
+      https://scout.docker.com/v/CVE-2025-45582?s=debian&n=tar&ns=debian&t=deb&osn=debian&osv=12&vr=%3E%3D1.34%2Bdfsg-1.2%2Bdeb12u1
+      Affected range : >=1.34+dfsg-1.2+deb12u1 
+      Fixed version  : not fixed               
+    
+    ✗ LOW CVE-2005-2541
+      https://scout.docker.com/v/CVE-2005-2541?s=debian&n=tar&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     1M     0L  body-parser 2.2.0
+pkg:npm/body-parser@2.2.0
+
+    ✗ MEDIUM CVE-2025-13466 [Uncontrolled Resource Consumption]
+      https://scout.docker.com/v/CVE-2025-13466?s=github&n=body-parser&t=npm&vr=%3E%3D2.2.0%2C%3C2.2.1
+      Affected range : >=2.2.0                                                             
+                     : <2.2.1                                                              
+      Fixed version  : 2.2.1                                                               
+      CVSS Score     : 5.5                                                                 
+      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:L/E:P 
+    
+
+   0C     0H     1M     0L  brace-expansion 2.0.2
+pkg:npm/brace-expansion@2.0.2
+
+    ✗ MEDIUM CVE-2026-33750 [Uncontrolled Resource Consumption]
+      https://scout.docker.com/v/CVE-2026-33750?s=github&n=brace-expansion&t=npm&vr=%3E%3D2.0.0%2C%3C2.0.3
+      Affected range : >=2.0.0                                      
+                     : <2.0.3                                       
+      Fixed version  : 5.0.5                                        
+      CVSS Score     : 6.5                                          
+      CVSS Vector    : CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H 
+    
+
+   0C     0H     1M     0L  ip-address 10.1.0
+pkg:npm/ip-address@10.1.0
+
+    ✗ MEDIUM CVE-2026-42338 [Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')]
+      https://scout.docker.com/v/CVE-2026-42338?s=github&n=ip-address&t=npm&vr=%3C%3D10.1.0
+      Affected range : <=10.1.0                                                        
+      Fixed version  : 10.1.1                                                          
+      CVSS Score     : 5.3                                                             
+      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N 
+    
+
+   0C     0H     0M     7L  glibc 2.36-9+deb12u14
+pkg:deb/debian/glibc@2.36-9%2Bdeb12u14?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2019-9192
+      https://scout.docker.com/v/CVE-2019-9192?s=debian&n=glibc&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2019-1010025
+      https://scout.docker.com/v/CVE-2019-1010025?s=debian&n=glibc&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2019-1010024
+      https://scout.docker.com/v/CVE-2019-1010024?s=debian&n=glibc&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2019-1010023
+      https://scout.docker.com/v/CVE-2019-1010023?s=debian&n=glibc&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2019-1010022
+      https://scout.docker.com/v/CVE-2019-1010022?s=debian&n=glibc&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2018-20796
+      https://scout.docker.com/v/CVE-2018-20796?s=debian&n=glibc&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2010-4756
+      https://scout.docker.com/v/CVE-2010-4756?s=debian&n=glibc&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     4L  systemd 252.39-1~deb12u2
+pkg:deb/debian/systemd@252.39-1~deb12u2?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2023-31439
+      https://scout.docker.com/v/CVE-2023-31439?s=debian&n=systemd&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2023-31438
+      https://scout.docker.com/v/CVE-2023-31438?s=debian&n=systemd&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2023-31437
+      https://scout.docker.com/v/CVE-2023-31437?s=debian&n=systemd&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2013-4392
+      https://scout.docker.com/v/CVE-2013-4392?s=debian&n=systemd&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     2L  libgcrypt20 1.10.1-3+deb12u1
+pkg:deb/debian/libgcrypt20@1.10.1-3%2Bdeb12u1?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2024-2236
+      https://scout.docker.com/v/CVE-2024-2236?s=debian&n=libgcrypt20&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2018-6829
+      https://scout.docker.com/v/CVE-2018-6829?s=debian&n=libgcrypt20&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     2L  util-linux 2.38.1-5+deb12u3
+pkg:deb/debian/util-linux@2.38.1-5%2Bdeb12u3?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2025-14104
+      https://scout.docker.com/v/CVE-2025-14104?s=debian&n=util-linux&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2022-0563
+      https://scout.docker.com/v/CVE-2022-0563?s=debian&n=util-linux&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     2L  openssl 3.0.20-1~deb12u2
+pkg:deb/debian/openssl@3.0.20-1~deb12u2?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2025-27587
+      https://scout.docker.com/v/CVE-2025-27587?s=debian&n=openssl&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2010-0928
+      https://scout.docker.com/v/CVE-2010-0928?s=debian&n=openssl&ns=debian&t=deb&osn=debian&osv=12&vr=%3E%3D3.0.11-1%7Edeb12u2
+      Affected range : >=3.0.11-1~deb12u2 
+      Fixed version  : not fixed          
+    
+
+   0C     0H     0M     2L  coreutils 9.1-1
+pkg:deb/debian/coreutils@9.1-1?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2025-5278
+      https://scout.docker.com/v/CVE-2025-5278?s=debian&n=coreutils&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2017-18018
+      https://scout.docker.com/v/CVE-2017-18018?s=debian&n=coreutils&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     1L  apt 2.6.1
+pkg:deb/debian/apt@2.6.1?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2011-3374
+      https://scout.docker.com/v/CVE-2011-3374?s=debian&n=apt&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     1L  shadow 1:4.13+dfsg1-1+deb12u2
+pkg:deb/debian/shadow@1%3A4.13%2Bdfsg1-1%2Bdeb12u2?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2007-5686
+      https://scout.docker.com/v/CVE-2007-5686?s=debian&n=shadow&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     1L  gcc-12 12.2.0-14+deb12u1
+pkg:deb/debian/gcc-12@12.2.0-14%2Bdeb12u1?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2022-27943
+      https://scout.docker.com/v/CVE-2022-27943?s=debian&n=gcc-12&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     1L  gnutls28 3.7.9-2+deb12u7
+pkg:deb/debian/gnutls28@3.7.9-2%2Bdeb12u7?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2011-3389
+      https://scout.docker.com/v/CVE-2011-3389?s=debian&n=gnutls28&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     1L  gnupg2 2.2.40-1.1+deb12u2
+pkg:deb/debian/gnupg2@2.2.40-1.1%2Bdeb12u2?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2022-3219
+      https://scout.docker.com/v/CVE-2022-3219?s=debian&n=gnupg2&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+
+44 vulnerabilities found in 20 packages
+  CRITICAL  0  
+  HIGH      5  
+  MEDIUM    10 
+  LOW       29 
+
+
+What's next:
+    View base image update recommendations → docker scout recommendations unieuro-progweb-202501-trabalhofinal-laudinho-060-back:latest
+
+
+>>> [4/4] Docker Scout — Imagem do Frontend
+---------------------------------------------
+Analisando imagem: unieuro-progweb-202501-trabalhofinal-laudinho-060-front:latest...
+    i New version 1.21.0 available (installed version is 1.20.3) at https://github.com/docker/scout-cli
+    ...Storing image for indexing
+    ✓ Image stored for indexing
+    ...Indexing
+    ✓ Indexed 83 packages
+    ✓ Provenance obtained from attestation
+    ✗ Detected 18 vulnerable packages with a total of 87 vulnerabilities
+
+
+## Overview
+
+                   │                            Analyzed Image                             
+───────────────────┼───────────────────────────────────────────────────────────────────────
+ Target            │  unieuro-progweb-202501-trabalhofinal-laudinho-060-front:latest       
+   digest          │  fffbbc91336a                                                         
+   platform        │ linux/arm64                                                           
+   provenance      │ https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal.git 
+                   │  https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal/blob/2065bf75d7755ca9c957ae676c25fe9d37556985                             
+   vulnerabilities │    4C    26H    45M    11L     1?                                     
+   size            │ 22 MB                                                                 
+   packages        │ 83                                                                    
+
+
+## Packages and Vulnerabilities
+
+   2C     2H     2M     2L  libxml2 2.13.4-r5
+pkg:apk/alpine/libxml2@2.13.4-r5?os_name=alpine&os_version=3.21
+
+    ✗ CRITICAL CVE-2025-49796
+      https://scout.docker.com/v/CVE-2025-49796?s=alpine&n=libxml2&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.13.9-r0
+      Affected range : <2.13.9-r0 
+      Fixed version  : 2.13.9-r0  
+    
+    ✗ CRITICAL CVE-2025-49794
+      https://scout.docker.com/v/CVE-2025-49794?s=alpine&n=libxml2&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.13.9-r0
+      Affected range : <2.13.9-r0 
+      Fixed version  : 2.13.9-r0  
+    
+    ✗ HIGH CVE-2025-6021
+      https://scout.docker.com/v/CVE-2025-6021?s=alpine&n=libxml2&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.13.9-r0
+      Affected range : <2.13.9-r0 
+      Fixed version  : 2.13.9-r0  
+    
+    ✗ HIGH CVE-2025-49795
+      https://scout.docker.com/v/CVE-2025-49795?s=alpine&n=libxml2&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.13.9-r0
+      Affected range : <2.13.9-r0 
+      Fixed version  : 2.13.9-r0  
+    
+    ✗ MEDIUM CVE-2026-6732
+      https://scout.docker.com/v/CVE-2026-6732?s=alpine&n=libxml2&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.13.9-r1
+      Affected range : <2.13.9-r1 
+      Fixed version  : 2.13.9-r1  
+    
+    ✗ MEDIUM CVE-2025-32414
+      https://scout.docker.com/v/CVE-2025-32414?s=alpine&n=libxml2&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.13.4-r6
+      Affected range : <2.13.4-r6 
+      Fixed version  : 2.13.4-r6  
+    
+    ✗ LOW CVE-2025-32415
+      https://scout.docker.com/v/CVE-2025-32415?s=alpine&n=libxml2&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.13.4-r6
+      Affected range : <2.13.4-r6 
+      Fixed version  : 2.13.4-r6  
+    
+    ✗ LOW CVE-2025-6170
+      https://scout.docker.com/v/CVE-2025-6170?s=alpine&n=libxml2&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.13.9-r0
+      Affected range : <2.13.9-r0 
+      Fixed version  : 2.13.9-r0  
+    
+
+   1C    10H     8M     0L  openssl 3.3.3-r0
+pkg:apk/alpine/openssl@3.3.3-r0?os_name=alpine&os_version=3.21
+
+    ✗ CRITICAL CVE-2026-31789
+      https://scout.docker.com/v/CVE-2026-31789?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.7-r0
+      Affected range : <3.3.7-r0 
+      Fixed version  : 3.3.7-r0  
+    
+    ✗ HIGH CVE-2025-15467
+      https://scout.docker.com/v/CVE-2025-15467?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.6-r0
+      Affected range : <3.3.6-r0 
+      Fixed version  : 3.3.6-r0  
+    
+    ✗ HIGH CVE-2026-28387
+      https://scout.docker.com/v/CVE-2026-28387?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.7-r0
+      Affected range : <3.3.7-r0 
+      Fixed version  : 3.3.7-r0  
+    
+    ✗ HIGH CVE-2026-31790
+      https://scout.docker.com/v/CVE-2026-31790?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.7-r0
+      Affected range : <3.3.7-r0 
+      Fixed version  : 3.3.7-r0  
+    
+    ✗ HIGH CVE-2026-28390
+      https://scout.docker.com/v/CVE-2026-28390?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.7-r0
+      Affected range : <3.3.7-r0 
+      Fixed version  : 3.3.7-r0  
+    
+    ✗ HIGH CVE-2026-28389
+      https://scout.docker.com/v/CVE-2026-28389?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.7-r0
+      Affected range : <3.3.7-r0 
+      Fixed version  : 3.3.7-r0  
+    
+    ✗ HIGH CVE-2026-28388
+      https://scout.docker.com/v/CVE-2026-28388?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.7-r0
+      Affected range : <3.3.7-r0 
+      Fixed version  : 3.3.7-r0  
+    
+    ✗ HIGH CVE-2025-9230
+      https://scout.docker.com/v/CVE-2025-9230?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.5-r0
+      Affected range : <3.3.5-r0 
+      Fixed version  : 3.3.5-r0  
+    
+    ✗ HIGH CVE-2025-69421
+      https://scout.docker.com/v/CVE-2025-69421?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.6-r0
+      Affected range : <3.3.6-r0 
+      Fixed version  : 3.3.6-r0  
+    
+    ✗ HIGH CVE-2025-69420
+      https://scout.docker.com/v/CVE-2025-69420?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.6-r0
+      Affected range : <3.3.6-r0 
+      Fixed version  : 3.3.6-r0  
+    
+    ✗ HIGH CVE-2025-69419
+      https://scout.docker.com/v/CVE-2025-69419?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.6-r0
+      Affected range : <3.3.6-r0 
+      Fixed version  : 3.3.6-r0  
+    
+    ✗ MEDIUM CVE-2025-9231
+      https://scout.docker.com/v/CVE-2025-9231?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.5-r0
+      Affected range : <3.3.5-r0 
+      Fixed version  : 3.3.5-r0  
+    
+    ✗ MEDIUM CVE-2025-9232
+      https://scout.docker.com/v/CVE-2025-9232?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.5-r0
+      Affected range : <3.3.5-r0 
+      Fixed version  : 3.3.5-r0  
+    
+    ✗ MEDIUM CVE-2025-66199
+      https://scout.docker.com/v/CVE-2025-66199?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.6-r0
+      Affected range : <3.3.6-r0 
+      Fixed version  : 3.3.6-r0  
+    
+    ✗ MEDIUM CVE-2025-15468
+      https://scout.docker.com/v/CVE-2025-15468?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.6-r0
+      Affected range : <3.3.6-r0 
+      Fixed version  : 3.3.6-r0  
+    
+    ✗ MEDIUM CVE-2026-22795
+      https://scout.docker.com/v/CVE-2026-22795?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.6-r0
+      Affected range : <3.3.6-r0 
+      Fixed version  : 3.3.6-r0  
+    
+    ✗ MEDIUM CVE-2026-22796
+      https://scout.docker.com/v/CVE-2026-22796?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.6-r0
+      Affected range : <3.3.6-r0 
+      Fixed version  : 3.3.6-r0  
+    
+    ✗ MEDIUM CVE-2025-68160
+      https://scout.docker.com/v/CVE-2025-68160?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.6-r0
+      Affected range : <3.3.6-r0 
+      Fixed version  : 3.3.6-r0  
+    
+    ✗ MEDIUM CVE-2025-69418
+      https://scout.docker.com/v/CVE-2025-69418?s=alpine&n=openssl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.3.6-r0
+      Affected range : <3.3.6-r0 
+      Fixed version  : 3.3.6-r0  
+    
+
+   1C     1H     3M     2L  expat 2.7.0-r0
+pkg:apk/alpine/expat@2.7.0-r0?os_name=alpine&os_version=3.21
+
+    ✗ CRITICAL CVE-2026-32767
+      https://scout.docker.com/v/CVE-2026-32767?s=alpine&n=expat&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.7.5-r0
+      Affected range : <2.7.5-r0 
+      Fixed version  : 2.7.5-r0  
+    
+    ✗ HIGH CVE-2025-59375
+      https://scout.docker.com/v/CVE-2025-59375?s=alpine&n=expat&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.7.2-r0
+      Affected range : <2.7.2-r0 
+      Fixed version  : 2.7.2-r0  
+    
+    ✗ MEDIUM CVE-2026-25210
+      https://scout.docker.com/v/CVE-2026-25210?s=alpine&n=expat&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.7.4-r0
+      Affected range : <2.7.4-r0 
+      Fixed version  : 2.7.4-r0  
+    
+    ✗ MEDIUM CVE-2026-32777
+      https://scout.docker.com/v/CVE-2026-32777?s=alpine&n=expat&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.7.5-r0
+      Affected range : <2.7.5-r0 
+      Fixed version  : 2.7.5-r0  
+    
+    ✗ MEDIUM CVE-2026-32776
+      https://scout.docker.com/v/CVE-2026-32776?s=alpine&n=expat&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.7.5-r0
+      Affected range : <2.7.5-r0 
+      Fixed version  : 2.7.5-r0  
+    
+    ✗ LOW CVE-2026-32778
+      https://scout.docker.com/v/CVE-2026-32778?s=alpine&n=expat&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.7.5-r0
+      Affected range : <2.7.5-r0 
+      Fixed version  : 2.7.5-r0  
+    
+    ✗ LOW CVE-2026-24515
+      https://scout.docker.com/v/CVE-2026-24515?s=alpine&n=expat&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C2.7.4-r0
+      Affected range : <2.7.4-r0 
+      Fixed version  : 2.7.4-r0  
+    
+
+   0C     6H     5M     0L  libpng 1.6.47-r0
+pkg:apk/alpine/libpng@1.6.47-r0?os_name=alpine&os_version=3.21
+
+    ✗ HIGH CVE-2026-25646
+      https://scout.docker.com/v/CVE-2026-25646?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.55-r0
+      Affected range : <1.6.55-r0 
+      Fixed version  : 1.6.55-r0  
+    
+    ✗ HIGH CVE-2026-33636
+      https://scout.docker.com/v/CVE-2026-33636?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.56-r0
+      Affected range : <1.6.56-r0 
+      Fixed version  : 1.6.56-r0  
+    
+    ✗ HIGH CVE-2026-33416
+      https://scout.docker.com/v/CVE-2026-33416?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.56-r0
+      Affected range : <1.6.56-r0 
+      Fixed version  : 1.6.56-r0  
+    
+    ✗ HIGH CVE-2025-66293
+      https://scout.docker.com/v/CVE-2025-66293?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.53-r0
+      Affected range : <1.6.53-r0 
+      Fixed version  : 1.6.53-r0  
+    
+    ✗ HIGH CVE-2025-65018
+      https://scout.docker.com/v/CVE-2025-65018?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.53-r0
+      Affected range : <1.6.53-r0 
+      Fixed version  : 1.6.53-r0  
+    
+    ✗ HIGH CVE-2025-64720
+      https://scout.docker.com/v/CVE-2025-64720?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.53-r0
+      Affected range : <1.6.53-r0 
+      Fixed version  : 1.6.53-r0  
+    
+    ✗ MEDIUM CVE-2026-22801
+      https://scout.docker.com/v/CVE-2026-22801?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.54-r0
+      Affected range : <1.6.54-r0 
+      Fixed version  : 1.6.54-r0  
+    
+    ✗ MEDIUM CVE-2026-22695
+      https://scout.docker.com/v/CVE-2026-22695?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.54-r0
+      Affected range : <1.6.54-r0 
+      Fixed version  : 1.6.54-r0  
+    
+    ✗ MEDIUM CVE-2025-64506
+      https://scout.docker.com/v/CVE-2025-64506?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.53-r0
+      Affected range : <1.6.53-r0 
+      Fixed version  : 1.6.53-r0  
+    
+    ✗ MEDIUM CVE-2025-64505
+      https://scout.docker.com/v/CVE-2025-64505?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.53-r0
+      Affected range : <1.6.53-r0 
+      Fixed version  : 1.6.53-r0  
+    
+    ✗ MEDIUM CVE-2026-34757
+      https://scout.docker.com/v/CVE-2026-34757?s=alpine&n=libpng&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.6.57-r0
+      Affected range : <1.6.57-r0 
+      Fixed version  : 1.6.57-r0  
+    
+
+   0C     5H    17M     1L  curl 8.12.1-r1
+pkg:apk/alpine/curl@8.12.1-r1?os_name=alpine&os_version=3.21
+
+    ✗ HIGH CVE-2026-6276
+      https://scout.docker.com/v/CVE-2026-6276?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ HIGH CVE-2026-5773
+      https://scout.docker.com/v/CVE-2026-5773?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ HIGH CVE-2026-3805
+      https://scout.docker.com/v/CVE-2026-3805?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.14.0-r0
+      Affected range : <=8.14.0-r0 
+      Fixed version  : not fixed   
+    
+    ✗ HIGH CVE-2025-9086
+      https://scout.docker.com/v/CVE-2025-9086?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C8.14.1-r2
+      Affected range : <8.14.1-r2 
+      Fixed version  : 8.14.1-r2  
+    
+    ✗ HIGH CVE-2025-5399
+      https://scout.docker.com/v/CVE-2025-5399?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C8.14.1-r0
+      Affected range : <8.14.1-r0 
+      Fixed version  : 8.14.1-r0  
+    
+    ✗ MEDIUM CVE-2026-5545
+      https://scout.docker.com/v/CVE-2026-5545?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2026-3784
+      https://scout.docker.com/v/CVE-2026-3784?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2026-1965
+      https://scout.docker.com/v/CVE-2026-1965?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2025-4947
+      https://scout.docker.com/v/CVE-2025-4947?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C8.14.0-r0
+      Affected range : <8.14.0-r0 
+      Fixed version  : 8.14.0-r0  
+    
+    ✗ MEDIUM CVE-2025-14017
+      https://scout.docker.com/v/CVE-2025-14017?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2026-6253
+      https://scout.docker.com/v/CVE-2026-6253?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2026-4873
+      https://scout.docker.com/v/CVE-2026-4873?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2025-13034
+      https://scout.docker.com/v/CVE-2025-13034?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2026-7168
+      https://scout.docker.com/v/CVE-2026-7168?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2026-6429
+      https://scout.docker.com/v/CVE-2026-6429?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2026-3783
+      https://scout.docker.com/v/CVE-2026-3783?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2025-15079
+      https://scout.docker.com/v/CVE-2025-15079?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2025-14819
+      https://scout.docker.com/v/CVE-2025-14819?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2025-14524
+      https://scout.docker.com/v/CVE-2025-14524?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ MEDIUM CVE-2025-10148
+      https://scout.docker.com/v/CVE-2025-10148?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C8.14.1-r2
+      Affected range : <8.14.1-r2 
+      Fixed version  : 8.14.1-r2  
+    
+    ✗ MEDIUM CVE-2025-5025
+      https://scout.docker.com/v/CVE-2025-5025?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C8.14.0-r0
+      Affected range : <8.14.0-r0 
+      Fixed version  : 8.14.0-r0  
+    
+    ✗ MEDIUM CVE-2025-10966
+      https://scout.docker.com/v/CVE-2025-10966?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+    ✗ LOW CVE-2025-15224
+      https://scout.docker.com/v/CVE-2025-15224?s=alpine&n=curl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D8.12.1-r1
+      Affected range : <=8.12.1-r1 
+      Fixed version  : not fixed   
+    
+
+   0C     1H     1M     0L  musl 1.2.5-r9
+pkg:apk/alpine/musl@1.2.5-r9?os_name=alpine&os_version=3.21
+
+    ✗ HIGH CVE-2026-40200
+      https://scout.docker.com/v/CVE-2026-40200?s=alpine&n=musl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.2.5-r11
+      Affected range : <1.2.5-r11 
+      Fixed version  : 1.2.5-r11  
+    
+    ✗ MEDIUM CVE-2026-6042
+      https://scout.docker.com/v/CVE-2026-6042?s=alpine&n=musl&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.2.5-r10
+      Affected range : <1.2.5-r10 
+      Fixed version  : 1.2.5-r10  
+    
+
+   0C     1H     0M     0L  nghttp2 1.64.0-r0
+pkg:apk/alpine/nghttp2@1.64.0-r0?os_name=alpine&os_version=3.21
+
+    ✗ HIGH CVE-2026-27135
+      https://scout.docker.com/v/CVE-2026-27135?s=alpine&n=nghttp2&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.68.1
+      Affected range : <1.68.1 
+      Fixed version  : 1.68.1  
+    
+
+   0C     0H     2M     0L  libavif 1.0.4-r0
+pkg:apk/alpine/libavif@1.0.4-r0?os_name=alpine&os_version=3.21
+
+    ✗ MEDIUM CVE-2025-48175
+      https://scout.docker.com/v/CVE-2025-48175?s=alpine&n=libavif&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D1.0.4-r0
+      Affected range : <=1.0.4-r0 
+      Fixed version  : not fixed  
+    
+    ✗ MEDIUM CVE-2025-48174
+      https://scout.docker.com/v/CVE-2025-48174?s=alpine&n=libavif&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D1.0.4-r0
+      Affected range : <=1.0.4-r0 
+      Fixed version  : not fixed  
+    
+
+   0C     0H     1M     2L  busybox 1.37.0-r12
+pkg:apk/alpine/busybox@1.37.0-r12?os_name=alpine&os_version=3.21
+
+    ✗ MEDIUM CVE-2025-60876
+      https://scout.docker.com/v/CVE-2025-60876?s=alpine&n=busybox&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D1.37.0-r13
+      Affected range : <=1.37.0-r13 
+      Fixed version  : not fixed    
+    
+    ✗ LOW CVE-2025-46394
+      https://scout.docker.com/v/CVE-2025-46394?s=alpine&n=busybox&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.37.0-r14
+      Affected range : <1.37.0-r14 
+      Fixed version  : 1.37.0-r14  
+    
+    ✗ LOW CVE-2024-58251
+      https://scout.docker.com/v/CVE-2024-58251?s=alpine&n=busybox&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.37.0-r14
+      Affected range : <1.37.0-r14 
+      Fixed version  : 1.37.0-r14  
+    
+
+   0C     0H     1M     1L  zlib 1.3.1-r2
+pkg:apk/alpine/zlib@1.3.1-r2?os_name=alpine&os_version=3.21
+
+    ✗ MEDIUM CVE-2026-22184
+      https://scout.docker.com/v/CVE-2026-22184?s=alpine&n=zlib&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.3.2-r0
+      Affected range : <1.3.2-r0 
+      Fixed version  : 1.3.2-r0  
+    
+    ✗ LOW CVE-2026-27171
+      https://scout.docker.com/v/CVE-2026-27171?s=alpine&n=zlib&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.3.2-r0
+      Affected range : <1.3.2-r0 
+      Fixed version  : 1.3.2-r0  
+    
+
+   0C     0H     1M     0L  libgcrypt 1.10.3-r1
+pkg:apk/alpine/libgcrypt@1.10.3-r1?os_name=alpine&os_version=3.21
+
+    ✗ MEDIUM CVE-2026-41989
+      https://scout.docker.com/v/CVE-2026-41989?s=alpine&n=libgcrypt&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D1.10.3-r1
+      Affected range : <=1.10.3-r1 
+      Fixed version  : not fixed   
+    
+
+   0C     0H     1M     0L  fontconfig 2.15.0-r1
+pkg:apk/alpine/fontconfig@2.15.0-r1?os_name=alpine&os_version=3.21
+
+    ✗ MEDIUM CVE-2026-34085
+      https://scout.docker.com/v/CVE-2026-34085?s=alpine&n=fontconfig&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D2.15.0-r1
+      Affected range : <=2.15.0-r1 
+      Fixed version  : not fixed   
+    
+
+   0C     0H     1M     0L  freetype 2.13.3-r0
+pkg:apk/alpine/freetype@2.13.3-r0?os_name=alpine&os_version=3.21
+
+    ✗ MEDIUM CVE-2026-23865
+      https://scout.docker.com/v/CVE-2026-23865?s=alpine&n=freetype&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D2.13.3-r0
+      Affected range : <=2.13.3-r0 
+      Fixed version  : not fixed   
+    
+
+   0C     0H     1M     0L  c-ares 1.34.5-r0
+pkg:apk/alpine/c-ares@1.34.5-r0?os_name=alpine&os_version=3.21
+
+    ✗ MEDIUM CVE-2025-62408
+      https://scout.docker.com/v/CVE-2025-62408?s=alpine&n=c-ares&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C1.34.6-r0
+      Affected range : <1.34.6-r0 
+      Fixed version  : 1.34.6-r0  
+    
+
+   0C     0H     1M     0L  util-linux 2.40.4-r1
+pkg:apk/alpine/util-linux@2.40.4-r1?os_name=alpine&os_version=3.21
+
+    ✗ MEDIUM CVE-2026-27456
+      https://scout.docker.com/v/CVE-2026-27456?s=alpine&n=util-linux&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C%3D2.40.4-r1
+      Affected range : <=2.40.4-r1 
+      Fixed version  : not fixed   
+    
+
+   0C     0H     0M     2L  tiff 4.7.0-r0
+pkg:apk/alpine/tiff@4.7.0-r0?os_name=alpine&os_version=3.21
+
+    ✗ LOW CVE-2025-8961
+      https://scout.docker.com/v/CVE-2025-8961?s=alpine&n=tiff&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C4.7.1-r0
+      Affected range : <4.7.1-r0 
+      Fixed version  : 4.7.1-r0  
+    
+    ✗ LOW CVE-2025-9165
+      https://scout.docker.com/v/CVE-2025-9165?s=alpine&n=tiff&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C4.7.1-r0
+      Affected range : <4.7.1-r0 
+      Fixed version  : 4.7.1-r0  
+    
+
+   0C     0H     0M     1L  xz 5.6.3-r1
+pkg:apk/alpine/xz@5.6.3-r1?os_name=alpine&os_version=3.21
+
+    ✗ LOW CVE-2026-34743
+      https://scout.docker.com/v/CVE-2026-34743?s=alpine&n=xz&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C5.8.3-r0
+      Affected range : <5.8.3-r0 
+      Fixed version  : 5.8.3-r0  
+    
+
+   0C     0H     0M     0L     1?  libxpm 3.5.17-r0
+pkg:apk/alpine/libxpm@3.5.17-r0?os_name=alpine&os_version=3.21
+
+    ✗ UNSPECIFIED CVE-2026-4367
+      https://scout.docker.com/v/CVE-2026-4367?s=alpine&n=libxpm&ns=alpine&t=apk&osn=alpine&osv=3.21&vr=%3C3.5.19-r0
+      Affected range : <3.5.19-r0 
+      Fixed version  : 3.5.19-r0  
+    
+
+
+87 vulnerabilities found in 18 packages
+  CRITICAL     4  
+  HIGH         26 
+  MEDIUM       45 
+  LOW          11 
+  UNSPECIFIED  1  
+
+
+What's next:
+    View base image update recommendations → docker scout recommendations unieuro-progweb-202501-trabalhofinal-laudinho-060-front:latest
+
+
+=============================================
+ Relatório salvo em: /Users/danielzakhourjreige/Downloads/unieuro-progweb-202501-trabalhofinal-laudinho-0.6.0/reports/security-report-2026-06-11.txt
+=============================================
