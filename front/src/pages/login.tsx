@@ -1,6 +1,7 @@
 // src/pages/Login.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL, API_PREFIX } from '../config';
 import './login.css';
 
 const Login: React.FC = () => {
@@ -13,14 +14,15 @@ const Login: React.FC = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('https://laudinho.cleversystems.net/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}${API_PREFIX}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ usuarioemail: email, usuariosenha: senha }),
       });
 
       if (response.ok) {
-        await response.json();
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
         alert('Login realizado com sucesso!');
         navigate('/clientes');
       } else {

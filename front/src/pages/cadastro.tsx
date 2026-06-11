@@ -1,6 +1,7 @@
 // src/pages/Cadastro.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL, API_PREFIX } from '../config';
 import './cadastro.css';
 
 const Cadastro: React.FC = () => {
@@ -13,7 +14,7 @@ const Cadastro: React.FC = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('https://laudinho.cleversystems.net/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}${API_PREFIX}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ usuarioemail: email, usuariosenha: senha }),

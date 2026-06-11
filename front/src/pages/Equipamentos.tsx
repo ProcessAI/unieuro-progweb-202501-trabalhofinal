@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 
@@ -81,8 +82,8 @@ export default function Equipamentos() {
       try {
         const [dadosEquip, dadosTipos, dadosSedes] = await Promise.all([
           getEquipamentos(),
-          fetch("https://laudinho.cleversystems.net/api/tipoeq/listarTipoEquipamento").then(res => res.json()),
-          fetch("https://laudinho.cleversystems.net/api/sede").then(res => res.json())
+          fetch(`${API_BASE_URL}/api/tipoeq/listarTipoEquipamento`).then(res => res.json()),
+          fetch(`${API_BASE_URL}/api/sede`).then(res => res.json())
         ]);
         
         const equipamentosComCliente = dadosEquip.map((eq: Equipamento) => {

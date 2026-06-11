@@ -1,4 +1,6 @@
-const API_URL = 'https://laudinho.cleversystems.net/api/tipo-laudo';
+import { API_BASE_URL, API_PREFIX } from '../config';
+
+const API_URL = `${API_BASE_URL}${API_PREFIX}/tipo-laudo`;
 
 interface TipoLaudoPayload {
   tipolaudonome: string;

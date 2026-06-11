@@ -1,4 +1,6 @@
-const API_BASE_URL = 'https://laudinho.cleversystems.net/api/laudos';
+import { API_BASE_URL as PROD_API_BASE, API_PREFIX } from '../config';
+
+const API_BASE_URL = `${PROD_API_BASE}${API_PREFIX}/laudos`;
 
 export interface Laudo {
   idlaudo: number;

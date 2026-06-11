@@ -1,4 +1,6 @@
-const API_URL = "https://laudinho.cleversystems.net/api/tipoeq";
+import { API_BASE_URL, API_PREFIX } from '../config';
+
+const API_URL = `${API_BASE_URL}${API_PREFIX}/tipoeq`;
 
 export interface Tipoeq {
   idtipoeq: number;

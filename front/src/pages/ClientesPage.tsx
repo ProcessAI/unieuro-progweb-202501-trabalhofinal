@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import { useState, useEffect, useCallback } from "react";
 import {
   Dialog,
@@ -69,7 +70,7 @@ export default function ClientesPage() {
 
   const fetchAllData = useCallback(async () => {
     try {
-      const clientesResponse = await fetch("https://laudinho.cleversystems.net/api/cliente/listarCliente");
+      const clientesResponse = await fetch(`${API_BASE_URL}/api/cliente/listarCliente`);
       if (!clientesResponse.ok) {
         throw new Error(`Falha ao buscar clientes: ${clientesResponse.status} ${clientesResponse.statusText}`);
       }
@@ -85,13 +86,13 @@ export default function ClientesPage() {
         sedes: []
       }));
 
-      const sedesResponse = await fetch("https://laudinho.cleversystems.net/api/sede");
+      const sedesResponse = await fetch(`${API_BASE_URL}/api/sede`);
       if (!sedesResponse.ok) {
         throw new Error(`Falha ao buscar sedes: ${sedesResponse.status} ${sedesResponse.statusText}`);
       }
       const sedesData: Sede[] = await sedesResponse.json();
 
-      const enderecosResponse = await fetch("https://laudinho.cleversystems.net/api/endereco");
+      const enderecosResponse = await fetch(`${API_BASE_URL}/api/endereco`);
       if (!enderecosResponse.ok) {
         throw new Error(`Falha ao buscar endereços: ${enderecosResponse.status} ${enderecosResponse.statusText}`);
       }
@@ -148,7 +149,7 @@ export default function ClientesPage() {
  async function toggleStatusCliente(clienteToToggle: Cliente): Promise<{ nome: string; status: "ativo" | "inativo" } | void> {
   const novoStatusNum = clienteToToggle.status === "ativo" ? 0 : 1;
   try {
-    const response = await fetch(`https://laudinho.cleversystems.net/api/cliente/atualizarCliente/${clienteToToggle.idcliente}`, {
+    const response = await fetch(`${API_BASE_URL}/api/cliente/atualizarCliente/${clienteToToggle.idcliente}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -196,7 +197,7 @@ export default function ClientesPage() {
   const cliente = clientes[clienteEditandoIndex];
 
   try {
-    const response = await fetch(`https://laudinho.cleversystems.net/api/cliente/atualizarCliente/${cliente.idcliente}`, {
+    const response = await fetch(`${API_BASE_URL}/api/cliente/atualizarCliente/${cliente.idcliente}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -246,7 +247,7 @@ export default function ClientesPage() {
     if (!confirmacao) return;
 
     try {
-      const response = await fetch(`https://laudinho.cleversystems.net/api/cliente/deletarCliente/${cliente.idcliente}`, {
+      const response = await fetch(`${API_BASE_URL}/api/cliente/deletarCliente/${cliente.idcliente}`, {
         method: "DELETE",
       });
 
@@ -295,7 +296,7 @@ export default function ClientesPage() {
       sedes: [],
     };
 
-    const response = await fetch("https://laudinho.cleversystems.net/api/cliente/criarCliente", {
+    const response = await fetch(`${API_BASE_URL}/api/cliente/criarCliente`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -359,7 +360,7 @@ async function toggleStatusSede(sedeToToggle: Sede) { // <-- Altera para receber
       idcliente: sedeToToggle.idcliente
     };
 
-    const sedeResponse = await fetch(`https://laudinho.cleversystems.net/api/sede/${sedeToToggle.idsede}`, {
+    const sedeResponse = await fetch(`${API_BASE_URL}/api/sede/${sedeToToggle.idsede}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -384,7 +385,7 @@ async function toggleStatusSede(sedeToToggle: Sede) { // <-- Altera para receber
         idsede: sedeToToggle.idsede,
       };
 
-      const enderecoResponse = await fetch(`https://laudinho.cleversystems.net/api/endereco/${enderecoId}`, {
+      const enderecoResponse = await fetch(`${API_BASE_URL}/api/endereco/${enderecoId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -569,13 +570,13 @@ async function salvarSede() {
 
     if (isEditingSede && sedeAtualNoEstado?.idsede) {
       // Lógica de atualização da Sede existente
-      console.log("Requisição Sede: URL=" + `https://laudinho.cleversystems.net/api/sede/${sedeAtualNoEstado.idsede}` + ", Método=PUT", "Body:", JSON.stringify({
+      console.log("Requisição Sede: URL=" + `${API_BASE_URL}/api/sede/${sedeAtualNoEstado.idsede}` + ", Método=PUT", "Body:", JSON.stringify({
         sedenome: sedenome,
         sedestatus: novoStatusNumerico,
         dataDeInclusao: sededtinclusao,
         idcliente: clienteAtual.idcliente,
       }));
-      sedeResponse = await fetch(`https://laudinho.cleversystems.net/api/sede/${sedeAtualNoEstado.idsede}`, {
+      sedeResponse = await fetch(`${API_BASE_URL}/api/sede/${sedeAtualNoEstado.idsede}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -590,13 +591,13 @@ async function salvarSede() {
     } else {
       // Lógica de criação de Nova Sede
       const dataDeInclusao = new Date().toISOString();
-      console.log("Requisição Sede: URL=" + "https://laudinho.cleversystems.net/api/sede" + ", Método=POST", "Body:", JSON.stringify({
+      console.log("Requisição Sede: URL=" + `${API_BASE_URL}/api/sede` + ", Método=POST", "Body:", JSON.stringify({
         sedenome: sedenome,
         sedestatus: novoStatusNumerico,
         sededtinclusao: dataDeInclusao,
         idcliente: clienteAtual.idcliente,
       }));
-      sedeResponse = await fetch("https://laudinho.cleversystems.net/api/sede", {
+      sedeResponse = await fetch(`${API_BASE_URL}/api/sede`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -635,15 +636,15 @@ async function salvarSede() {
 
     let enderecoResponse;
     if (enderecoIdParaBackend) {
-      console.log("Requisição Endereço: URL=" + `https://laudinho.cleversystems.net/api/endereco/${enderecoIdParaBackend}` + ", Método=PUT", "Body:", JSON.stringify(enderecoBody));
-      enderecoResponse = await fetch(`https://laudinho.cleversystems.net/api/endereco/${enderecoIdParaBackend}`, {
+      console.log("Requisição Endereço: URL=" + `${API_BASE_URL}/api/endereco/${enderecoIdParaBackend}` + ", Método=PUT", "Body:", JSON.stringify(enderecoBody));
+      enderecoResponse = await fetch(`${API_BASE_URL}/api/endereco/${enderecoIdParaBackend}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(enderecoBody),
       });
     } else {
-      console.log("Requisição Endereço: URL=" + "https://laudinho.cleversystems.net/api/endereco", "Método=POST", "Body:", JSON.stringify(enderecoBody));
-      enderecoResponse = await fetch("https://laudinho.cleversystems.net/api/endereco", {
+      console.log("Requisição Endereço: URL=" + `${API_BASE_URL}/api/endereco`, "Método=POST", "Body:", JSON.stringify(enderecoBody));
+      enderecoResponse = await fetch(`${API_BASE_URL}/api/endereco`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(enderecoBody),
@@ -683,7 +684,7 @@ async function excluirSede(sedeParaExcluir: any) { // <-- Agora recebe o objeto 
 
     try {
       if (sedeParaExcluir.endereco?.id) {
-        const enderecoDeleteResponse = await fetch(`https://laudinho.cleversystems.net/api/endereco/${sedeParaExcluir.endereco.id}`, {
+        const enderecoDeleteResponse = await fetch(`${API_BASE_URL}/api/endereco/${sedeParaExcluir.endereco.id}`, {
           method: 'DELETE',
         });
         if (!enderecoDeleteResponse.ok) {
@@ -691,7 +692,7 @@ async function excluirSede(sedeParaExcluir: any) { // <-- Agora recebe o objeto 
         }
       }
 
-      const sedeDeleteResponse = await fetch(`https://laudinho.cleversystems.net/api/sede/${sedeParaExcluir.idsede}`, {
+      const sedeDeleteResponse = await fetch(`${API_BASE_URL}/api/sede/${sedeParaExcluir.idsede}`, {
         method: 'DELETE',
       });
       if (!sedeDeleteResponse.ok) {
@@ -904,7 +905,7 @@ async function excluirSede(sedeParaExcluir: any) { // <-- Agora recebe o objeto 
                         type="button"
                         onClick={async () => {
                           try {
-                            const response = await fetch(`https://laudinho.cleversystems.net/api/sede/${sede.idsede}`);
+                            const response = await fetch(`${API_BASE_URL}/api/sede/${sede.idsede}`);
                             if (!response.ok) throw new Error('Erro ao buscar dados da sede');
 
                             const data = await response.json();

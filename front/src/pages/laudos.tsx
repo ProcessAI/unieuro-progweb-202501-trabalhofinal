@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './laudos.css';
@@ -63,14 +64,14 @@ const Laudos: React.FC = () => {
         console.error('Erro ao carregar laudos:', err);
       }
       try {
-        const respInstalacao = await fetch('https://laudinho.cleversystems.net/api/tipo-instalacao');
+        const respInstalacao = await fetch(`${API_BASE_URL}/api/tipo-instalacao`);
         const dadosInstalacao = await respInstalacao.json();
         setTiposInstalacao(dadosInstalacao);
       } catch (err) {
         console.error('Erro ao carregar tipos de instalação:', err);
       }
       try {
-        const respLaudo = await fetch('https://laudinho.cleversystems.net/api/tipo-laudo');
+        const respLaudo = await fetch(`${API_BASE_URL}/api/tipo-laudo`);
         const dadosLaudo = await respLaudo.json();
         setTiposLaudo(dadosLaudo);
       } catch (err) {

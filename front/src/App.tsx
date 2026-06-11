@@ -14,18 +14,26 @@ import TipoInstalacao from './pages/tipoinstalacao';
 
 import './App.css';
 
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+};
+
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/cadastro" />} />
       <Route path="/cadastro" element={<CadastroPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/clientes" element={<ClientesPage />} />
-      <Route path="/equipamentos" element={<Equipamentos />} />
-      <Route path="/tipoeq" element={<TipoeqCrud/>} />
-      <Route path="/laudo" element={<Laudos/>} />
-      <Route path="/tipolaudo" element={<TipoLaudo />} />
-      <Route path="/tipoinstalacao" element={<TipoInstalacao />} />
+      <Route path="/clientes" element={<ProtectedRoute><ClientesPage /></ProtectedRoute>} />
+      <Route path="/equipamentos" element={<ProtectedRoute><Equipamentos /></ProtectedRoute>} />
+      <Route path="/tipoeq" element={<ProtectedRoute><TipoeqCrud/></ProtectedRoute>} />
+      <Route path="/laudo" element={<ProtectedRoute><Laudos/></ProtectedRoute>} />
+      <Route path="/tipolaudo" element={<ProtectedRoute><TipoLaudo /></ProtectedRoute>} />
+      <Route path="/tipoinstalacao" element={<ProtectedRoute><TipoInstalacao /></ProtectedRoute>} />
     </Routes>
   );
 }

@@ -1,3 +1,5 @@
+import { API_BASE_URL, API_PREFIX } from '../config';
+
 export interface Equipamento {
   id?: number;           // novo campo opcional para guardar o id real
   modelo: string;
@@ -24,20 +26,20 @@ interface TipoEq {
 }
 
 export async function getSedes(): Promise<Sede[]> {
-  const res = await fetch("https://laudinho.cleversystems.net/api/sede");
+  const res = await fetch(`${API_BASE_URL}${API_PREFIX}/sede`);
   if (!res.ok) throw new Error("Erro ao buscar sedes");
   return res.json();
 }
 
 export async function getTipos(): Promise<TipoEq[]> {
-  const res = await fetch("https://laudinho.cleversystems.net/api/tipoeq/listarTipoEquipamento");
+  const res = await fetch(`${API_BASE_URL}${API_PREFIX}/tipoeq/listarTipoEquipamento`);
   if (!res.ok) throw new Error("Erro ao buscar tipos");
   return res.json();
 }
 
 // Buscar equipamentos do backend
 export async function getEquipamentos(): Promise<Equipamento[]> {
-  const res = await fetch("https://laudinho.cleversystems.net/api/equipamento");
+  const res = await fetch(`${API_BASE_URL}${API_PREFIX}/equipamento`);
   if (!res.ok) throw new Error("Erro ao buscar equipamentos");
   const equipamentosRaw = await res.json();
 
@@ -87,7 +89,7 @@ export async function addEquipamento(e: Equipamento): Promise<void> {
     idtipoeq: tipo.idtipoeq
   };
 
-  const res = await fetch("https://laudinho.cleversystems.net/api/equipamento/criarEquipamento", {
+  const res = await fetch(`${API_BASE_URL}${API_PREFIX}/equipamento/criarEquipamento`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
@@ -122,7 +124,7 @@ export async function updateEquipamento(id: number, e: Equipamento): Promise<voi
     idtipoeq: tipo.idtipoeq
   };
 
-  const res = await fetch(`https://laudinho.cleversystems.net/api/equipamento/${id}`, {
+  const res = await fetch(`${API_BASE_URL}${API_PREFIX}/equipamento/${id}`, {
     method: "PUT", // ou PATCH dependendo do seu backend
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -135,7 +137,7 @@ export async function updateEquipamento(id: number, e: Equipamento): Promise<voi
 }
 
 export async function deleteEquipamento(id: number): Promise<void> {
-  const res = await fetch(`https://laudinho.cleversystems.net/api/equipamento/${id}`, {
+  const res = await fetch(`${API_BASE_URL}${API_PREFIX}/equipamento/${id}`, {
     method: "DELETE",
   });
 
