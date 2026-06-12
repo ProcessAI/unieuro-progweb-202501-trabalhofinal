@@ -176,7 +176,6 @@ Severity: 4 moderate | 1 critical
 >>> [3/4] Docker Scout — Imagem do Backend
 ---------------------------------------------
 Analisando imagem: unieuro-progweb-202501-trabalhofinal-laudinho-060-back:latest...
-    i New version 1.21.0 available (installed version is 1.20.3) at https://github.com/docker/scout-cli
     ...Storing image for indexing
     ✓ Image stored for indexing
     ...Indexing
@@ -190,7 +189,7 @@ Analisando imagem: unieuro-progweb-202501-trabalhofinal-laudinho-060-back:latest
                    │                            Analyzed Image                             
 ───────────────────┼───────────────────────────────────────────────────────────────────────
  Target            │  unieuro-progweb-202501-trabalhofinal-laudinho-060-back:latest        
-   digest          │  53b72e9bce28                                                         
+   digest          │  6c9d61d61a89                                                         
    platform        │ linux/arm64                                                           
    provenance      │ https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal.git 
                    │  https://github.com/ProcessAI/unieuro-progweb-202501-trabalhofinal/blob/2065bf75d7755ca9c957ae676c25fe9d37556985                             
@@ -332,18 +331,6 @@ pkg:deb/debian/tar@1.34%2Bdfsg-1.2%2Bdeb12u1?os_distro=bookworm&os_name=debian&o
       Fixed version  : not fixed 
     
 
-   0C     0H     1M     0L  body-parser 2.2.0
-pkg:npm/body-parser@2.2.0
-
-    ✗ MEDIUM CVE-2025-13466 [Uncontrolled Resource Consumption]
-      https://scout.docker.com/v/CVE-2025-13466?s=github&n=body-parser&t=npm&vr=%3E%3D2.2.0%2C%3C2.2.1
-      Affected range : >=2.2.0                                                             
-                     : <2.2.1                                                              
-      Fixed version  : 2.2.1                                                               
-      CVSS Score     : 5.5                                                                 
-      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:L/E:P 
-    
-
    0C     0H     1M     0L  brace-expansion 2.0.2
 pkg:npm/brace-expansion@2.0.2
 
@@ -354,6 +341,18 @@ pkg:npm/brace-expansion@2.0.2
       Fixed version  : 5.0.5                                        
       CVSS Score     : 6.5                                          
       CVSS Vector    : CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H 
+    
+
+   0C     0H     1M     0L  body-parser 2.2.0
+pkg:npm/body-parser@2.2.0
+
+    ✗ MEDIUM CVE-2025-13466 [Uncontrolled Resource Consumption]
+      https://scout.docker.com/v/CVE-2025-13466?s=github&n=body-parser&t=npm&vr=%3E%3D2.2.0%2C%3C2.2.1
+      Affected range : >=2.2.0                                                             
+                     : <2.2.1                                                              
+      Fixed version  : 2.2.1                                                               
+      CVSS Score     : 5.5                                                                 
+      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:L/E:P 
     
 
    0C     0H     1M     0L  ip-address 10.1.0
@@ -430,20 +429,6 @@ pkg:deb/debian/systemd@252.39-1~deb12u2?os_distro=bookworm&os_name=debian&os_ver
       Fixed version  : not fixed 
     
 
-   0C     0H     0M     2L  libgcrypt20 1.10.1-3+deb12u1
-pkg:deb/debian/libgcrypt20@1.10.1-3%2Bdeb12u1?os_distro=bookworm&os_name=debian&os_version=12
-
-    ✗ LOW CVE-2024-2236
-      https://scout.docker.com/v/CVE-2024-2236?s=debian&n=libgcrypt20&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
-      Affected range : >0        
-      Fixed version  : not fixed 
-    
-    ✗ LOW CVE-2018-6829
-      https://scout.docker.com/v/CVE-2018-6829?s=debian&n=libgcrypt20&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
-      Affected range : >0        
-      Fixed version  : not fixed 
-    
-
    0C     0H     0M     2L  util-linux 2.38.1-5+deb12u3
 pkg:deb/debian/util-linux@2.38.1-5%2Bdeb12u3?os_distro=bookworm&os_name=debian&os_version=12
 
@@ -472,6 +457,20 @@ pkg:deb/debian/openssl@3.0.20-1~deb12u2?os_distro=bookworm&os_name=debian&os_ver
       Fixed version  : not fixed          
     
 
+   0C     0H     0M     2L  libgcrypt20 1.10.1-3+deb12u1
+pkg:deb/debian/libgcrypt20@1.10.1-3%2Bdeb12u1?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2024-2236
+      https://scout.docker.com/v/CVE-2024-2236?s=debian&n=libgcrypt20&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+    ✗ LOW CVE-2018-6829
+      https://scout.docker.com/v/CVE-2018-6829?s=debian&n=libgcrypt20&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
    0C     0H     0M     2L  coreutils 9.1-1
 pkg:deb/debian/coreutils@9.1-1?os_distro=bookworm&os_name=debian&os_version=12
 
@@ -482,15 +481,6 @@ pkg:deb/debian/coreutils@9.1-1?os_distro=bookworm&os_name=debian&os_version=12
     
     ✗ LOW CVE-2017-18018
       https://scout.docker.com/v/CVE-2017-18018?s=debian&n=coreutils&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
-      Affected range : >0        
-      Fixed version  : not fixed 
-    
-
-   0C     0H     0M     1L  apt 2.6.1
-pkg:deb/debian/apt@2.6.1?os_distro=bookworm&os_name=debian&os_version=12
-
-    ✗ LOW CVE-2011-3374
-      https://scout.docker.com/v/CVE-2011-3374?s=debian&n=apt&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
       Affected range : >0        
       Fixed version  : not fixed 
     
@@ -513,20 +503,29 @@ pkg:deb/debian/gcc-12@12.2.0-14%2Bdeb12u1?os_distro=bookworm&os_name=debian&os_v
       Fixed version  : not fixed 
     
 
-   0C     0H     0M     1L  gnutls28 3.7.9-2+deb12u7
-pkg:deb/debian/gnutls28@3.7.9-2%2Bdeb12u7?os_distro=bookworm&os_name=debian&os_version=12
-
-    ✗ LOW CVE-2011-3389
-      https://scout.docker.com/v/CVE-2011-3389?s=debian&n=gnutls28&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
-      Affected range : >0        
-      Fixed version  : not fixed 
-    
-
    0C     0H     0M     1L  gnupg2 2.2.40-1.1+deb12u2
 pkg:deb/debian/gnupg2@2.2.40-1.1%2Bdeb12u2?os_distro=bookworm&os_name=debian&os_version=12
 
     ✗ LOW CVE-2022-3219
       https://scout.docker.com/v/CVE-2022-3219?s=debian&n=gnupg2&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     1L  apt 2.6.1
+pkg:deb/debian/apt@2.6.1?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2011-3374
+      https://scout.docker.com/v/CVE-2011-3374?s=debian&n=apt&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
+      Affected range : >0        
+      Fixed version  : not fixed 
+    
+
+   0C     0H     0M     1L  gnutls28 3.7.9-2+deb12u7
+pkg:deb/debian/gnutls28@3.7.9-2%2Bdeb12u7?os_distro=bookworm&os_name=debian&os_version=12
+
+    ✗ LOW CVE-2011-3389
+      https://scout.docker.com/v/CVE-2011-3389?s=debian&n=gnutls28&ns=debian&t=deb&osn=debian&osv=12&vr=%3E0
       Affected range : >0        
       Fixed version  : not fixed 
     
@@ -546,7 +545,6 @@ What's next:
 >>> [4/4] Docker Scout — Imagem do Frontend
 ---------------------------------------------
 Analisando imagem: unieuro-progweb-202501-trabalhofinal-laudinho-060-front:latest...
-    i New version 1.21.0 available (installed version is 1.20.3) at https://github.com/docker/scout-cli
     ...Storing image for indexing
     ✓ Image stored for indexing
     ...Indexing

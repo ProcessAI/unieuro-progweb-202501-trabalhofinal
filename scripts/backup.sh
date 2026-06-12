@@ -19,6 +19,8 @@ pg_dump \
   -p "${PGPORT:-5432}" \
   -U "${POSTGRES_USER:-postgres}" \
   -d "${POSTGRES_DB:-laudinho_db}" \
+  --clean \
+  --if-exists \
   --no-owner \
   --no-privileges \
   | gzip > "${BACKUP_DIR}/${FILENAME}"
